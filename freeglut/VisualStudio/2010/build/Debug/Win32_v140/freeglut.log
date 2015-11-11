@@ -1,0 +1,11 @@
+﻿Build started 11/2/2015 10:55:05 PM.
+     1>Project "D:\Google Drive\Eden & Ben\Computer Graphics\Ben\HW1\freeglut\VisualStudio\2010\freeglut.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1357,5): warning MSB8012: TargetPath(D:\Google Drive\Eden & Ben\Computer Graphics\Ben\HW1\freeglut\VisualStudio\2010\..\..\lib\x86\Debug\freeglut.lib) does not match the Library's OutputFile property value (D:\Google Drive\Eden & Ben\Computer Graphics\Ben\HW1\freeglut\lib\x86\Debug\freeglut_static.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1359,5): warning MSB8012: TargetName(freeglut) does not match the Library's OutputFile property value (freeglut_static). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+     1>Lib:
+         freeglut.vcxproj -> D:\Google Drive\Eden & Ben\Computer Graphics\Ben\HW1\freeglut\VisualStudio\2010\..\..\lib\x86\Debug\freeglut.lib
+     1>Done Building Project "D:\Google Drive\Eden & Ben\Computer Graphics\Ben\HW1\freeglut\VisualStudio\2010\freeglut.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.06
