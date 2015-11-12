@@ -7,11 +7,12 @@ class Vector4
 private:
 	//assighning coordinate variables
 	int vectorValues[4];
+	bool columnVector;
 
 public:
 	//constructors
 	Vector4();
-	Vector4(const int valX, const int valY, const int valZ, const int valW);
+	Vector4(const int valX, const int valY, const int valZ, const int valW, bool isColumnVector);
 
 	//copy constructor
 	Vector4(const Vector4& V);
