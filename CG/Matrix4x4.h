@@ -1,8 +1,8 @@
-#include <iostream>
-#include "Vector4.h"
 
 #ifndef MATRIX4X4_H
 #define MATRIX4X4_H
+#include <iostream>
+class Vector4;
 
 class Matrix4x4
 {
@@ -17,17 +17,15 @@ public:
 	const int* operator[] (int i) const;
 	int* operator[](int i);
 
-	/*int& operator() (int row,int line);
-	int operator() (unsigned row, unsigned col) const;*/
-
 	const Matrix4x4& operator = (const Matrix4x4& m);
 	const bool operator == (const Matrix4x4& m)const;
 	const bool operator != (const Matrix4x4& m)const;
 	const Matrix4x4 operator + (const Matrix4x4& m) const;
 	const Matrix4x4 operator - (const Matrix4x4& m) const;
 	const Matrix4x4 operator * (const Matrix4x4& m) const;
-	const Vector4 operator * (const Vector4 v) const;
-
+	const Vector4 operator * (const Vector4& v) const;
+//	const Vector4 operator * (const Vector4 v) const;
+	
 
 
 };
