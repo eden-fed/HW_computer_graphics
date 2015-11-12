@@ -38,6 +38,11 @@ int & Vector4::operator[](int i)
 	return this->vectorValues[i];
 }
 
+const int & Vector4::operator[](int i) const
+{
+	return this->vectorValues[i];
+}
+
 const Vector4 & Vector4::operator=(const Vector4 & V)
 {
 	for (int i = 0; i <= 3; i++) {

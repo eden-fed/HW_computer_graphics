@@ -1,9 +1,9 @@
-#pragma once
-#include <string>
-#include "Matrix4x4.h"
 
 #ifndef VECTOR4_H
 #define VECTOR4_H
+#include <string>
+#include "Matrix4x4.h"
+
 
 class Vector4
 {
@@ -35,6 +35,7 @@ public:
 
 	//operators
 	int &operator[](int i);
+	const int &operator[](int i) const;
 	const Vector4& operator = (const Vector4& V);
 	const bool operator == (const Vector4& V)const;
 	const bool operator != (const Vector4& V)const;

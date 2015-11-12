@@ -1,4 +1,5 @@
 #include "Matrix4x4.h"
+#include "Vector4.h"
 
 Matrix4x4::Matrix4x4():v1{ {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,1} }
 {
@@ -92,10 +93,15 @@ const Matrix4x4 Matrix4x4::operator*(const Matrix4x4 & m) const
 	return newMat;
 }
 
-const Vector4 Matrix4x4::operator*(const Vector4 v) const
+const Vector4 Matrix4x4::operator*(const Vector4 & v) const
 {
-	Vector4 newVector;
-	for (int i = 0; i < 4; i++)
-		newVector[i] = v1[i][0] * v[0] + v1[i][1] * v[1] + v1[i][2] * v[2] + v1[i][3] * v[3];
-	return newVector;
+	Vector4 newV;
+	for (int i = 0; i <= 3; i++) {
+		for (int j = 0; j <= 3; j++) {
+			newV[i] += v1[i][j] * v[j];
+		}
+	}
+	return newV;
 }
+
+
