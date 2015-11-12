@@ -30,6 +30,7 @@ public:
 	const bool operator != (const Vector4& V)const;
 	const Vector4& operator + (const Vector4& V);
 	const Vector4& operator - (const Vector4& V);
+	const Vector4& operator * (const Vector4& V);
 
 };
 
