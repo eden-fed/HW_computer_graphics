@@ -33,8 +33,8 @@ public:
 	const bool operator == (const Vector4& V)const;
 	const bool operator != (const Vector4& V)const;
 	const Vector4& operator + (const Vector4& V) throw(std::string);
-	const Vector4& operator - (const Vector4& V);
-	const Vector4& operator * (const Matrix4x4& M);
+	const Vector4& operator - (const Vector4& V) throw(std::string);
+	const Vector4& operator * (const Matrix4x4& M) throw(std::string);
 
 	//const Vector4& operator * (const Vector4& V);
 
