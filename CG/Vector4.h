@@ -10,18 +10,24 @@ class Vector4
 private:
 	//assighning coordinate variables
 	int vectorValues[4];
-	bool columnVector;
+	bool isColumnVector;
 
 public:
 	//constructors
 	Vector4();
-	Vector4(const int valX, const int valY, const int valZ, const int valW, bool isColumnVector);
+	Vector4(const int valX, const int valY, const int valZ, const int valW, bool isCVector);
 
 	//copy constructor
 	Vector4(const Vector4& V);
 
 	//destructor
 	~Vector4();
+
+	//get functions
+	const bool getColumnVector()const { return isColumnVector; }
+
+	//set functions
+	void setColumnVector(const bool val);
 
 	//class methods
 	//const Vector4& dot(const Vector4& V);
@@ -32,11 +38,12 @@ public:
 	const Vector4& operator = (const Vector4& V);
 	const bool operator == (const Vector4& V)const;
 	const bool operator != (const Vector4& V)const;
-	const Vector4& operator + (const Vector4& V) throw(std::string);
-	const Vector4& operator - (const Vector4& V) throw(std::string);
-	const Vector4& operator * (const Matrix4x4& M) throw(std::string);
-
-	//const Vector4& operator * (const Vector4& V);
+	const Vector4& operator += (const Vector4& V) throw(std::string);
+	const Vector4 operator + (const Vector4& V) throw(std::string);
+	const Vector4& operator -= (const Vector4& V) throw(std::string);
+	const Vector4 operator - (const Vector4& V) throw(std::string);
+	const Vector4& operator *= (const Matrix4x4& M) throw(std::string);
+	const Vector4 operator * (const Matrix4x4& M) throw(std::string);
 
 };
 
