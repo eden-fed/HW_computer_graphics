@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+#include "Matrix4x4.h"
+
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
@@ -21,17 +24,19 @@ public:
 	~Vector4();
 
 	//class methods
-	const Vector4& dot(const Vector4& V);
-	const Vector4& cross(const Vector4& V);
+	//const Vector4& dot(const Vector4& V);
+	//const Vector4& cross(const Vector4& V);
 
 	//operators
 	int &operator[](int i);
 	const Vector4& operator = (const Vector4& V);
 	const bool operator == (const Vector4& V)const;
 	const bool operator != (const Vector4& V)const;
-	const Vector4& operator + (const Vector4& V);
+	const Vector4& operator + (const Vector4& V) throw(std::string);
 	const Vector4& operator - (const Vector4& V);
-	const Vector4& operator * (const Vector4& V);
+	const Vector4& operator * (const Matrix4x4& M);
+
+	//const Vector4& operator * (const Vector4& V);
 
 };
 

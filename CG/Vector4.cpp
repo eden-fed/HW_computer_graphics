@@ -57,3 +57,49 @@ const bool Vector4::operator!=(const Vector4 & V) const
 {
 	return !(*this==V);
 }
+
+const Vector4 & Vector4::operator+(const Vector4 & V) 
+{
+	if (this->columnVector == V.columnVector) {
+		for (int i = 0; i <= 3; i++) {
+			this->vectorValues[i] += V.vectorValues[i];
+		}
+	}
+	else {
+		throw new std::string("Trying to add vectors of differant types\n");
+	}
+	return *this;
+
+}
+
+const Vector4 & Vector4::operator-(const Vector4 & V)
+{
+	if (this->columnVector == V.columnVector) {
+		for (int i = 0; i <= 3; i++) {
+			this->vectorValues[i] -= V.vectorValues[i];
+		}
+	}
+	else {
+		throw new std::string("Trying to subtract vectors of differant types\n");
+	}
+	return *this;
+}
+
+const Vector4 & Vector4::operator*(const Matrix4x4 & M)
+{
+	if (this->columnVector == false) {
+		Vector4 V = *this;
+		memset(this, 0, sizeof(Vector4));
+		for (int i = 0; i <= 3; i++) {
+			for (int j = 0; j <= 3; j++) {
+				(*this)[i] += V[j] * M[j][i];
+			}
+		}
+		this->columnVector = false;
+	}
+	else {
+		throw new std::string("Trying to multiply a column vector with a matrix\n");
+	}
+	return *this;
+}
+
