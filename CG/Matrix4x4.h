@@ -20,12 +20,15 @@ public:
 	/*int& operator() (int row,int line);
 	int operator() (unsigned row, unsigned col) const;*/
 
-	const Matrix4x4& operator = (const Matrix4x4& V);
-	const bool operator == (const Matrix4x4& V)const;
-	const bool operator != (const Matrix4x4& V)const;
-	const Matrix4x4& operator + (const Matrix4x4& V);
-	const Matrix4x4& operator - (const Matrix4x4& V);
-	const Matrix4x4& operator * (const Matrix4x4& V);
+	const Matrix4x4& operator = (const Matrix4x4& m);
+	const bool operator == (const Matrix4x4& m)const;
+	const bool operator != (const Matrix4x4& m)const;
+	const Matrix4x4 operator + (const Matrix4x4& m) const;
+	const Matrix4x4 operator - (const Matrix4x4& m) const;
+	const Matrix4x4 operator * (const Matrix4x4& m) const;
+	const Vector4 operator * (const Vector4 v) const;
+
+
 
 };
 #endif

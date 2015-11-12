@@ -27,6 +27,9 @@ Matrix4x4::Matrix4x4(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int
 
 Matrix4x4::Matrix4x4(const Matrix4x4 & m)
 {
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			this->v1[i][j] = m.v1[i][j];
 }
 
 const int*  Matrix4x4::operator[](int i) const
@@ -39,7 +42,60 @@ int * Matrix4x4::operator[](int i)
 	return this->v1[i];
 }
 
-const Matrix4x4 & Matrix4x4::operator=(const Matrix4x4 & V)
+const Matrix4x4 & Matrix4x4::operator=(const Matrix4x4 & m)
 {
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			this->v1[i][j] = m.v1[i][j];
 	
+	return *this;
+}
+
+const bool Matrix4x4::operator==(const Matrix4x4 & m) const
+{
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			if (v1[i][j] != m.v1[i][j])
+				return false;
+	return true;
+}
+
+const bool Matrix4x4::operator!=(const Matrix4x4 & m) const
+{
+	return (!(*this == m));
+}
+
+const Matrix4x4  Matrix4x4::operator+(const Matrix4x4 & m) const
+{
+	Matrix4x4 newMat;
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			newMat[i][j] = v1[i][j] + m[i][j];
+	return newMat;
+}
+
+const Matrix4x4 Matrix4x4::operator-(const Matrix4x4 & m) const
+{
+	Matrix4x4 newMat;
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			newMat[i][j] = v1[i][j] - m[i][j];
+	return newMat;
+}
+
+const Matrix4x4 Matrix4x4::operator*(const Matrix4x4 & m) const
+{
+	Matrix4x4 newMat;
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			newMat[i][j] = v1[i][0]*m[0][j]+v1[i][1]*m[1][j]+v1[i][2]*m[2][j]+v1[i][3]*m[3][j];
+	return newMat;
+}
+
+const Vector4 Matrix4x4::operator*(const Vector4 v) const
+{
+	Vector4 newVector;
+	for (int i = 0; i < 4; i++)
+		newVector[i] = v1[i][0] * v[0] + v1[i][1] * v[1] + v1[i][2] * v[2] + v1[i][3] * v[3];
+	return newVector;
 }
