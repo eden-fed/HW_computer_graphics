@@ -4,7 +4,7 @@ Vector4::Vector4() :vectorValues{0,0,0,1}, isColumnVector(true)
 {
 }
 
-Vector4::Vector4(const int valX, const int valY, const int valZ, const int valW, bool isCVector)
+Vector4::Vector4(const double valX, const double valY, const double valZ, const double valW, bool isCVector)
 {
 	this->vectorValues[0] = valX;
 	this->vectorValues[1] = valY;
@@ -33,12 +33,12 @@ void Vector4::setColumnVector(const bool val)
 	this->isColumnVector = val;
 }
 
-int & Vector4::operator[](int i)
+double & Vector4::operator[](int i)
 {
 	return this->vectorValues[i];
 }
 
-const int & Vector4::operator[](int i) const
+const double & Vector4::operator[](int i) const
 {
 	return this->vectorValues[i];
 }
@@ -119,6 +119,36 @@ const Vector4 Vector4::operator-(const Vector4 & V) throw(std::string)
 	}
 	else {
 		throw new std::string("Trying to add vectors of differant types\n");
+	}
+	return retV;
+}
+
+double Vector4::operator*(const Vector4 & V)
+{
+	double retVal;
+	if (this->isColumnVector == false && V.isColumnVector == true) {
+		for (int i = 0; i <= 3; i++) {
+			retVal += (*this)[0] * V[0];
+		}
+	}
+
+	return retVal;
+}
+
+Vector4 Vector4::operator^(const Vector4 & V)
+{
+	Vector4 retV;
+	retV[0] = (*this)[1] * V[2] - (*this)[2] * V[1];
+	retV[1] = (*this)[0] * V[2] - (*this)[2] * V[0];
+	retV[2] = (*this)[0] * V[1] - (*this)[1] * V[0];
+	return retV;
+}
+
+Vector4 Vector4::operator*(const double num)
+{
+	Vector4 retV;
+	for (int i = 0; i <= 3; i++) {
+		retV.vectorValues[i] = num*this->vectorValues[i];
 	}
 	return retV;
 }
