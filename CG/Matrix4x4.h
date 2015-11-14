@@ -7,15 +7,15 @@ class Vector4;
 class Matrix4x4
 {
 private:
-	int v1[4][4];
+	double v1[4][4];
 
 public:
 	Matrix4x4();
-	Matrix4x4(int x1, int x2, int x3, int x4, int y1, int y2,int y3,int y4, int z1, int z2, int z3, int z4, int w1, int w2, int w3, int w4);
+	Matrix4x4(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4, double w1, double w2, double w3, double w4);
 	Matrix4x4(const Matrix4x4& m);
 
-	const int* operator[] (int i) const;
-	int* operator[](int i);
+	const double* operator[] (int i) const;
+	double* operator[](int i);
 
 	const Matrix4x4& operator = (const Matrix4x4& m);
 	const bool operator == (const Matrix4x4& m)const;
@@ -24,7 +24,6 @@ public:
 	const Matrix4x4 operator - (const Matrix4x4& m) const;
 	const Matrix4x4 operator * (const Matrix4x4& m) const;
 	const Vector4 operator * (const Vector4& v) const;
-//	const Vector4 operator * (const Vector4 v) const;
 	
 
 
