@@ -6,7 +6,7 @@ Matrix4x4::Matrix4x4():v1{ {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,1} }
 
 }
 
-Matrix4x4::Matrix4x4(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, int z1, int z2, int z3, int z4, int w1, int w2, int w3, int w4)
+Matrix4x4::Matrix4x4(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4, double w1, double w2, double w3, double w4=1)
 {
 	v1[0][0] = x1;
 	v1[0][1] = x2;
@@ -33,12 +33,12 @@ Matrix4x4::Matrix4x4(const Matrix4x4 & m)
 			this->v1[i][j] = m.v1[i][j];
 }
 
-const int*  Matrix4x4::operator[](int i) const
+const double*  Matrix4x4::operator[](int i) const
 {
 	return this->v1[i];
 }
 
-int * Matrix4x4::operator[](int i)
+double * Matrix4x4::operator[](int i)
 {
 	return this->v1[i];
 }

@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "Operation", TW_TYPE_INT32, &g_Op, " min=0.00 max=2 step=1 keyIncr=z keyDecr=Z help='Operation: 0-reg line, 1-house, 2-star.' ");
 	
 	//time display - don't delete
-	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "shows the drawing time in micro seconds");
+	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
 
 	// Call the GLUT main loop
 	glutMainLoop();
