@@ -34,8 +34,8 @@ public:
 	~Line();
 
 	//get functions
-	const Coordinate getStartCrd()const { return startCrd; }
-	const Coordinate getEndCrd()const { return endCrd; }
+	inline const Coordinate getStartCrd()const { return startCrd; }
+	inline const Coordinate getEndCrd()const { return endCrd; }
 
 	//set functions
 	void setStartCrd(const Coordinate startCrd);

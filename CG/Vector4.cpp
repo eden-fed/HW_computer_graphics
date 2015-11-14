@@ -71,7 +71,7 @@ const bool Vector4::operator!=(const Vector4 & V) const
 const Vector4 & Vector4::operator+=(const Vector4 & V) 
 {
 	if (this->isColumnVector == V.isColumnVector) {
-		for (int i = 0; i <= 3; i++) {
+		for (int i = 0; i <= 2; i++) {
 			this->vectorValues[i] += V.vectorValues[i];
 		}
 	}
@@ -86,7 +86,7 @@ const Vector4 Vector4::operator+(const Vector4 & V) throw(std::string)
 {
 	Vector4 retV = *this;
 	if (retV.isColumnVector == V.isColumnVector) {
-		for (int i = 0; i <= 3; i++) {
+		for (int i = 0; i <= 2; i++) {
 			retV.vectorValues[i] += V.vectorValues[i];
 		}
 	}
@@ -99,7 +99,7 @@ const Vector4 Vector4::operator+(const Vector4 & V) throw(std::string)
 const Vector4 & Vector4::operator-=(const Vector4 & V)
 {
 	if (this->isColumnVector == V.isColumnVector) {
-		for (int i = 0; i <= 3; i++) {
+		for (int i = 0; i <= 2; i++) {
 			this->vectorValues[i] -= V.vectorValues[i];
 		}
 	}
@@ -113,7 +113,7 @@ const Vector4 Vector4::operator-(const Vector4 & V) throw(std::string)
 {
 	Vector4 retV = *this;
 	if (retV.isColumnVector == V.isColumnVector) {
-		for (int i = 0; i <= 3; i++) {
+		for (int i = 0; i <= 2; i++) {
 			retV.vectorValues[i] -= V.vectorValues[i];
 		}
 	}
@@ -147,7 +147,7 @@ Vector4 Vector4::operator^(const Vector4 & V)
 Vector4 Vector4::operator*(const double num)
 {
 	Vector4 retV;
-	for (int i = 0; i <= 3; i++) {
+	for (int i = 0; i <= 2; i++) {
 		retV.vectorValues[i] = num*this->vectorValues[i];
 	}
 	return retV;
