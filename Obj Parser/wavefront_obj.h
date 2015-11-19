@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "CG\Vector4.h"
+#include "CG\Triangle.h"
 
 struct Wavefront_obj
 {
@@ -14,7 +15,7 @@ struct Wavefront_obj
 		int v[3];
 		int t[3];
 		int n[3];
-		inline operator Triangle () { return(Triangle(v,t,n)); }
+		inline operator Triangle() { return(Triangle(v,t,n)); }
 	};
 
 	/*struct Vector
