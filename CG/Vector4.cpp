@@ -25,6 +25,11 @@ Vector4::~Vector4()
 }
 
 
+const double Vector4::getSize() const
+{
+	return (sqrt(pow((*this)[0], 2) + pow((*this)[1], 2) + pow((*this)[2], 2)));
+}
+
 double & Vector4::operator[](int i)
 {
 	return this->vectorValues[i];
@@ -58,7 +63,7 @@ const bool Vector4::operator!=(const Vector4 & V) const
 	return !(*this==V);
 }
 
-const Vector4 & Vector4::operator+=(const Vector4 & V) 
+const Vector4 & Vector4::operator+=(const Vector4 & V)
 {
 		for (int i = 0; i <= 2; i++) {
 			this->vectorValues[i] += V.vectorValues[i];
@@ -67,7 +72,7 @@ const Vector4 & Vector4::operator+=(const Vector4 & V)
 
 }
 
-const Vector4 Vector4::operator+(const Vector4 & V) 
+const Vector4 Vector4::operator+(const Vector4 & V)const
 {
 	Vector4 retV = *this;
 		for (int i = 0; i <= 2; i++) {
@@ -85,7 +90,7 @@ const Vector4 & Vector4::operator-=(const Vector4 & V)
 	return *this;
 }
 
-const Vector4 Vector4::operator-(const Vector4 & V) 
+const Vector4 Vector4::operator-(const Vector4 & V) const
 {
 	Vector4 retV = *this;
 		for (int i = 0; i <= 2; i++) {
@@ -94,7 +99,7 @@ const Vector4 Vector4::operator-(const Vector4 & V)
 	return retV;
 }
 
-double Vector4::operator*(const Vector4 & V)
+const double Vector4::operator*(const Vector4 & V)const
 {
 	double retVal;
 		for (int i = 0; i <= 3; i++) {
@@ -106,7 +111,7 @@ double Vector4::operator*(const Vector4 & V)
 	return retVal;
 }
 
-Vector4 Vector4::operator^(const Vector4 & V)
+const Vector4 Vector4::operator^(const Vector4 & V)const
 {
 	Vector4 retV;
 	retV[0] = (*this)[1] * V[2] - (*this)[2] * V[1];
@@ -115,7 +120,7 @@ Vector4 Vector4::operator^(const Vector4 & V)
 	return retV;
 }
 
-Vector4 Vector4::operator*(const double num)
+const Vector4 Vector4::operator*(const double num)const
 {
 	Vector4 retV;
 	for (int i = 0; i <= 2; i++) {
