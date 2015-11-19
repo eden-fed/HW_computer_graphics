@@ -19,7 +19,7 @@ class MeshModel
 public:
 	//constructors
 	MeshModel();
-	MeshModel(Wavefront_obj&);
+	MeshModel(Wavefront_obj& J);
 
 	//destructor
 	~MeshModel();

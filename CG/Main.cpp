@@ -19,10 +19,10 @@ LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing
 LARGE_INTEGER Frequency;
 
 
-int g_StartX = 0;
+/*int g_StartX = 0;
 int g_StartY = 0;
 int g_EndX = 0;
-int g_EndY = 0;
+int g_EndY = 0;*/
 unsigned int g_Color = 0xff0000ff;
 int g_Op = 0;
 
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	//add 'g_Scale' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
 	//TwAddVarRW(bar, "Scale", TW_TYPE_DOUBLE, &g_Scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z help='Scale the object (1=original size).' ");
 	//***********************************************************************************
-
+/*  **********gui for hw1*********
 	//add 'g_StartX' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
 	TwAddVarRW(bar, "StartX", TW_TYPE_INT32, &g_StartX, " min=0.00 max=1366 step=1 keyIncr=z keyDecr=Z help='Start X position (0.0=original size).' ");
 
@@ -97,7 +97,9 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "Color", TW_TYPE_COLOR32, &g_Color, " coloralpha = true help='RGBA color format - 4 components of 8 bits each - 0xAABBGGRR - AA alpha, BB blue, RR red' ");
 
 	//add 'g_EndY' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	TwAddVarRW(bar, "Operation", TW_TYPE_INT32, &g_Op, " min=0.00 max=2 step=1 keyIncr=z keyDecr=Z help='Operation: 0-reg line, 1-house, 2-star.' ");
+	TwAddVarRW(bar, "Operation", TW_TYPE_INT32, &g_Op, " min=0.00 max=2 step=1 keyIncr=z keyDecr=Z help='Operation: 0-reg line, 1-house, 2-star.' ");*/
+
+	TwAddButton(bar, "LoadOBJ",loadOBJModel, NULL, "help='button to load obf file'");
 	
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
@@ -115,6 +117,8 @@ void TW_CALL loadOBJModel(void *data)
 
 	Wavefront_obj objScene;
 	bool result = objScene.load_file(str);
+
+	//store the values in Object, MeshModel...
 
 	if(result)
 	{
@@ -158,9 +162,7 @@ void initGraphics(int argc, char *argv[])
 }
 
 
-//this is just an example of usage.
-//remove these lines and use your own code for drawing the scene.
-//it is also a good idea to move this function to another file/class
+/*drawScene of hw1
 void drawScene()
 {
 	Coordinate startCrd(g_StartX, g_StartY, g_Color);
@@ -214,8 +216,8 @@ void drawScene()
 		break;
 	}
 
-}
-
+}*/
+void drawScene(){}
 
 //this will make sure that integer coordinates are mapped exactly to corresponding pixels on screen
 void glUseScreenCoordinates(int width, int height)
