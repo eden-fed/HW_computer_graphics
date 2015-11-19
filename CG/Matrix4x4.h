@@ -23,7 +23,7 @@ public:
 	const Matrix4x4 operator + (const Matrix4x4& m) const;
 	const Matrix4x4 operator - (const Matrix4x4& m) const;
 	const Matrix4x4 operator * (const Matrix4x4& m) const;
-	const Vector4 operator * (const Vector4& v) const;
+	/*const Vector4 operator * (const Vector4& v) const;*/
 	
 
 

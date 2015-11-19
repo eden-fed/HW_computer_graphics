@@ -93,7 +93,7 @@ const Matrix4x4 Matrix4x4::operator*(const Matrix4x4 & m) const
 	return newMat;
 }
 
-const Vector4 Matrix4x4::operator*(const Vector4 & v) const
+/*const Vector4 Matrix4x4::operator*(const Vector4 & v) const
 {
 	Vector4 newV;
 	for (int i = 0; i <= 3; i++) {
@@ -102,6 +102,6 @@ const Vector4 Matrix4x4::operator*(const Vector4 & v) const
 		}
 	}
 	return newV;
-}
+}*/
 
 
