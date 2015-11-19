@@ -25,7 +25,7 @@ public:
 	~MeshModel();
 
 	//get functions
-	Vector4 getCenterOfModel();
+	Vector4 getCentroid();
 	inline int getNumberOfTriangles() { return model.size(); };//get number of triangles
 	inline int getNumberOfVertices() { return vertices.size(); };//get number of vertices
 	inline int getNumberOfNormals() { return vertices.size(); };//get number of normals
@@ -34,6 +34,7 @@ public:
 	inline Triangle getTriangle(int index) { return model[index]; }; // get normal by index
 
 
-	//call methods 
-	void CalcNormals();
+	//class methods 
+	void calcNormals();
+	Vector4 calcCentroid();
 };
