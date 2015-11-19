@@ -22,9 +22,9 @@ public:
 	//destructor
 	~Vector4();
 
-	//class methods
-	//const Vector4& dot(const Vector4& V);
-	//const Vector4& cross(const Vector4& V);
+
+	//get functions
+	const double getSize()const;
 
 	//operators
 	double &operator[](int i);
@@ -33,13 +33,13 @@ public:
 	const bool operator == (const Vector4& V)const;
 	const bool operator != (const Vector4& V)const;
 	const Vector4& operator += (const Vector4& V);
-	const Vector4 operator + (const Vector4& V) ;
-	const Vector4& operator -= (const Vector4& V) ;
-	const Vector4 operator - (const Vector4& V) ;
+	const Vector4 operator + (const Vector4& V)const;
+	const Vector4& operator -= (const Vector4& V);
+	const Vector4 operator - (const Vector4& V)const;
 
-	double operator*(const Vector4& V); //Dot product 
-	Vector4 operator^(const Vector4& V); //Cross product
-	Vector4 operator*(const double num); //scalar*vector
+	const double operator*(const Vector4& V)const; //Dot product 
+	const Vector4 operator^(const Vector4& V)const; //Cross product
+	const Vector4 operator*(const double num)const; //scalar*vector
 
 	const Vector4& operator *= (const Matrix4x4& M) ;//vector*matrix
 	const Vector4 operator * (const Matrix4x4& M);

@@ -23,4 +23,7 @@ public:
 	inline Vector4& operator[](int index) { return vertices[index]; }
 	inline const Vector4& operator[](int index) const { return vertices[index]; }
 
+	//class methods
+	Vector4 calcNormal();
+
 };
