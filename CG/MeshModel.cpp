@@ -16,7 +16,7 @@ MeshModel::MeshModel(Wavefront_obj & J)
 		if (has_normals)
 			v.normal = J.m_normals[i];
 		else
-			CalcNormals();
+			calcNormals();
 		vertices.push_back(v);
 	}
 }
@@ -28,6 +28,10 @@ MeshModel::~MeshModel()
 Vector4 MeshModel::getCentroid()
 {
 	return this->centroid;
+}
+
+void MeshModel::calcNormals()
+{
 }
 
 Vector4 MeshModel::calcCentroid()
