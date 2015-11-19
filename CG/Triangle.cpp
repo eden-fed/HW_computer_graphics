@@ -12,6 +12,14 @@ Triangle::Triangle(Vector4 & v1, Vector4 & v2, Vector4 & v3)
 	this->normal = calcNormal();
 }
 
+Triangle::Triangle(int * v1, int * v2, int * v3)
+{
+	vertices[0] = Vector4(v1[0], v1[1], v1[2], 1);
+	vertices[1] = Vector4(v2[0], v2[1], v2[2], 1);
+	vertices[2] = Vector4(v3[0], v3[1], v3[2], 1);
+	this->normal = calcNormal();
+}
+
 Triangle::Triangle(Vector4 & v1, Vector4 & v2, Vector4 & v3, Vector4 & n)
 {
 	this->vertices[0] = v1;

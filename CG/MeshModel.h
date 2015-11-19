@@ -11,7 +11,7 @@ class MeshModel
 		//bool normalIsSet;
 	}vertexInfo;
 
-	Wavefront_obj obj;
+	//Wavefront_obj obj;
 	std::vector<vertexInfo>  vertices;
 	std::vector<Triangle> model;
 	Vector4 centroid;//****temp**** may not need it 

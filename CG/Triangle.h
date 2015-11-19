@@ -11,6 +11,7 @@ public:
 	//constructors
 	Triangle();
 	Triangle(Vector4& v1, Vector4& v2, Vector4& v3);
+	Triangle(int* v1, int* v2, int* v3);
 	Triangle(Vector4& v1, Vector4& v2, Vector4& v3, Vector4& n);
 
 	//destructor
