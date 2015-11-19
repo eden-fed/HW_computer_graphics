@@ -16,7 +16,7 @@ MeshModel::MeshModel(Wavefront_obj & J)
 		if (has_normals)
 			v.normal = J.m_normals[i];
 		else
-			CalcNormals();
+			calcNormals();
 		vertices.push_back(v);
 	}
 }
@@ -28,6 +28,23 @@ MeshModel::~MeshModel()
 Vector4 MeshModel::getCentroid()
 {
 	return this->centroid;
+}
+
+void MeshModel::calcNormals()
+{
+	Vector4 sumVector;
+	int sumArea;
+	for (int i = 0; i < vertices.size(); i++) {
+		sumVector.setVlaues(0,0,0,1);
+		sumArea = 0;
+		for (int j = 0; j < model.size(); j++) {
+			if (model[j].isVertexInTriangle(vertices[i].vertex)) {
+				sumVector += model[j].getNormal()*model[j].getArea();
+				sumArea += model[j].getArea();
+			}
+		}
+		vertices[i].normal = sumVector * (1 / sumArea);
+	}
 }
 
 Vector4 MeshModel::calcCentroid()

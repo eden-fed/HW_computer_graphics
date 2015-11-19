@@ -22,6 +22,8 @@ public:
 	//destructor
 	~Vector4();
 
+	//set
+	void setVlaues(const double valX, const double valY, const double valZ, const double valW);
 
 	//get functions
 	const double getSize()const;

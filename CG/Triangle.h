@@ -25,5 +25,6 @@ public:
 
 	//class methods
 	Vector4 calcNormal();
+	const bool isVertexInTriangle(Vector4& V);
 
 };
