@@ -24,6 +24,14 @@ Vector4::~Vector4()
 {
 }
 
+void Vector4::setVlaues(const double valX, const double valY, const double valZ, const double valW)
+{
+	this->vectorValues[0] = valX;
+	this->vectorValues[1] = valY;
+	this->vectorValues[2] = valZ;
+	this->vectorValues[3] = valW;
+}
+
 
 const double Vector4::getSize() const
 {
@@ -102,7 +110,7 @@ const Vector4 Vector4::operator-(const Vector4 & V) const
 const double Vector4::operator*(const Vector4 & V)const
 {
 	double retVal;
-		for (int i = 0; i <= 3; i++) {
+		for (int i = 0; i < 3; i++) {
 			retVal += (*this)[i] * V[i];
 			//retVal += (*this)[0] * V[0];
 		}
