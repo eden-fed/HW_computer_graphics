@@ -14,7 +14,7 @@ class MeshModel
 	Wavefront_obj obj;
 	std::vector<vertexInfo>  vertices;
 	std::vector<Triangle> model;
-	Vector4 center;//****temp**** may not need it 
+	Vector4 centroid;//****temp**** may not need it 
 
 public:
 	//constructors
