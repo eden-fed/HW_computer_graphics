@@ -22,14 +22,16 @@ LARGE_INTEGER Frequency;
 /*int g_StartX = 0;
 int g_StartY = 0;
 int g_EndX = 0;
-int g_EndY = 0;*/
+int g_EndY = 0;
+int g_Op = 0;*/
 unsigned int g_Color = 0xff0000ff;
-int g_Op = 0;
+bool g_normals = false;
 
 double g_quaternion[4] = {0.0, 0.0, 0.0, 1.0};
 
 
 void TW_CALL loadOBJModel(void* clientData);
+//void TW_CALL showNormals(void* clientData);
 void initScene();
 void initGraphics(int argc, char *argv[]);
 void drawScene();
@@ -100,7 +102,9 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "Operation", TW_TYPE_INT32, &g_Op, " min=0.00 max=2 step=1 keyIncr=z keyDecr=Z help='Operation: 0-reg line, 1-house, 2-star.' ");*/
 
 	TwAddButton(bar, "LoadOBJ",loadOBJModel, NULL, "help='button to load obf file'");
-	
+	//TwAddButton(bar, "showNormals", showNormals, NULL, "help='button to indicate if to show normals or not'");
+	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
+
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
 
@@ -134,6 +138,13 @@ void TW_CALL loadOBJModel(void *data)
 
 }
 
+/*void TW_CALL showNormals(void* clientData)
+{
+	static bool show = true;
+	std::cout << "show=" << show << std::endl;
+	show = false;
+
+}*/
 
 //do not change this function unless you really know what you are doing!
 void initGraphics(int argc, char *argv[])

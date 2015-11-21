@@ -7,6 +7,7 @@ class Object
 {
 	MeshModel mshMdl;
 	Matrix4x4 mdlMtrx;
+	bool show_normals;
 
 public:
 	//constructors
@@ -15,5 +16,7 @@ public:
 	//destructor
 	~Object();
 
+	void setShowNormals(bool norm);
+	bool getShowNormals() { return show_normals; };
 
 };
