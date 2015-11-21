@@ -1,4 +1,5 @@
 #include "MeshModel.h"
+#include "Matrix4x4.h"
 
 MeshModel::MeshModel()
 {
@@ -25,7 +26,7 @@ MeshModel::MeshModel(Wavefront_obj & J)
 		t = (Triangle)J.m_faces[i];
 		model.push_back(t);
 	}
-
+	////////////////////////////////////
 	this->calcCentroid();
 }
 
@@ -55,11 +56,32 @@ void MeshModel::calcNormals()
 	}
 }
 
-Vector4 MeshModel::calcCentroid()
+void MeshModel::calcCentroid()
 {
 	Vector4 sum;
 	for (int i = 0; i < vertices.size(); i++) {
 		sum += vertices[i].vertex;
 	}
-	return sum *(1 / vertices.size());
+	this->centroid = sum * (1 / vertices.size());
+}
+
+void MeshModel::transformMshMdl(Matrix4x4 M)
+{
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].vertex = vertices[i].vertex*M;
+		vertices[i].normal = vertices[i].normal*M;
+	}
+	for (int j = 0; j < model.size(); j++) {
+		for (int k = 0; k < 3; k++) {
+			model[j][k] = model[j][k] * M;
+		}
+	}
+}
+
+void MeshModel::moveCentroidToOrigin()
+{
+	Matrix4x4 M(1,0,0,0,0,1,0,0,0,0,1,0,(-1 * this->centroid[0]), (-1 * this->centroid[1]), (-1 * this->centroid[2]),1);
+	transformMshMdl(M);
+
+
 }

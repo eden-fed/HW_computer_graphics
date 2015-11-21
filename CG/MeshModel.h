@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector4.h"
+#include "Matrix4x4.h"
 #include "Triangle.h"
 #include "Obj Parser\wavefront_obj.h"
 
@@ -36,5 +37,7 @@ public:
 
 	//class methods 
 	void calcNormals();
-	Vector4 calcCentroid();
+	void calcCentroid();
+	void transformMshMdl(Matrix4x4 M);
+	void moveCentroidToOrigin();
 };
