@@ -65,7 +65,7 @@ void MeshModel::calcCentroid()
 	this->centroid = sum * (1 / vertices.size());
 }
 
-void MeshModel::transformMshMdl(Matrix4x4 M)
+void MeshModel::transformMshMdl(Matrix4x4 &M)
 {
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].vertex = vertices[i].vertex*M;

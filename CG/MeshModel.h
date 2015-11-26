@@ -38,6 +38,6 @@ public:
 	//class methods 
 	void calcNormals();
 	void calcCentroid();
-	void transformMshMdl(Matrix4x4 M);
+	void transformMshMdl(Matrix4x4 &M);
 	void moveCentroidToOrigin();
 };

@@ -54,7 +54,7 @@ const Line & Line::operator=(const Line & line)
 
 const bool Line::operator==(const Line & line) const
 {
-	if (this->startCrd == line.startCrd && this->endCrd== line.endCrd)
+	if ((this->startCrd == line.startCrd && this->endCrd== line.endCrd)|| (this->startCrd == line.endCrd  && this->endCrd == line.startCrd))
 		return true;
 	else
 		return false;
@@ -62,10 +62,7 @@ const bool Line::operator==(const Line & line) const
 
 const bool Line::operator!=(const Line & line) const
 {
-	if (this->startCrd != line.startCrd || this->endCrd != line.endCrd)
-		return true;
-	else
-		return false;
+		return !(*this==line);
 }
 
 void Line::drawline()
