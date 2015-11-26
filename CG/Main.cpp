@@ -26,6 +26,7 @@ int g_EndY = 0;
 int g_Op = 0;*/
 unsigned int g_Color = 0xff0000ff;
 bool g_normals = false;
+bool g_bbox = false;
 
 double g_quaternion[4] = {0.0, 0.0, 0.0, 1.0};
 
@@ -104,6 +105,7 @@ int main(int argc, char *argv[])
 	TwAddButton(bar, "LoadOBJ",loadOBJModel, NULL, "help='button to load obf file'");
 	//TwAddButton(bar, "showNormals", showNormals, NULL, "help='button to indicate if to show normals or not'");
 	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
+	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
 
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
