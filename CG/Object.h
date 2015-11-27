@@ -28,6 +28,7 @@ public:
 	std::set<Line>& getLinesToDraw() { return linesToDraw; };
 	//class methods
 	void populatelinesToDraw();
+	void drawObjectTriangles();
 	void drawObject();
 };
 #endif

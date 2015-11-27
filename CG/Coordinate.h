@@ -1,9 +1,7 @@
-#include <iostream>
-#include "Renderer.h"
-
 #ifndef COORDINATE_H
 #define COORDINATE_H
-
+#include <iostream>
+#include "Renderer.h"
 
 class Coordinate
 {

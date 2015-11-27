@@ -335,8 +335,10 @@ void Display()
 	if (!clear) {
 		//drawScene();
 		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		model.calcCentroid();
+		model.moveCentroidToOrigin();
 		Object sceneObject(model, mat);
-		sceneObject.drawObject();
+		sceneObject.drawObjectTriangles();
 
 		Line ln;
 		ln.setStartCrd(300, 200, g_Color);
