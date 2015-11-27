@@ -93,6 +93,26 @@ const Matrix4x4 Matrix4x4::operator*(const Matrix4x4 & m) const
 	return newMat;
 }
 
+void Matrix4x4::setAllValues(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4, double w1, double w2, double w3, double w4)
+{
+	v1[0][0] = x1;
+	v1[0][1] = x2;
+	v1[0][2] = x3;
+	v1[0][3] = x4;
+	v1[1][0] = y1;
+	v1[1][1] = y2;
+	v1[1][2] = y3;
+	v1[1][3] = y4;
+	v1[2][0] = z1;
+	v1[2][1] = z2;
+	v1[2][2] = z3;
+	v1[2][3] = z4;
+	v1[3][0] = w1;
+	v1[3][1] = w2;
+	v1[3][2] = w3;
+	v1[3][3] = w4;
+}
+
 /*const Vector4 Matrix4x4::operator*(const Vector4 & v) const
 {
 	Vector4 newV;
