@@ -15,3 +15,24 @@ void Object::setShowNormals(bool norm)
 {
 	show_normals = norm;
 }
+
+void Object::populatelinesToDraw()
+{
+	Line ln;
+	for (int i = 0; i < mshMdl.getNumberOfTriangles(); i++) {
+		for (int j = 0; j < 3; j++) {
+			ln.setStartCrd(mshMdl.getTriangle(i)[j],0xff0000ff);
+			ln.setEndCrd(mshMdl.getTriangle(i)[(j+1)%3], 0xff0000ff);
+			linesToDraw.insert(ln);
+		}
+	}
+}
+
+void Object::drawObject()
+{
+	Line ln;
+	for (std::set<Line>::iterator it = this->linesToDraw.begin(); it != this->linesToDraw.end(); ++it) {
+		ln = *it;
+		ln.drawline();
+	}
+}

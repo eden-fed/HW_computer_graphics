@@ -24,3 +24,5 @@ void Renderer::drawPixels(const std::vector<Pixel>& pixels)
 
 	glDrawArrays(GL_POINTS, 0, numPixels);
 }
+
+

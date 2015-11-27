@@ -109,7 +109,7 @@ const Vector4 Vector4::operator-(const Vector4 & V) const
 
 const double Vector4::operator*(const Vector4 & V)const
 {
-	double retVal;
+	double retVal=0;
 		for (int i = 0; i < 3; i++) {
 			retVal += (*this)[i] * V[i];
 			//retVal += (*this)[0] * V[0];
@@ -159,5 +159,25 @@ const Vector4 Vector4::operator*(const Matrix4x4 & M)
 			}
 		}
 	return V;
+}
+
+Vector4 Vector4::roundVectorValues()
+{
+	Vector4 retVal;
+	for (int i = 0; i < 3; i++) {
+		retVal[i] = roundNum((*this)[i]);
+	}
+	return retVal;
+}
+
+int Vector4::roundNum(float f)
+{
+	int i = f;
+	if (f - i <= 0.5) {
+		return i;
+	}
+	else {
+		return i + 1;
+	}
 }
 

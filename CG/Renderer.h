@@ -1,5 +1,7 @@
-#pragma once
+//#pragma once
 
+#ifndef RENDERER_H
+#define RENDERER_H
 #include <vector>
 #include <freeglut/include/GL/freeglut.h>
 
@@ -16,7 +18,9 @@ public:
 	~Renderer();
 
 	void drawPixels(const std::vector<Pixel>& pixels);
-
 protected:
 
 };
+
+
+#endif

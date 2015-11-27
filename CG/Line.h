@@ -1,10 +1,12 @@
-#include <iostream>
-#include "Coordinate.h"
-#include "Renderer.h"
+
 
 
 #ifndef LINE_H
 #define LINE_H
+#include <iostream>
+#include "Coordinate.h"
+#include "Vector4.h"
+#include "Renderer.h"
 
 #define ABS(x) ((x)<0 ? (-(x)) : (x))
 
@@ -26,6 +28,7 @@ public:
 	//constructors
 	Line();
 	Line(const Coordinate valStartCrd, const Coordinate valEndCrd);
+	Line(Vector4& V1, Vector4& V2, int color);
 
 	//copy constructor
 	Line(const Line& line);
@@ -38,8 +41,10 @@ public:
 	inline const Coordinate getEndCrd()const { return endCrd; }
 
 	//set functions
+	void setStartCrd(Vector4& V1, int color);
 	void setStartCrd(const Coordinate startCrd);
 	void setStartCrd(const int valX, const int valY, unsigned int valColor);
+	void setEndCrd(Vector4& V2, int color);
 	void setEndCrd(const Coordinate endCrd);
 	void setEndCrd(const int valX, const int valY, unsigned int valColor);
 	
@@ -47,6 +52,7 @@ public:
 	const Line& operator = (const Line& line);
 	const bool operator == (const Line& line)const;//the (==) sighn compares X and Y values of startCrd and endCrd
 	const bool operator != (const Line& line)const;//the (!=) sighn compares X and Y values of startCrd and endCrd
+	const bool operator < (const Line& line)const; //used for c++ set interface
 
 	//line methods
 	void drawline();

@@ -46,6 +46,10 @@ public:
 	const Vector4& operator *= (const Matrix4x4& M) ;//vector*matrix
 	const Vector4 operator * (const Matrix4x4& M);
 
+	//class methods
+	Vector4 roundVectorValues();
+	int roundNum(float F);
+
 };
 
 #endif

@@ -9,6 +9,20 @@ Line::Line(const Coordinate valStart, const Coordinate valEnd)
 	this->endCrd = valEnd;
 }
 
+Line::Line(Vector4 & V1, Vector4 & V2, int color)
+{
+	Vector4 roundV1, roundV2;
+	roundV1 = V1.roundVectorValues();
+	roundV2 = V2.roundVectorValues();
+	this->startCrd.setX(roundV1[0]);
+	this->startCrd.setY(roundV1[1]);
+	this->startCrd.setColor(color);
+	this->endCrd.setX(roundV2[0]);
+	this->endCrd.setY(roundV2[1]);
+	this->endCrd.setColor(color);
+
+}
+
 Line::Line(const Line & line)
 {
 	*this = line;
@@ -16,6 +30,15 @@ Line::Line(const Line & line)
 
 Line::~Line()
 {
+}
+
+void Line::setStartCrd(Vector4 & V1, int color)
+{
+	Vector4 roundV1;
+	roundV1 = V1.roundVectorValues();
+	this->startCrd.setX(roundV1[0]);
+	this->startCrd.setY(roundV1[1]);
+	this->startCrd.setColor(color);
 }
 
 void Line::setStartCrd(const Coordinate startCrd)
@@ -28,6 +51,15 @@ void Line::setStartCrd(const int valX, const int valY, unsigned int valColor)
 	this->startCrd.setX(valX);
 	this->startCrd.setY(valY);
 	this->startCrd.setColor(valColor);
+}
+
+void Line::setEndCrd(Vector4 & V2, int color)
+{
+	Vector4 roundV2;
+	roundV2 = V2.roundVectorValues();
+	this->endCrd.setX(roundV2[0]);
+	this->endCrd.setY(roundV2[1]);
+	this->endCrd.setColor(color);
 }
 
 void Line::setEndCrd(const Coordinate endCrd)
@@ -65,7 +97,12 @@ const bool Line::operator!=(const Line & line) const
 		return !(*this==line);
 }
 
-void Line::drawline()
+const bool Line::operator<(const Line & line) const
+{
+	return this->startCrd.getX() < line.startCrd.getX();
+}
+
+void Line::drawline() 
 {
 	Line::eLineType elineType;
 	Coordinate C1=startCrd, C2=endCrd;
@@ -110,7 +147,7 @@ void Line::drawline()
 	renderer.drawPixels(pixels);
 }
 
-Line::eLineType Line::HelpGetLineType(Coordinate & C1, Coordinate & C2)
+Line::eLineType Line::HelpGetLineType(Coordinate & C1, Coordinate & C2) 
 {
 	bool lowSlope;
 
