@@ -7,8 +7,8 @@ MeshModel::MeshModel()
 MeshModel::MeshModel(Wavefront_obj & J)
 {
 
-	bool has_normals;
-	if (J.m_normals.size() > 0) {
+	bool has_normals=false;
+	if (J.m_normals.size() != 0) {
 		has_normals = true;
 	}
 	for (int i = 0; i < J.m_points.size(); i++) {
@@ -18,16 +18,21 @@ MeshModel::MeshModel(Wavefront_obj & J)
 			v.normal = J.m_normals[i];
 		vertices.push_back(v);
 	}
-	if (!has_normals)
-		this->calcNormals();
+
+	this->moveCentroidToOrigin();
+	this->scale10units();
+
+	/*for (int i = 0; i < J.m_points.size();i++) {
+		J.m_points[i] = vertices[i].vertex;
+	}*/
 
 	for (int i = 0; i < J.m_faces.size(); i++) {
-		Triangle t;
-		t = (Triangle)J.m_faces[i];
-		model.push_back(t);
+		Triangle t(vertices[J.m_faces[i].v[0]].vertex, vertices[J.m_faces[i].v[1]].vertex, vertices[J.m_faces[i].v[2]].vertex);
+		faces.push_back(t);
 	}
-	////////////////////////////////////
-	this->calcCentroid();
+
+	if (!has_normals)
+		this->calcNormals();
 }
 
 MeshModel::~MeshModel()
@@ -46,10 +51,10 @@ void MeshModel::calcNormals()
 	for (int i = 0; i < vertices.size(); i++) {
 		sumVector.setVlaues(0, 0, 0, 1);
 		sumArea = 0;
-		for (int j = 0; j < model.size(); j++) {
-			if (model[j].isVertexInTriangle(vertices[i].vertex)) {
-				sumVector += model[j].getNormal()*model[j].getArea();
-				sumArea += model[j].getArea();
+		for (int j = 0; j < faces.size(); j++) {
+			if (faces[j].isVertexInTriangle(vertices[i].vertex)) {
+				sumVector += faces[j].getNormal()*faces[j].getArea();
+				sumArea += faces[j].getArea();
 			}
 		}
 		vertices[i].normal = sumVector * (1 / sumArea);
@@ -62,7 +67,7 @@ void MeshModel::calcCentroid()
 	for (int i = 0; i < vertices.size(); i++) {
 		sum += vertices[i].vertex;
 	}
-	this->centroid = sum * (1 / vertices.size());
+	this->centroid = sum * (1.0 / vertices.size());
 }
 
 void MeshModel::transformMshMdl(Matrix4x4 &M)
@@ -71,17 +76,42 @@ void MeshModel::transformMshMdl(Matrix4x4 &M)
 		vertices[i].vertex = vertices[i].vertex*M;
 		vertices[i].normal = vertices[i].normal*M;
 	}
-	for (int j = 0; j < model.size(); j++) {
+	for (int j = 0; j < faces.size(); j++) {
 		for (int k = 0; k < 3; k++) {
-			model[j][k] = model[j][k] * M;
+			faces[j][k] = faces[j][k] * M;
 		}
 	}
 }
 
+void MeshModel::transformMshMdlonlyVertices(Matrix4x4 &M)
+{
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].vertex = vertices[i].vertex*M;
+		vertices[i].normal = vertices[i].normal*M;
+	}
+}
+
+
+
 void MeshModel::moveCentroidToOrigin()
 {
-	Matrix4x4 M(1,0,0,0,0,1,0,0,0,0,1,0,(-1 * this->centroid[0]), (-1 * this->centroid[1]), (-1 * this->centroid[2]),1);
-	transformMshMdl(M);
+	this->calcCentroid();
+	Matrix4x4 M(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, (-1 * this->centroid[0]), (-1 * this->centroid[1]), (-1 * this->centroid[2]), 1);
+	transformMshMdlonlyVertices(M);
+}
 
-
+void MeshModel::scale10units()
+{
+	double maxVal = 0.0;
+	for (int i = 0; i < vertices.size(); i++){
+		for (int j = 0; j < 3; j++) 
+				if ((vertices[i].vertex[j])>maxVal) {
+					maxVal = vertices[i].vertex[j];
+				}
+		/*if (vertices[i].vertex[0]>maxVal)
+			maxVal = vertices[i].vertex[0];*/
+		}
+	double scaleValue = 10.0 / maxVal;
+	Matrix4x4 M(scaleValue, 0, 0, 0, 0, scaleValue, 0, 0, 0, 0, scaleValue, 0, 0, 0, 0, 1);
+	transformMshMdlonlyVertices(M);
 }
