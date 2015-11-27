@@ -1,7 +1,7 @@
 #include "Object.h"
 
-Object::Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx) {
-	//this->mshMdl = mshMdl;
+Object::Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx ){
+	this->mshMdl = mshMdl;
 	this->mdlMtrx = mdlMtrx;
 	show_normals = false;
 }
@@ -30,6 +30,7 @@ void Object::populatelinesToDraw()
 
 void Object::drawObject()
 {
+	std::cout << "in drawObject!! "<< std::endl;
 	Line ln;
 	for (std::set<Line>::iterator it = this->linesToDraw.begin(); it != this->linesToDraw.end(); ++it) {
 		ln = *it;

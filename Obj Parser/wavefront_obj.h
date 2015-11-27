@@ -1,7 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This simple obj parser assumes  that all polygons in the mesh are triangles and will fail otherwise //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+#ifndef WAVEFRONT_OBJ_H
+#define WAVEFRONT_OBJ_H
 #include <vector>
 #include "CG\Vector4.h"
 #include "CG\Triangle.h"
@@ -36,5 +37,5 @@ struct Wavefront_obj
 	bool load_file(std::wstring filename);
 
 };
-
+#endif
 

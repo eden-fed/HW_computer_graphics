@@ -13,6 +13,9 @@
 #include "Renderer.h"
 #include "Obj Parser/wavefront_obj.h"
 #include "Line.h"
+#include "MeshModel.h"
+#include "Object.h"
+#include "Matrix4x4.h"
 
 
 LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing 
@@ -25,14 +28,37 @@ int g_EndX = 0;
 int g_EndY = 0;
 int g_Op = 0;*/
 unsigned int g_Color = 0xff0000ff;
-bool g_normals = false;
-bool g_bbox = false;
+
+double g_near = 0.01;
+double g_far = 10000;
+double g_fovy = 60;
+
+double g_translation = 0.0;
+double g_scale = 0.0;
+double g_xRotation = 0.0;
+double g_yRotation = 0.0;
+double g_zRotation = 0.0;
 
 double g_quaternion[4] = {0.0, 0.0, 0.0, 1.0};
 
+//global veriables for glut functions
+bool g_normals = false;
+bool g_bbox = false;
+bool g_projection = true;
+
+MeshModel model;
+bool clear = true;
 
 void TW_CALL loadOBJModel(void* clientData);
-//void TW_CALL showNormals(void* clientData);
+void TW_CALL showNormals(void* clientData);
+void TW_CALL showBbox(void* clientData);
+void TW_CALL centerCamera(void* clientData);
+void TW_CALL applyTranslation(void* clientData);
+void TW_CALL applyScale(void* clientData);
+void TW_CALL applyXrotation(void* clientData);
+void TW_CALL applyYrotation(void* clientData);
+void TW_CALL applyZrotation(void* clientData);
+
 void initScene();
 void initGraphics(int argc, char *argv[]);
 void drawScene();
@@ -83,29 +109,35 @@ int main(int argc, char *argv[])
 	//add 'g_Scale' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
 	//TwAddVarRW(bar, "Scale", TW_TYPE_DOUBLE, &g_Scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z help='Scale the object (1=original size).' ");
 	//***********************************************************************************
-/*  **********gui for hw1*********
-	//add 'g_StartX' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	TwAddVarRW(bar, "StartX", TW_TYPE_INT32, &g_StartX, " min=0.00 max=1366 step=1 keyIncr=z keyDecr=Z help='Start X position (0.0=original size).' ");
 
-	//add 'g_StartY' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	TwAddVarRW(bar, "StartY", TW_TYPE_INT32, &g_StartY, " min=0.00 max=768 step=1 keyIncr=x keyDecr=X help='Start Y position (0.0=original size).' ");
-
-	//add 'g_EndX' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	TwAddVarRW(bar, "EndX", TW_TYPE_INT32, &g_EndX, " min=0.00 max=1366 step=1 keyIncr=a keyDecr=A help='End X position (0.0=original size).' ");
-
-	//add 'g_EndY' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	TwAddVarRW(bar, "EndY", TW_TYPE_INT32, &g_EndY, " min=0.00 max=768 step=1 keyIncr=s keyDecr=S help='End Y position (0.0=original size).' ");
-
-	//add 'g_EndY' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	TwAddVarRW(bar, "Color", TW_TYPE_COLOR32, &g_Color, " coloralpha = true help='RGBA color format - 4 components of 8 bits each - 0xAABBGGRR - AA alpha, BB blue, RR red' ");
-
-	//add 'g_EndY' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	TwAddVarRW(bar, "Operation", TW_TYPE_INT32, &g_Op, " min=0.00 max=2 step=1 keyIncr=z keyDecr=Z help='Operation: 0-reg line, 1-house, 2-star.' ");*/
 
 	TwAddButton(bar, "LoadOBJ",loadOBJModel, NULL, "help='button to load obf file'");
-	//TwAddButton(bar, "showNormals", showNormals, NULL, "help='button to indicate if to show normals or not'");
-	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
-	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
+	//TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
+	TwAddButton(bar, "showNormals", showNormals, NULL, "help='button to indicate if to show normals or not'");
+	//TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
+	TwAddButton(bar, "showBbox", showBbox, NULL, "help='button to indicate if to show the bbox or not'");
+	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projection, " help='true = orthographic, false = perspective.' ");
+	TwAddVarRW(bar, "perspective-near", TW_TYPE_DOUBLE, &g_near, " keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "perspective-far", TW_TYPE_DOUBLE, &g_far, " keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "perspective-fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=z keyDecr=Z ' ");
+
+	//point the camera to the center of the model 
+	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
+
+	TwAddVarRW(bar, "translation", TW_TYPE_DOUBLE, &g_translation, " keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply translation", applyTranslation, NULL, "help='apply translation'");
+
+	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " in=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply scale", &applyScale, NULL, "help='apply scale'");
+
+	TwAddVarRW(bar, "x-rotation", TW_TYPE_INT32, &g_xRotation, " keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply x rotation", &applyXrotation, NULL, "min = 0 max = 180 step=1 help='apply scale'");
+
+	TwAddVarRW(bar, "y-rotation", TW_TYPE_INT32, &g_yRotation, " keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply y rotation", &applyYrotation, NULL, "min = 0 max = 180 step=1 help='apply scale'");
+
+	TwAddVarRW(bar, "z-rotation", TW_TYPE_INT32, &g_zRotation, " keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, "min = 0 max = 180 step=1 help='apply scale'");
 
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
@@ -124,11 +156,15 @@ void TW_CALL loadOBJModel(void *data)
 	Wavefront_obj objScene;
 	bool result = objScene.load_file(str);
 
-	//store the values in Object, MeshModel...
+	
 
 	if(result)
 	{
 		std::cout << "The obj file was loaded successfully" << std::endl;
+		//store the values in Object, MeshModel...
+		//draw the object for the first time
+		MeshModel m(objScene);
+		model = m;
 	}
 	else
 	{
@@ -137,17 +173,53 @@ void TW_CALL loadOBJModel(void *data)
 
 	std::cout << "The number of vertices in the model is: " << objScene.m_points.size() << std::endl;
 	std::cout << "The number of triangles in the model is: " << objScene.m_faces.size() << std::endl;
-
+	clear = false;
+	glutPostRedisplay();
 }
 
-/*void TW_CALL showNormals(void* clientData)
+void TW_CALL showNormals(void* clientData)
 {
-	static bool show = true;
-	std::cout << "show=" << show << std::endl;
-	show = false;
+	if (g_normals)
+	{
+		//code for drawing normals
+	}
+	else
+	{
+		//code for deleting normals
+	}
 
-}*/
+}
+void TW_CALL showBbox(void* clientData)
+{
+	if (g_normals)
+	{
+		//code for drawing bbox
+	}
+	else
+	{
+		//code for deleting bbox
+	}
 
+}
+void TW_CALL centerCamera(void* clientData) {
+	//code for centering the camera
+
+}
+void TW_CALL applyTranslation(void* clientData) {
+
+}
+void TW_CALL applyScale(void* clientData) {
+
+}
+void TW_CALL applyXrotation(void* clientData) {
+
+}
+void TW_CALL applyYrotation(void* clientData) {
+
+}
+void TW_CALL applyZrotation(void* clientData) {
+
+}
 //do not change this function unless you really know what you are doing!
 void initGraphics(int argc, char *argv[])
 {
@@ -230,7 +302,9 @@ void drawScene()
 	}
 
 }*/
-void drawScene(){}
+void drawScene(){
+//draw the scene with new values
+}
 
 //this will make sure that integer coordinates are mapped exactly to corresponding pixels on screen
 void glUseScreenCoordinates(int width, int height)
@@ -248,9 +322,9 @@ void glUseScreenCoordinates(int width, int height)
 // Callback function called by GLUT to render screen
 void Display()
 {
-// 	static int counter = 0;
-// 	std::cout << "C: " << counter << std::endl;
-// 	counter++;
+ 	/*static int counter = 0;
+ 	std::cout << "C: " << counter << std::endl;
+ 	counter++;*/
 
     glClearColor(0, 0, 0, 1); //background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -258,7 +332,17 @@ void Display()
 	//time measuring - don't delete
 	QueryPerformanceCounter(&StartingTime);
 
- 	drawScene();
+	if (!clear) {
+		//drawScene();
+		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		Object sceneObject(model, mat);
+		sceneObject.drawObject();
+
+		Line ln;
+		ln.setStartCrd(300, 200, g_Color);
+		ln.setEndCrd(600, 200, g_Color);
+		ln.drawline();
+	}
 
 	//time measuring - don't delete
 	QueryPerformanceCounter(&EndingTime);
