@@ -24,6 +24,8 @@ public:
 	const Matrix4x4 operator - (const Matrix4x4& m) const;
 	const Matrix4x4 operator * (const Matrix4x4& m) const;
 
+
+	const Matrix4x4 transpose();
 	void setAllValues(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4, double w1, double w2, double w3, double w4);
 	/*const Vector4 operator * (const Vector4& v) const;*/
 	

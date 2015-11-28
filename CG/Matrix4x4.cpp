@@ -93,6 +93,17 @@ const Matrix4x4 Matrix4x4::operator*(const Matrix4x4 & m) const
 	return newMat;
 }
 
+const Matrix4x4 Matrix4x4::transpose()
+{
+	Matrix4x4 ret;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			ret[i][j] = *this[j][i];
+		}
+	}
+	return ret;
+}
+
 void Matrix4x4::setAllValues(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4, double w1, double w2, double w3, double w4)
 {
 	v1[0][0] = x1;
