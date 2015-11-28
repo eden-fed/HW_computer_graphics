@@ -3,7 +3,7 @@
 
 Camera::Camera()
 {
-	setViewMtrx({ 0,0,-200,0 }, { 0,0,0,0 }, { 0,-1,0,0 });
+	setViewMtrx({ 0,0,200,0 }, { 0,0,0,0 }, { 1,1,-1,0 });
 	setPerspectiveMatrix(60, 0.01, 10000, PERSPECTIVE);
 }
 
@@ -18,15 +18,20 @@ void Camera::setViewMtrx(Vector4 vPosition, Vector4 vDirection, Vector4 vUp)
 	and V is the view matrix which move it to the origien
 	then I=C*V
 	*/
-
+	
 	// The "look-at" vector. 
 	Vector4 zaxis = (vPosition - vDirection).normalize();
+
 	// The "right" vector.
 	Vector4 xaxis = (vUp ^ zaxis).normalize();
+
 	// The "up" vector.
 	Vector4 yaxis = (zaxis ^ xaxis).normalize();
-	
-	viewMtrx.setAllValues(xaxis[0], yaxis[0], zaxis[0],0, xaxis[1], yaxis[1], zaxis[1],0, xaxis[2], yaxis[2], zaxis[2], 0, -vPosition[0], -vPosition[1], -vPosition[2],1);
+
+	//viewMtrx.setAllValues(xaxis[0], yaxis[0], zaxis[0],0, xaxis[1], yaxis[1], zaxis[1],0, xaxis[2], yaxis[2], zaxis[2], 0, -vPosition[0], -vPosition[1], -vPosition[2],1);
+
+	viewMtrx.setAllValues(xaxis[0], xaxis[1], xaxis[2],0, yaxis[0], -yaxis[1], yaxis[2],0, zaxis[0], zaxis[1], zaxis[2], 0, -vPosition[0], -vPosition[1], -vPosition[2],1);
+
 
 }
 
