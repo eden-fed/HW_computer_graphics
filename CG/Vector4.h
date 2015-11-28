@@ -48,7 +48,10 @@ public:
 
 	//class methods
 	Vector4 roundVectorValues();
-	int roundNum(float F);
+	Vector4 normalize() const;
+
+	//helper functions
+	int helpRoundNum(float F);
 
 };
 

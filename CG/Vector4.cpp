@@ -165,12 +165,12 @@ Vector4 Vector4::roundVectorValues()
 {
 	Vector4 retVal;
 	for (int i = 0; i < 3; i++) {
-		retVal[i] = roundNum((*this)[i]);
+		retVal[i] = helpRoundNum((*this)[i]);
 	}
 	return retVal;
 }
 
-int Vector4::roundNum(float f)
+int Vector4::helpRoundNum(float f)
 {
 	int i = f;
 	if (f - i <= 0.5) {
@@ -179,5 +179,17 @@ int Vector4::roundNum(float f)
 	else {
 		return i + 1;
 	}
+}
+
+Vector4 Vector4::normalize() const
+{
+	Vector4 ret;
+	float size = this->getSize();
+	if (size != 0) {
+		for (int i = 0; i < 3; i++) {
+			ret[i] = (*this)[i] / size;
+		}
+	}
+	return ret;
 }
 

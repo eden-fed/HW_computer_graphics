@@ -99,7 +99,31 @@ const bool Line::operator!=(const Line & line) const
 
 const bool Line::operator<(const Line & line) const
 {
-	return this->startCrd.getX() < line.startCrd.getX();
+	//if they are equal then false
+	if (*this == line) {
+		return false;
+	}
+	//if the start coordinates are equal -> determine using the end coordinates
+	else if (this->startCrd == line.startCrd) {
+		//if x is equal -> determine using y
+		if (this->endCrd.getX() == line.endCrd.getX()) {
+			return this->endCrd.getY() < line.endCrd.getY();
+		}
+		else {
+			return this->endCrd.getX() < line.endCrd.getX();
+		}
+	}
+	//if the start coordinates are differant ->determine using the start coordinates
+	else {
+		//if x is equal -> determine using y
+		if (this->startCrd.getX() == line.startCrd.getX()) {
+			return this->startCrd.getY() < line.startCrd.getY();
+		}
+		else {
+			return this->startCrd.getX() < line.startCrd.getX();
+		}
+	}
+
 }
 
 void Line::drawline() 

@@ -47,7 +47,7 @@ Vector4 MeshModel::getCentroid()
 void MeshModel::calcNormals()
 {
 	Vector4 sumVector;
-	int sumArea;
+	double sumArea;
 	for (int i = 0; i < vertices.size(); i++) {
 		sumVector.setVlaues(0, 0, 0, 1);
 		sumArea = 0;
@@ -57,7 +57,7 @@ void MeshModel::calcNormals()
 				sumArea += faces[j].getArea();
 			}
 		}
-		vertices[i].normal = sumVector * (1 / sumArea);
+		vertices[i].normal = sumVector * (1.0 / sumArea);
 	}
 }
 

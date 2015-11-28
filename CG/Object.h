@@ -24,6 +24,7 @@ public:
 	void setShowNormals(bool norm);
 
 	//get functions
+	MeshModel& getMshMdl() { return mshMdl; };
 	bool getShowNormals() { return show_normals; };
 	std::set<Line>& getLinesToDraw() { return linesToDraw; };
 	//class methods

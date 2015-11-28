@@ -16,6 +16,7 @@
 #include "MeshModel.h"
 #include "Object.h"
 #include "Matrix4x4.h"
+#include "Camera.h"
 
 
 LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing 
@@ -334,15 +335,18 @@ void Display()
 
 	if (!clear) {
 		//drawScene();
+		
 		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		Object sceneObject(model, mat);
-		//sceneObject.drawObject();
-		sceneObject.drawObjectTriangles();
-
-		Line ln;
-		ln.setStartCrd(300, 200, g_Color);
-		ln.setEndCrd(600, 200, g_Color);
-		ln.drawline();
+#define test
+#ifdef test
+		Camera cam;
+		sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
+		Matrix4x4 matTest(20, 0, 0, 0, 0, 20, 0, 0, 0, 0, 20, 0, 400, 300, 0, 1);
+		sceneObject.getMshMdl().transformMshMdl(matTest);
+		sceneObject.drawObject();
+#endif
+		//sceneObject.drawObjectTriangles();
 	}
 
 	//time measuring - don't delete
