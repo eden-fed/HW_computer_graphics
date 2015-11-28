@@ -11,9 +11,10 @@ typedef enum {
 
 class Camera
 {
-	eProjectionType pType;
 	Matrix4x4 viewMtrx;
 	Matrix4x4 perspectiveMtrx;
+	float flFovy, flNear, flFar;
+	eProjectionType pType;
 
 public:
 	//constructors
@@ -24,11 +25,12 @@ public:
 
 	//get functions
 	Matrix4x4 getViewMtrx() { return viewMtrx; };
+	Matrix4x4 getPerspectiveMtrx() { return perspectiveMtrx; };
 
 	//set functions
 	void setViewMtrx(Vector4 vPosition, Vector4 vDirection, Vector4 vUp);
 	void setProjectionType(eProjectionType pType);
-	void setPerspectiveMatrix(float f,float n, float t, float b, float l, float r, eProjectionType ptype);
+	void setPerspectiveMatrix(float flFovy, float flNear, float flFar, eProjectionType pType);
 
 	//operators
 

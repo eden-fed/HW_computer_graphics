@@ -1,9 +1,10 @@
 #include "Camera.h"
+#include <math.h> 
 
 Camera::Camera()
 {
-	setViewMtrx({ 0,0,200,0 }, { 0,0,0,0 }, { 0,1,0,0 });
-	pType = PERSPECTIVE;
+	setViewMtrx({ 0,0,-200,0 }, { 0,0,0,0 }, { 0,-1,0,0 });
+	setPerspectiveMatrix(60, 0.01, 10000, PERSPECTIVE);
 }
 
 Camera::~Camera()
@@ -31,13 +32,30 @@ void Camera::setViewMtrx(Vector4 vPosition, Vector4 vDirection, Vector4 vUp)
 
 void Camera::setProjectionType(eProjectionType pType)
 {
-	this->pType = pType;
+	setPerspectiveMatrix(this->flFovy, this->flNear, this->flFar, pType);
 }
 
-void Camera::setPerspectiveMatrix(float f, float n, float t, float b, float l, float r, eProjectionType ptype)
+void Camera::setPerspectiveMatrix(float flFovy=60, float flNear=0.01, float flFar=10000, eProjectionType pType= PERSPECTIVE)
 {
-}
+	this->flFovy = flFovy;
+	this->flFar = flFar;
+	this->flNear = flNear;
+	this->pType = pType;
 
+
+	float r_l = 2 * flNear * tan(flFovy / 2);
+	float t_b = (r_l * 9) / 16;
+
+	switch(pType) {
+	case PERSPECTIVE:
+		perspectiveMtrx.setAllValues((2* flNear) / r_l,0,0,0,0, (2 * flNear) / t_b,0,0,0,0,-(flFar + flNear)/(flFar - flNear),-1,0,0,(-2* flFar*flNear) / (flFar - flNear),0);
+		break;
+	case ORTHOGRAPHIC:
+		perspectiveMtrx.setAllValues((2/ r_l),0,0,0,0,(2/ t_b),0,0,0,0,(-2/ (flFar - flNear)),0,0,0, (-(flFar + flNear) / (flFar - flNear)),1);
+		break;
+	}
+
+}
 
 
 /*void Camera::setPerspectiveMatrix(float a, float d)
