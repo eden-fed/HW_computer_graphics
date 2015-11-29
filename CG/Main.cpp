@@ -17,6 +17,7 @@
 #include "Object.h"
 #include "Matrix4x4.h"
 #include "Camera.h"
+#include "BBox.h"""
 
 
 LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing 
@@ -46,13 +47,15 @@ double g_quaternion[4] = {0.0, 0.0, 0.0, 1.0};
 bool g_normals = false;
 bool g_bbox = false;
 bool g_projection = true;
+double g_normals_size = 5.0;
 
 MeshModel model;
+BBox box;
 bool clear = true;
 
 void TW_CALL loadOBJModel(void* clientData);
 void TW_CALL showNormals(void* clientData);
-void TW_CALL showBbox(void* clientData);
+//void TW_CALL showBbox(void* clientData);
 void TW_CALL centerCamera(void* clientData);
 void TW_CALL applyTranslation(void* clientData);
 void TW_CALL applyScale(void* clientData);
@@ -113,10 +116,11 @@ int main(int argc, char *argv[])
 
 
 	TwAddButton(bar, "LoadOBJ",loadOBJModel, NULL, "help='button to load obf file'");
-	//TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
-	TwAddButton(bar, "showNormals", showNormals, NULL, "help='button to indicate if to show normals or not'");
-	//TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
-	TwAddButton(bar, "showBbox", showBbox, NULL, "help='button to indicate if to show the bbox or not'");
+	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
+	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=30 step=0.01 help='Change notmals size (20=original size).' ");
+	//TwAddButton(bar, "showNormals", showNormals, NULL, "help='button to indicate if to show normals or not'");
+	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
+	//TwAddButton(bar, "showBBox", showBbox, NULL, "help='button to indicate if to show the bbox or not'");
 	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projection, " help='true = orthographic, false = perspective.' ");
 	TwAddVarRW(bar, "perspective-near", TW_TYPE_DOUBLE, &g_near, " keyIncr=z keyDecr=Z .' ");
 	TwAddVarRW(bar, "perspective-far", TW_TYPE_DOUBLE, &g_far, " keyIncr=z keyDecr=Z .' ");
@@ -190,18 +194,19 @@ void TW_CALL showNormals(void* clientData)
 	}
 
 }
-void TW_CALL showBbox(void* clientData)
+/*void TW_CALL showBbox(void* clientData)
 {
-	if (g_normals)
+	if (!g_bbox)
 	{
-		//code for drawing bbox
+		g_bbox = true;
 	}
 	else
 	{
-		//code for deleting bbox
+		g_bbox = false;
 	}
+	glutPostRedisplay();
 
-}
+}*/
 void TW_CALL centerCamera(void* clientData) {
 	//code for centering the camera
 
@@ -346,6 +351,13 @@ void Display()
 		Matrix4x4 matTest(20, 0, 0, 0, 0, 20, 0, 0, 0, 0, 20, 0, 650, 400, 0, 1);
 		sceneObject.getMshMdl().transformMshMdl(matTest);
 		sceneObject.drawObject();
+		if (g_bbox) {
+			box.setVertices(sceneObject.getMshMdl());
+			box.drawBox();
+		}
+		if (g_normals) {
+
+		}
 
 #endif
 		//sceneObject.drawObjectTriangles();
@@ -387,13 +399,13 @@ void Reshape(int width, int height)
 void MouseButton(int button, int state, int x, int y)
 {
 	TwEventMouseButtonGLUT(button, state, x, y);
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 void MouseMotion(int x, int y)
 {
 	TwEventMouseMotionGLUT(x, y);
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 void PassiveMouseMotion(int x, int y)

@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector4.h"
 #include "MeshModel.h"
+#include "Line.h"
 
 
 class BBox
@@ -11,11 +12,14 @@ class BBox
 public:
 	//constructors
 	BBox(MeshModel model);
+	BBox();
 
 	//destructor
 	~BBox();
 
-	void drawObject();
+	void setVertices(MeshModel model);
+
+	void drawBox();
 
 
 };
