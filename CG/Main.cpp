@@ -44,7 +44,7 @@ double g_xRotation = 0.0;
 double g_yRotation = 0.0;
 double g_zRotation = 0.0;
 
-double g_quaternion[4] = {0.0, 0.0, 0.0, 1.0};
+double g_quaternion[4] = { 0.0, 0.0, 0.0, 1.0 };
 
 //global veriables for glut functions
 bool g_normals = false;
@@ -84,9 +84,9 @@ int main(int argc, char *argv[])
 	initGraphics(argc, argv);
 	// Initialize AntTweakBar
 	TwInit(TW_OPENGL, NULL);
-	
+
 	//initialize the timer frequency
-	QueryPerformanceFrequency(&Frequency); 
+	QueryPerformanceFrequency(&Frequency);
 
 	// Set GLUT callbacks
 	glutDisplayFunc(Display);
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 	glutPassiveMotionFunc(PassiveMouseMotion);
 	glutKeyboardFunc(Keyboard);
 	glutSpecialFunc(Special);
-	
+
 	//send 'glutGetModifers' function pointer to AntTweakBar.
 	//required because the GLUT key event functions do not report key modifiers states.
 	//TwGLUTModifiersFunc(glutGetModifiers);
@@ -105,19 +105,19 @@ int main(int argc, char *argv[])
 	atexit(Terminate);  //called after glutMainLoop ends
 
 
-	// Create a tweak bar
+						// Create a tweak bar
 	TwBar* bar = TwNewBar("TweakBar");
 
 	TwDefine(" GLOBAL help='This example shows how to integrate AntTweakBar with GLUT and OpenGL.' "); // Message added to the help bar.
 	TwDefine(" TweakBar size='200 400' color='96 216 224' "); // change default tweak bar size and color
 
-	//***********************************************************************************
-	//add 'g_Scale' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-	//TwAddVarRW(bar, "Scale", TW_TYPE_DOUBLE, &g_Scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z help='Scale the object (1=original size).' ");
-	//***********************************************************************************
+															  //***********************************************************************************
+															  //add 'g_Scale' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
+															  //TwAddVarRW(bar, "Scale", TW_TYPE_DOUBLE, &g_Scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z help='Scale the object (1=original size).' ");
+															  //***********************************************************************************
 
 
-	TwAddButton(bar, "LoadOBJ",loadOBJModel, NULL, "help='button to load obf file'");
+	TwAddButton(bar, "LoadOBJ", loadOBJModel, NULL, "help='button to load obf file'");
 	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
 	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=100 step=0.01 help='Change notmals size (20=original size).' ");
 	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
@@ -163,9 +163,9 @@ void TW_CALL loadOBJModel(void *data)
 	Wavefront_obj objScene;
 	bool result = objScene.load_file(str);
 
-	
 
-	if(result)
+
+	if (result)
 	{
 		std::cout << "The obj file was loaded successfully" << std::endl;
 		//store the values in Object, MeshModel...
@@ -189,7 +189,7 @@ void TW_CALL centerCamera(void* clientData) {
 
 }
 void TW_CALL applyTranslation(void* clientData) {
-	if (g_translationX != 0.0 || g_translationY!=0.0 || g_translationZ!=0.0) {
+	if (g_translationX != 0.0 || g_translationY != 0.0 || g_translationZ != 0.0) {
 		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
 		//sceneObject.getMshMdl().transformMshMdl(mat);
 		model.transformMshMdl(mat);
@@ -197,7 +197,7 @@ void TW_CALL applyTranslation(void* clientData) {
 	glutPostRedisplay();
 }
 void TW_CALL applyScale(void* clientData) {
-	
+
 	if (g_scale != 1.0) {
 		Matrix4x4 mat = Matrix4x4(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
 		//sceneObject.getMshMdl().transformMshMdl(mat);
@@ -208,10 +208,10 @@ void TW_CALL applyScale(void* clientData) {
 void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
 		double teta = g_xRotation*PI / 180.0;
-		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0, 
-								  0, cos(teta), sin(teta), 0,
-								  0, -sin(teta), cos(teta), 0,
-								  0, 0, 0, 1);
+		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0,
+			0, cos(teta), sin(teta), 0,
+			0, -sin(teta), cos(teta), 0,
+			0, 0, 0, 1);
 		model.transformMshMdl(mat);
 		model.transformNormals(mat);
 	}
@@ -221,9 +221,9 @@ void TW_CALL applyYrotation(void* clientData) {
 	if (g_yRotation != 0.0) {
 		double teta = g_yRotation*PI / 180.0;
 		Matrix4x4 mat = Matrix4x4(cos(teta), 0, -sin(teta), 0,
-								  1, 0, 0, sin(teta), 
-								  0, cos(teta), 0, 0, 
-								  0, 0, 0, 1);
+			1, 0, 0, sin(teta),
+			0, cos(teta), 0, 0,
+			0, 0, 0, 1);
 		model.transformMshMdl(mat);
 		model.transformNormals(mat);
 	}
@@ -232,10 +232,10 @@ void TW_CALL applyYrotation(void* clientData) {
 void TW_CALL applyZrotation(void* clientData) {
 	if (g_zRotation != 0.0) {
 		double teta = g_zRotation*PI / 180.0;
-		Matrix4x4 mat = Matrix4x4(cos(teta), sin(teta), 0, 0, 
-								  -sin(teta), cos(teta), 0, 0,
-								  0, 0, 1, 0, 
-								  0, 0, 0, 1);
+		Matrix4x4 mat = Matrix4x4(cos(teta), sin(teta), 0, 0,
+			-sin(teta), cos(teta), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1);
 		model.transformMshMdl(mat);
 		model.transformNormals(mat);
 	}
@@ -260,7 +260,7 @@ void initGraphics(int argc, char *argv[])
 
 	// Initialize GLEW
 	GLenum err = glewInit();
-	if(err != GLEW_OK)
+	if (err != GLEW_OK)
 	{
 		assert(0);
 		return;
@@ -271,60 +271,60 @@ void initGraphics(int argc, char *argv[])
 /*drawScene of hw1
 void drawScene()
 {
-	Coordinate startCrd(g_StartX, g_StartY, g_Color);
-	Coordinate endCrd(g_EndX, g_EndY, g_Color);
-	Line ln(startCrd, endCrd);
+Coordinate startCrd(g_StartX, g_StartY, g_Color);
+Coordinate endCrd(g_EndX, g_EndY, g_Color);
+Line ln(startCrd, endCrd);
 
-	switch (g_Op) {
-	case 0:
-		ln.drawline();
-		break;
-	case 1:
-		ln.setStartCrd(300, 200, g_Color);
-		ln.setEndCrd(600, 200, g_Color);
-		ln.drawline();
-		ln.setStartCrd(600, 200, g_Color);
-		ln.setEndCrd(600, 400, g_Color);
-		ln.drawline();
-		ln.setStartCrd(600, 400, g_Color);
-		ln.setEndCrd(300, 400, g_Color);
-		ln.drawline();
-		ln.setStartCrd(300, 400, g_Color);
-		ln.setEndCrd(300, 200, g_Color);
-		ln.drawline();
-		ln.setStartCrd(300, 400, g_Color);
-		ln.setEndCrd(450, 500, g_Color);
-		ln.drawline();
-		ln.setStartCrd(600, 400, g_Color);
-		ln.setEndCrd(450, 500, g_Color);
-		ln.drawline();
-		break;
-	case 2:
-		ln.setStartCrd(300, 200, g_Color);
-		ln.setEndCrd(450, 500, g_Color);
-		ln.drawline();
-		ln.setStartCrd(450, 500, g_Color);
-		ln.setEndCrd(600, 200, g_Color);
-		ln.drawline();
-		ln.setStartCrd(600, 200, g_Color);
-		ln.setEndCrd(300, 200, g_Color);
-		ln.drawline();
-		ln.setStartCrd(300, 400, g_Color);
-		ln.setEndCrd(600, 400, g_Color);
-		ln.drawline();
-		ln.setStartCrd(600, 400, g_Color);
-		ln.setEndCrd(450, 100, g_Color);
-		ln.drawline();
-		ln.setStartCrd(450, 100, g_Color);
-		ln.setEndCrd(300, 400, g_Color);
-		ln.drawline();
+switch (g_Op) {
+case 0:
+ln.drawline();
+break;
+case 1:
+ln.setStartCrd(300, 200, g_Color);
+ln.setEndCrd(600, 200, g_Color);
+ln.drawline();
+ln.setStartCrd(600, 200, g_Color);
+ln.setEndCrd(600, 400, g_Color);
+ln.drawline();
+ln.setStartCrd(600, 400, g_Color);
+ln.setEndCrd(300, 400, g_Color);
+ln.drawline();
+ln.setStartCrd(300, 400, g_Color);
+ln.setEndCrd(300, 200, g_Color);
+ln.drawline();
+ln.setStartCrd(300, 400, g_Color);
+ln.setEndCrd(450, 500, g_Color);
+ln.drawline();
+ln.setStartCrd(600, 400, g_Color);
+ln.setEndCrd(450, 500, g_Color);
+ln.drawline();
+break;
+case 2:
+ln.setStartCrd(300, 200, g_Color);
+ln.setEndCrd(450, 500, g_Color);
+ln.drawline();
+ln.setStartCrd(450, 500, g_Color);
+ln.setEndCrd(600, 200, g_Color);
+ln.drawline();
+ln.setStartCrd(600, 200, g_Color);
+ln.setEndCrd(300, 200, g_Color);
+ln.drawline();
+ln.setStartCrd(300, 400, g_Color);
+ln.setEndCrd(600, 400, g_Color);
+ln.drawline();
+ln.setStartCrd(600, 400, g_Color);
+ln.setEndCrd(450, 100, g_Color);
+ln.drawline();
+ln.setStartCrd(450, 100, g_Color);
+ln.setEndCrd(300, 400, g_Color);
+ln.drawline();
 
-		break;
-	}
+break;
+}
 
 }*/
-void drawScene(){
-//draw the scene with new values
+void drawScene() {
+	//draw the scene with new values
 }
 
 //this will make sure that integer coordinates are mapped exactly to corresponding pixels on screen
@@ -343,28 +343,27 @@ void glUseScreenCoordinates(int width, int height)
 // Callback function called by GLUT to render screen
 void Display()
 {
- 	/*static int counter = 0;
- 	std::cout << "C: " << counter << std::endl;
- 	counter++;*/
+	/*static int counter = 0;
+	std::cout << "C: " << counter << std::endl;
+	counter++;*/
 
-    glClearColor(0, 0, 0, 1); //background color
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0, 0, 0, 1); //background color
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//time measuring - don't delete
 	QueryPerformanceCounter(&StartingTime);
 
 	if (!clear) {
 		//drawScene();
-		
-		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-		sceneObject.setModel(model, mat);
+		Object sceneObject(model, { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
 #define test
 #ifdef test
 		Camera cam;
 		sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
-	//	sceneObject.getMshMdl().transformMshMdl(cam.getPerspectiveMtrx());
-		Matrix4x4 matTest(20, 0, 0, 0, 0, 20, 0, 0, 0, 0, 20, 0, 650, 400, 0, 1);
+		sceneObject.getMshMdl().transformMshMdl(cam.getPerspectiveMtrx());
+		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1366 / 2, 768 / 2, 0, 1);
 		sceneObject.getMshMdl().transformMshMdl(matTest);
+
 		sceneObject.drawObject();
 		if (g_bbox) {
 			box.setVertices(sceneObject.getMshMdl());
@@ -373,9 +372,10 @@ void Display()
 		if (g_normals) {
 			sceneObject.drawNormals(g_normals_size);
 		}
-
-#endif
+		sceneObject.drawObject();
 		//sceneObject.drawObjectTriangles();
+#endif
+
 	}
 
 	//time measuring - don't delete
@@ -404,8 +404,8 @@ void Reshape(int width, int height)
 
 	//////////////////////////////////////
 
-    // Send the new window size to AntTweakBar
-    TwWindowSize(width, height);
+	// Send the new window size to AntTweakBar
+	TwWindowSize(width, height);
 	glutPostRedisplay();
 }
 
@@ -445,8 +445,8 @@ void Special(int k, int x, int y)
 
 // Function called at exit
 void Terminate(void)
-{ 
-    TwTerminate();
+{
+	TwTerminate();
 }
 
 
