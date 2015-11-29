@@ -146,7 +146,7 @@ const Vector4 & Vector4::operator*=(const Matrix4x4 & M)
 				(*this)[i] += V[j] * M[j][i];
 			}
 		}
-	return *this;
+	return *this*(1 / (*this)[3]);
 }
 
 const Vector4 Vector4::operator*(const Matrix4x4 & M)
@@ -158,7 +158,7 @@ const Vector4 Vector4::operator*(const Matrix4x4 & M)
 				V[i] += (*this)[j] * M[j][i];
 			}
 		}
-	return V;
+	return V*(1/V[3]);
 }
 
 Vector4 Vector4::roundVectorValues()
@@ -192,4 +192,16 @@ Vector4 Vector4::normalize() const
 	}
 	return ret;
 }
+
+/*Vector4 Vector4::convertToEuclideanCoordinate()
+{
+	Vector4 retVal;
+	for (int i = 0; i < 3; i++) {
+		retVal[i] = (*this)[i];
+	}
+	for (int i = 0; i < 3; i++) {
+		retVal[i] /= (*this)[3];
+	}
+	return retVal;
+}*/
 

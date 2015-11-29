@@ -27,12 +27,12 @@ public:
 
 	//get functions
 	Vector4 getCentroid();
-	inline int getNumberOfTriangles() { return faces.size(); };//get number of triangles
+	inline int getNumberOfFaces() { return faces.size(); };//get number of triangles
 	inline int getNumberOfVertices() { return vertices.size(); };//get number of vertices
 	inline int getNumberOfNormals() { return vertices.size(); };//get number of normals
 	inline Vector4 getVertex(int index) { return vertices[index].vertex; };//get vertex by index
 	inline Vector4 getNormal(int index) { return vertices[index].normal; }; // get normal by index
-	inline Triangle getTriangle(int index) { return faces[index]; }; // get normal by index
+	inline Triangle getFace(int index) { return faces[index]; }; // get normal by index
 
 
 	//class methods 

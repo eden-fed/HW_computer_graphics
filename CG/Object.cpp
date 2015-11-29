@@ -20,10 +20,10 @@ void Object::populatelinesToDraw()
 {
 	linesToDraw.clear();
 	Line ln;
-	for (int i = 0; i < mshMdl.getNumberOfTriangles(); i++) {
+	for (int i = 0; i < mshMdl.getNumberOfFaces(); i++) {
 		for (int j = 0; j < 3; j++) {
-			ln.setStartCrd(mshMdl.getTriangle(i)[j],0xff0000ff);
-			ln.setEndCrd(mshMdl.getTriangle(i)[(j+1)%3], 0xff0000ff);
+			ln.setStartCrd(mshMdl.getFace(i)[j],0xff0000ff);
+			ln.setEndCrd(mshMdl.getFace(i)[(j+1)%3], 0xff0000ff);
 			linesToDraw.insert(ln);
 		}
 	}
@@ -32,10 +32,10 @@ void Object::populatelinesToDraw()
 void Object::drawObjectTriangles()
 {
 	Line ln;
-	for (int i = 0; i < mshMdl.getNumberOfTriangles(); i++) {
+	for (int i = 0; i < mshMdl.getNumberOfFaces(); i++) {
 		for (int j = 0; j < 3; j++) {
-			ln.setStartCrd(mshMdl.getTriangle(i)[j], 0xff0000ff);
-			ln.setEndCrd(mshMdl.getTriangle(i)[(j + 1) % 3], 0xff0000ff);
+			ln.setStartCrd(mshMdl.getFace(i)[j], 0xff0000ff);
+			ln.setEndCrd(mshMdl.getFace(i)[(j + 1) % 3], 0xff0000ff);
 			ln.drawline();
 		}
 	}
