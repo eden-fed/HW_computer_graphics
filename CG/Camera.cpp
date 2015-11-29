@@ -3,7 +3,8 @@
 
 Camera::Camera()
 {
-	setViewMtrx({ 0,0,200,0 }, { 0,0,0,0 }, { 1,1,-1,0 });
+	//setViewMtrx({ 0,0,200,0 }, { 0,0,0,0 }, {0,1,0,0 });
+	setViewMtrx({ 0,200,0,0 }, { 0,0,0,0 }, { -1,0,0,0 });
 	setPerspectiveMatrix(60, 0.01, 10000, PERSPECTIVE);
 }
 
@@ -11,28 +12,37 @@ Camera::~Camera()
 {
 }
 
-void Camera::setViewMtrx(Vector4 vPosition, Vector4 vDirection, Vector4 vUp)
+void Camera::setViewMtrx(Vector4 vEye, Vector4 vAt, Vector4 vUp)
 {
-	/*
-	if C is the camera matrix which moves the camera to world space
-	and V is the view matrix which move it to the origien
-	then I=C*V
-	*/
-	
-	// The "look-at" vector. 
-	Vector4 zaxis = (vPosition - vDirection).normalize();
-
-	// The "right" vector.
+	Vector4 zaxis = (vEye - vAt).normalize();
 	Vector4 xaxis = (vUp ^ zaxis).normalize();
-
-	// The "up" vector.
-	Vector4 yaxis = (zaxis ^ xaxis).normalize();
-
-	//viewMtrx.setAllValues(xaxis[0], yaxis[0], zaxis[0],0, xaxis[1], yaxis[1], zaxis[1],0, xaxis[2], yaxis[2], zaxis[2], 0, -vPosition[0], -vPosition[1], -vPosition[2],1);
-
-	viewMtrx.setAllValues(xaxis[0], xaxis[1], xaxis[2],0, yaxis[0], -yaxis[1], yaxis[2],0, zaxis[0], zaxis[1], zaxis[2], 0, -vPosition[0], -vPosition[1], -vPosition[2],1);
+	Vector4 yaxis = (zaxis ^ xaxis)*(-1);
 
 
+	viewMtrx[0][0] = xaxis[0];
+	viewMtrx[1][0] = xaxis[1];
+	viewMtrx[2][0] = xaxis[2];
+	viewMtrx[3][0] = 0;
+
+	viewMtrx[0][1] = yaxis[0];
+	viewMtrx[1][1] = yaxis[1];
+	viewMtrx[2][1] = yaxis[2];
+	viewMtrx[3][1] = 0;
+
+	viewMtrx[0][2] = zaxis[0];
+	viewMtrx[1][2] = zaxis[1];
+	viewMtrx[2][2] = zaxis[2];
+	viewMtrx[3][2] = 0;
+
+	viewMtrx[0][3] = 0;
+	viewMtrx[1][3] = 0;
+	viewMtrx[2][3] = 0;
+	viewMtrx[3][3] = 1;
+
+	viewMtrx[3][0] = -(xaxis*vEye);//-(vEye[0]);
+	viewMtrx[3][1] = -(yaxis*vEye);//-(vEye[1]);
+	viewMtrx[3][2] = -(zaxis*vEye);//-(vEye[2]);
+	
 }
 
 void Camera::setProjectionType(eProjectionType pType)

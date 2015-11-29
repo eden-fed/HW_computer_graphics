@@ -119,7 +119,7 @@ const double Vector4::operator*(const Vector4 & V)const
 	return retVal;
 }
 
-const Vector4 Vector4::operator^(const Vector4 & V)const
+const Vector4 Vector4::operator^(const Vector4 & V)const //RH coordinate system
 {
 	Vector4 retV;
 	retV[0] = (*this)[1] * V[2] - (*this)[2] * V[1];
