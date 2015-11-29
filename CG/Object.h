@@ -16,12 +16,14 @@ class Object
 public:
 	//constructors
 	Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx);
+	Object();
 
 	//destructor
 	~Object();
 
 	//set functions
 	void setShowNormals(bool norm);
+	void setModel(MeshModel& mshMdl, Matrix4x4 mdlMtrx);
 
 	//get functions
 	MeshModel& getMshMdl() { return mshMdl; };
@@ -31,5 +33,6 @@ public:
 	void populatelinesToDraw();
 	void drawObjectTriangles();
 	void drawObject();
+	void drawNormals(double normSize);
 };
 #endif

@@ -75,7 +75,7 @@ void MeshModel::transformMshMdl(Matrix4x4 &M)
 {
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].vertex = vertices[i].vertex*M;
-		vertices[i].normal = vertices[i].normal*M;
+		//vertices[i].normal = vertices[i].normal*M;
 	}
 	for (int j = 0; j < faces.size(); j++) {
 		for (int k = 0; k < 3; k++) {
@@ -88,6 +88,13 @@ void MeshModel::transformMshMdlonlyVertices(Matrix4x4 &M)
 {
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].vertex = vertices[i].vertex*M;
+		//vertices[i].normal = vertices[i].normal*M;
+	}
+}
+
+void MeshModel::transformNormals(Matrix4x4 & M)
+{
+	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].normal = vertices[i].normal*M;
 	}
 }

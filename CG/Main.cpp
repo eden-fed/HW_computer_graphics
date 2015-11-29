@@ -23,6 +23,7 @@
 LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing 
 LARGE_INTEGER Frequency;
 
+#define PI 3.14159265359
 
 /*int g_StartX = 0;
 int g_StartY = 0;
@@ -35,8 +36,10 @@ double g_near = 0.01;
 double g_far = 10000;
 double g_fovy = 60;
 
-double g_translation = 0.0;
-double g_scale = 0.0;
+double g_translationX = 0.0;
+double g_translationY = 0.0;
+double g_translationZ = 0.0;
+double g_scale = 1.0;
 double g_xRotation = 0.0;
 double g_yRotation = 0.0;
 double g_zRotation = 0.0;
@@ -49,13 +52,12 @@ bool g_bbox = false;
 bool g_projection = true;
 double g_normals_size = 5.0;
 
+Object sceneObject;
 MeshModel model;
 BBox box;
 bool clear = true;
 
 void TW_CALL loadOBJModel(void* clientData);
-void TW_CALL showNormals(void* clientData);
-//void TW_CALL showBbox(void* clientData);
 void TW_CALL centerCamera(void* clientData);
 void TW_CALL applyTranslation(void* clientData);
 void TW_CALL applyScale(void* clientData);
@@ -117,10 +119,8 @@ int main(int argc, char *argv[])
 
 	TwAddButton(bar, "LoadOBJ",loadOBJModel, NULL, "help='button to load obf file'");
 	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
-	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=30 step=0.01 help='Change notmals size (20=original size).' ");
-	//TwAddButton(bar, "showNormals", showNormals, NULL, "help='button to indicate if to show normals or not'");
+	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=100 step=0.01 help='Change notmals size (20=original size).' ");
 	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
-	//TwAddButton(bar, "showBBox", showBbox, NULL, "help='button to indicate if to show the bbox or not'");
 	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projection, " help='true = orthographic, false = perspective.' ");
 	TwAddVarRW(bar, "perspective-near", TW_TYPE_DOUBLE, &g_near, " keyIncr=z keyDecr=Z .' ");
 	TwAddVarRW(bar, "perspective-far", TW_TYPE_DOUBLE, &g_far, " keyIncr=z keyDecr=Z .' ");
@@ -129,20 +129,22 @@ int main(int argc, char *argv[])
 	//point the camera to the center of the model 
 	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
 
-	TwAddVarRW(bar, "translation", TW_TYPE_DOUBLE, &g_translation, " keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-15 max=15 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-15 max=15 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "translate Z", TW_TYPE_DOUBLE, &g_translationZ, "min=-15 max=15 keyIncr=z keyDecr=Z .' ");
 	TwAddButton(bar, "apply translation", applyTranslation, NULL, "help='apply translation'");
 
-	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " in=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z .' ");
 	TwAddButton(bar, "apply scale", &applyScale, NULL, "help='apply scale'");
 
 	TwAddVarRW(bar, "x-rotation", TW_TYPE_INT32, &g_xRotation, " keyIncr=z keyDecr=Z .' ");
-	TwAddButton(bar, "apply x rotation", &applyXrotation, NULL, "min = 0 max = 180 step=1 help='apply scale'");
+	TwAddButton(bar, "apply x rotation", &applyXrotation, NULL, "min = -180 max = 180 step=1 help='apply scale'");
 
 	TwAddVarRW(bar, "y-rotation", TW_TYPE_INT32, &g_yRotation, " keyIncr=z keyDecr=Z .' ");
-	TwAddButton(bar, "apply y rotation", &applyYrotation, NULL, "min = 0 max = 180 step=1 help='apply scale'");
+	TwAddButton(bar, "apply y rotation", &applyYrotation, NULL, "min = -180 max = 180 step=1 help='apply scale'");
 
 	TwAddVarRW(bar, "z-rotation", TW_TYPE_INT32, &g_zRotation, " keyIncr=z keyDecr=Z .' ");
-	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, "min = 0 max = 180 step=1 help='apply scale'");
+	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, "min = -180 max = 180 step=1 help='apply scale'");
 
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
@@ -182,49 +184,62 @@ void TW_CALL loadOBJModel(void *data)
 	glutPostRedisplay();
 }
 
-void TW_CALL showNormals(void* clientData)
-{
-	if (g_normals)
-	{
-		//code for drawing normals
-	}
-	else
-	{
-		//code for deleting normals
-	}
-
-}
-/*void TW_CALL showBbox(void* clientData)
-{
-	if (!g_bbox)
-	{
-		g_bbox = true;
-	}
-	else
-	{
-		g_bbox = false;
-	}
-	glutPostRedisplay();
-
-}*/
 void TW_CALL centerCamera(void* clientData) {
 	//code for centering the camera
 
 }
 void TW_CALL applyTranslation(void* clientData) {
-
+	if (g_translationX != 0.0 || g_translationY!=0.0 || g_translationZ!=0.0) {
+		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
+		//sceneObject.getMshMdl().transformMshMdl(mat);
+		model.transformMshMdl(mat);
+	}
+	glutPostRedisplay();
 }
 void TW_CALL applyScale(void* clientData) {
-
+	
+	if (g_scale != 1.0) {
+		Matrix4x4 mat = Matrix4x4(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
+		//sceneObject.getMshMdl().transformMshMdl(mat);
+		model.transformMshMdl(mat);
+	}
+	glutPostRedisplay();
 }
 void TW_CALL applyXrotation(void* clientData) {
-
+	if (g_xRotation != 0.0) {
+		double teta = g_xRotation*PI / 180.0;
+		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0, 
+								  0, cos(teta), sin(teta), 0,
+								  0, -sin(teta), cos(teta), 0,
+								  0, 0, 0, 1);
+		model.transformMshMdl(mat);
+		model.transformNormals(mat);
+	}
+	glutPostRedisplay();
 }
 void TW_CALL applyYrotation(void* clientData) {
-
+	if (g_yRotation != 0.0) {
+		double teta = g_yRotation*PI / 180.0;
+		Matrix4x4 mat = Matrix4x4(cos(teta), 0, -sin(teta), 0,
+								  1, 0, 0, sin(teta), 
+								  0, cos(teta), 0, 0, 
+								  0, 0, 0, 1);
+		model.transformMshMdl(mat);
+		model.transformNormals(mat);
+	}
+	glutPostRedisplay();
 }
 void TW_CALL applyZrotation(void* clientData) {
-
+	if (g_zRotation != 0.0) {
+		double teta = g_zRotation*PI / 180.0;
+		Matrix4x4 mat = Matrix4x4(cos(teta), sin(teta), 0, 0, 
+								  -sin(teta), cos(teta), 0, 0,
+								  0, 0, 1, 0, 
+								  0, 0, 0, 1);
+		model.transformMshMdl(mat);
+		model.transformNormals(mat);
+	}
+	glutPostRedisplay();
 }
 //do not change this function unless you really know what you are doing!
 void initGraphics(int argc, char *argv[])
@@ -342,7 +357,7 @@ void Display()
 		//drawScene();
 		
 		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-		Object sceneObject(model, mat);
+		sceneObject.setModel(model, mat);
 #define test
 #ifdef test
 		Camera cam;
@@ -356,7 +371,7 @@ void Display()
 			box.drawBox();
 		}
 		if (g_normals) {
-
+			sceneObject.drawNormals(g_normals_size);
 		}
 
 #endif

@@ -41,6 +41,7 @@ public:
 	void calcCentroid();
 	void transformMshMdl(Matrix4x4 &M);
 	void transformMshMdlonlyVertices(Matrix4x4 &M);
+	void transformNormals(Matrix4x4 &M);
 	void getMinMaxValues(double& maxXpos, double& maxXneg, double& maxYpos, double& maxYneg, double& maxZpos, double& maxZneg);
 	void scale10units();
 	void moveCentroidToOrigin();

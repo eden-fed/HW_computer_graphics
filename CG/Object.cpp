@@ -6,6 +6,10 @@ Object::Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx ){
 	show_normals = false;
 }
 
+Object::Object()
+{
+}
+
 Object::~Object()
 {
 	show_normals = false;
@@ -14,6 +18,13 @@ Object::~Object()
 void Object::setShowNormals(bool norm)
 {
 	show_normals = norm;
+}
+
+void Object::setModel(MeshModel & mshMdl, Matrix4x4 mdlMtrx)
+{
+	this->mshMdl = mshMdl;
+	this->mdlMtrx = mdlMtrx;
+	show_normals = false;
 }
 
 void Object::populatelinesToDraw()
@@ -49,5 +60,17 @@ void Object::drawObject()
 	for (std::set<Line>::iterator it = this->linesToDraw.begin(); it != this->linesToDraw.end(); ++it) {
 		ln = *it;
 		ln.drawline();
+	}
+}
+
+void Object::drawNormals(double normSize)
+{
+	Line ln; Vector4 end;
+	for (int i = 0; i < mshMdl.getNumberOfNormals(); i++) {
+			ln.setStartCrd(mshMdl.getVertex(i), 0xff0000);
+			end = mshMdl.getVertex(i) + ((mshMdl.getNormal(i).normalize())*normSize);
+			ln.setEndCrd(end, 0xff0000);
+			ln.drawline();
+		
 	}
 }
