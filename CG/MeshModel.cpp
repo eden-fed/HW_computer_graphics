@@ -1,6 +1,7 @@
 #include "MeshModel.h"
 #include "Matrix4x4.h"
 
+
 MeshModel::MeshModel()
 {
 }
@@ -99,18 +100,31 @@ void MeshModel::moveCentroidToOrigin()
 	Matrix4x4 M(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, (-1 * this->centroid[0]), (-1 * this->centroid[1]), (-1 * this->centroid[2]), 1);
 	transformMshMdlonlyVertices(M);
 }
-
+void MeshModel::getMinMaxValues(double& maxX, double& minX, double& maxY, double& minY, double& maxZ, double& minZ) {
+	minX = maxX = vertices[0].vertex[0];
+	minY = maxY = vertices[0].vertex[1];
+	minZ = maxZ = vertices[0].vertex[2];
+	for (int i = 1; i < vertices.size(); i++) {
+		if (vertices[i].vertex[0] > maxX) maxX = vertices[i].vertex[0];
+		else if (vertices[i].vertex[0] < minX) minX = vertices[i].vertex[0];
+		if (vertices[i].vertex[1] > maxY) maxY = vertices[i].vertex[1];
+		else if (vertices[i].vertex[1] < minY) minY = vertices[i].vertex[1];
+		if (vertices[i].vertex[2] > maxZ) maxZ = vertices[i].vertex[2];
+		else if (vertices[i].vertex[2] < minZ) minZ = vertices[i].vertex[2];
+	}
+}
 void MeshModel::scale10units()
 {
 	double maxVal = 0.0;
-	for (int i = 0; i < vertices.size(); i++){
-		for (int j = 0; j < 3; j++) 
-				if ((vertices[i].vertex[j])>maxVal) {
-					maxVal = vertices[i].vertex[j];
-				}
-		/*if (vertices[i].vertex[0]>maxVal)
-			maxVal = vertices[i].vertex[0];*/
-		}
+	double maxXpos , maxXneg , maxYpos, maxYneg , maxZpos, maxZneg ;
+	getMinMaxValues(maxXpos, maxXneg, maxYpos, maxYneg, maxZpos, maxZneg);
+	maxXpos -= maxXneg;
+	maxYpos -= maxYneg;
+	maxZpos -= maxZneg;
+	maxVal = maxXpos;
+	if (maxYpos > maxVal) maxVal = maxYpos;
+	if (maxZpos > maxVal) maxVal = maxZpos;
+
 	double scaleValue = 10.0 / maxVal;
 	Matrix4x4 M(scaleValue, 0, 0, 0, 0, scaleValue, 0, 0, 0, 0, scaleValue, 0, 0, 0, 0, 1);
 	transformMshMdlonlyVertices(M);
