@@ -138,3 +138,38 @@ void MeshModel::scale10units()
 	Matrix4x4 M(scaleValue, 0, 0, 0, 0, scaleValue, 0, 0, 0, 0, scaleValue, 0, 0, 0, 0, 1);
 	transformMshMdlonlyVertices(M);
 }
+
+void MeshModel::populatelinesToDraw()
+{
+	linesToDraw.clear();
+	Line ln;
+	for (int i = 0; i < getNumberOfFaces(); i++) {
+		for (int j = 0; j < 3; j++) {
+			ln.setStartCrd(getFace(i)[j], 0xff0000ff);
+			ln.setEndCrd(getFace(i)[(j + 1) % 3], 0xff0000ff);
+			linesToDraw.insert(ln);
+		}
+	}
+}
+
+void MeshModel::drawModel()
+{
+	populatelinesToDraw();
+	Line ln;
+	for (std::set<Line>::iterator it = this->linesToDraw.begin(); it != this->linesToDraw.end(); ++it) {
+		ln = *it;
+		ln.drawline();
+	}
+}
+
+void MeshModel::drawNormals(double normSize)
+{
+	Line ln; Vector4 end;
+	for (int i = 0; i < getNumberOfNormals(); i++) {
+		ln.setStartCrd(getVertex(i), 0xff0000);
+		end = getVertex(i) + ((getNormal(i).normalize())*normSize);
+		ln.setEndCrd(end, 0xff0000);
+		ln.drawline();
+
+	}
+}

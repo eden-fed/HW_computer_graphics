@@ -23,6 +23,8 @@ public:
 	const Matrix4x4 operator + (const Matrix4x4& m) const;
 	const Matrix4x4 operator - (const Matrix4x4& m) const;
 	const Matrix4x4 operator * (const Matrix4x4& m) const;
+	const Matrix4x4& operator*=(const Matrix4x4 & m);
+
 
 
 	const Matrix4x4 transpose();

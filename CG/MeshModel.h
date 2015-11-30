@@ -3,7 +3,8 @@
 #include "Matrix4x4.h"
 #include "Triangle.h"
 #include "Obj Parser\wavefront_obj.h"
-
+#include <set>
+#include "Line.h"
 
 class MeshModel
 {
@@ -17,6 +18,7 @@ class MeshModel
 	std::vector<vertexInfo>  vertices;
 	std::vector<Triangle> faces;
 	Vector4 centroid;//****temp**** may not need it 
+	std::set<Line> linesToDraw;
 
 public:
 	//constructors
@@ -45,4 +47,8 @@ public:
 	void getMinMaxValues(double& maxXpos, double& maxXneg, double& maxYpos, double& maxYneg, double& maxZpos, double& maxZneg);
 	void scale10units();
 	void moveCentroidToOrigin();
+	void populatelinesToDraw();
+	void drawModel();
+	void drawNormals(double normSize);
+
 };
