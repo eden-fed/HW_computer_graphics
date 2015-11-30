@@ -56,7 +56,6 @@ void Object::drawObjectTriangles()
 void Object::drawObject()
 {
 	populatelinesToDraw();
-	std::cout << "in drawObject!! "<< std::endl;
 	Line ln;
 	for (std::set<Line>::iterator it = this->linesToDraw.begin(); it != this->linesToDraw.end(); ++it) {
 		ln = *it;

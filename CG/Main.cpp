@@ -32,6 +32,9 @@ int g_EndY = 0;
 int g_Op = 0;*/
 unsigned int g_Color = 0xff0000ff;
 
+int g_Swidth = 1366;
+int g_Sheight = 768;
+
 double g_near = 0.01;
 double g_far = 10000;
 double g_fovy = 60;
@@ -137,14 +140,14 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z .' ");
 	TwAddButton(bar, "apply scale", &applyScale, NULL, "help='apply scale'");
 
-	TwAddVarRW(bar, "x-rotation", TW_TYPE_INT32, &g_xRotation, " keyIncr=z keyDecr=Z .' ");
-	TwAddButton(bar, "apply x rotation", &applyXrotation, NULL, "min = -180 max = 180 step=1 help='apply scale'");
+	TwAddVarRW(bar, "x-rotation", TW_TYPE_DOUBLE, &g_xRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply x rotation", &applyXrotation, NULL, " help='apply scale'");
 
-	TwAddVarRW(bar, "y-rotation", TW_TYPE_INT32, &g_yRotation, " keyIncr=z keyDecr=Z .' ");
-	TwAddButton(bar, "apply y rotation", &applyYrotation, NULL, "min = -180 max = 180 step=1 help='apply scale'");
+	TwAddVarRW(bar, "y-rotation", TW_TYPE_DOUBLE, &g_yRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply y rotation", &applyYrotation, NULL, " help='apply scale'");
 
-	TwAddVarRW(bar, "z-rotation", TW_TYPE_INT32, &g_zRotation, " keyIncr=z keyDecr=Z .' ");
-	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, "min = -180 max = 180 step=1 help='apply scale'");
+	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z .' ");
+	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, " help='apply scale'");
 
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
@@ -205,13 +208,30 @@ void TW_CALL applyScale(void* clientData) {
 	}
 	glutPostRedisplay();
 }
+/*void TW_CALL applyXrotation(void* clientData) {
+	if (g_xRotation != 0.0) {
+		double teta = g_xRotation*PI / 180.0;
+		Vector4 center=model.getCentroid();
+		Matrix4x4 moveToCenter= Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -center[0], -center[1], -center[2], 1);
+		Matrix4x4 moveFromCenter = Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, center[0], center[1], center[2], 1);
+		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0,
+							      0, cos(teta), sin(teta), 0,
+								  0, -sin(teta), cos(teta), 0,
+								  0, 0, 0, 1);
+		model.transformNormals(mat);
+		mat = moveToCenter*mat;
+		mat = mat*moveFromCenter;
+		model.transformMshMdl(mat);
+	}
+	glutPostRedisplay();
+}*/
 void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
 		double teta = g_xRotation*PI / 180.0;
 		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0,
-			0, cos(teta), sin(teta), 0,
-			0, -sin(teta), cos(teta), 0,
-			0, 0, 0, 1);
+								  0, cos(teta), sin(teta), 0,
+								  0, -sin(teta), cos(teta), 0,
+							  	  0, 0, 0, 1);
 		model.transformMshMdl(mat);
 		model.transformNormals(mat);
 	}
@@ -221,9 +241,9 @@ void TW_CALL applyYrotation(void* clientData) {
 	if (g_yRotation != 0.0) {
 		double teta = g_yRotation*PI / 180.0;
 		Matrix4x4 mat = Matrix4x4(cos(teta), 0, -sin(teta), 0,
-			1, 0, 0, sin(teta),
-			0, cos(teta), 0, 0,
-			0, 0, 0, 1);
+							  	  0, 1, 0 ,0,
+								  sin(teta),0, cos(teta), 0,
+								  0, 0, 0, 1);
 		model.transformMshMdl(mat);
 		model.transformNormals(mat);
 	}
@@ -233,9 +253,9 @@ void TW_CALL applyZrotation(void* clientData) {
 	if (g_zRotation != 0.0) {
 		double teta = g_zRotation*PI / 180.0;
 		Matrix4x4 mat = Matrix4x4(cos(teta), sin(teta), 0, 0,
-			-sin(teta), cos(teta), 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1);
+								  -sin(teta), cos(teta), 0, 0,
+								  0, 0, 1, 0,
+								  0, 0, 0, 1);
 		model.transformMshMdl(mat);
 		model.transformNormals(mat);
 	}
@@ -247,7 +267,7 @@ void initGraphics(int argc, char *argv[])
 	// Initialize GLUT
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(1366, 768);
+	glutInitWindowSize(g_Swidth, g_Sheight);
 	glutCreateWindow("Computer Graphics Skeleton using AntTweakBar and free GLUT");
 	glutCreateMenu(NULL);
 
@@ -369,7 +389,7 @@ void Display()
 		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1366 / 2, 768 / 2, 0, 1);
 		sceneObject.getMshMdl().transformMshMdl(matTest);
 
-		sceneObject.drawObject();
+		//sceneObject.drawObject();
 		if (g_bbox) {
 			box.setVertices(sceneObject.getMshMdl());
 			box.drawBox();
@@ -402,12 +422,8 @@ void Reshape(int width, int height)
 {
 	glUseScreenCoordinates(width, height);
 
-	//////////////////////////////////////
-	///////add your reshape code here/////////////
-
-
-
-	//////////////////////////////////////
+	g_Swidth = width;
+	g_Sheight = height;
 
 	// Send the new window size to AntTweakBar
 	TwWindowSize(width, height);
