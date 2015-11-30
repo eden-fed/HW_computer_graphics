@@ -49,7 +49,7 @@ double g_quaternion[4] = { 0.0, 0.0, 0.0, 1.0 };
 //global veriables for glut functions
 bool g_normals = false;
 bool g_bbox = false;
-bool g_projection = true;
+bool g_projectionType = true;
 double g_normals_size = 5.0;
 
 Object sceneObject;
@@ -121,10 +121,10 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
 	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=100 step=0.01 help='Change notmals size (20=original size).' ");
 	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
-	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projection, " help='true = orthographic, false = perspective.' ");
-	TwAddVarRW(bar, "near", TW_TYPE_DOUBLE, &g_near, " keyIncr=z keyDecr=Z .' ");
-	TwAddVarRW(bar, "far", TW_TYPE_DOUBLE, &g_far, " keyIncr=z keyDecr=Z .' ");
-	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=z keyDecr=Z ' ");
+	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projectionType, " help='true = orthographic, false = perspective.' ");
+	TwAddVarRW(bar, "near", TW_TYPE_DOUBLE, &g_near, "step=0.01 keyIncr=n keyDecr=N .' ");
+	TwAddVarRW(bar, "far", TW_TYPE_DOUBLE, &g_far, " keyIncr=f keyDecr=F .' ");
+	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=y keyDecr=Y ' ");
 
 	//point the camera to the center of the model 
 	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
@@ -355,12 +355,17 @@ void Display()
 
 	if (!clear) {
 		//drawScene();
-		Object sceneObject(model, { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
+		Object sceneObject(model, { 50, 0, 0, 0, 0, 50, 0, 0, 0, 0, 50, 0, 0, 0, 0, 1 });//this is the model matrix
 #define test
 #ifdef test
-		Camera cam;
+		Vector4 z_10(0,0,10,1);
+		Camera cam(sceneObject.getMshMdl().getCentroid() + z_10, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 }); //setting camera to look at object from z=10
 		sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
-		sceneObject.getMshMdl().transformMshMdl(cam.getPerspectiveMtrx());
+		cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType,1);//
+		sceneObject.getMshMdl().transformMshMdl(cam.getProjectionMtrx());
+
+
+		//like view to screen matrix
 		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1366 / 2, 768 / 2, 0, 1);
 		sceneObject.getMshMdl().transformMshMdl(matTest);
 

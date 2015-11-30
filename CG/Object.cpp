@@ -3,6 +3,7 @@
 Object::Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx ){
 	this->mshMdl = mshMdl;
 	this->mdlMtrx = mdlMtrx;
+	this->mshMdl.transformMshMdl(mdlMtrx);
 	show_normals = false;
 }
 
