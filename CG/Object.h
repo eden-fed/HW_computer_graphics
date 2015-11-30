@@ -11,7 +11,6 @@ class Object
 {
 	MeshModel mshMdl;
 	Matrix4x4 mdlMtrx;
-	bool show_normals;
 	std::set<Line> linesToDraw;
 public:
 	//constructors
@@ -22,12 +21,10 @@ public:
 	~Object();
 
 	//set functions
-	void setShowNormals(bool norm);
 	void setModel(MeshModel& mshMdl, Matrix4x4 mdlMtrx);
 
 	//get functions
 	MeshModel& getMshMdl() { return mshMdl; };
-	bool getShowNormals() { return show_normals; };
 	std::set<Line>& getLinesToDraw() { return linesToDraw; };
 	//class methods
 	void populatelinesToDraw();

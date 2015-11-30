@@ -3,8 +3,6 @@
 Object::Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx ){
 	this->mshMdl = mshMdl;
 	this->mdlMtrx = mdlMtrx;
-	this->mshMdl.transformMshMdl(mdlMtrx);
-	show_normals = false;
 }
 
 Object::Object()
@@ -13,19 +11,14 @@ Object::Object()
 
 Object::~Object()
 {
-	show_normals = false;
 }
 
-void Object::setShowNormals(bool norm)
-{
-	show_normals = norm;
-}
+
 
 void Object::setModel(MeshModel & mshMdl, Matrix4x4 mdlMtrx)
 {
 	this->mshMdl = mshMdl;
 	this->mdlMtrx = mdlMtrx;
-	show_normals = false;
 }
 
 void Object::populatelinesToDraw()
