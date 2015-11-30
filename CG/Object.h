@@ -22,10 +22,11 @@ public:
 
 	//set functions
 	void setModel(MeshModel& mshMdl, Matrix4x4 mdlMtrx);
-
+	void setMtrx(Matrix4x4 mdlMtrx);
 	//get functions
 	MeshModel& getMshMdl() { return mshMdl; };
 	std::set<Line>& getLinesToDraw() { return linesToDraw; };
+	Matrix4x4& getMtrx() { return mdlMtrx; };
 	//class methods
 	void populatelinesToDraw();
 	void drawObjectTriangles();

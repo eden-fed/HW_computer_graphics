@@ -21,6 +21,11 @@ void Object::setModel(MeshModel & mshMdl, Matrix4x4 mdlMtrx)
 	this->mdlMtrx = mdlMtrx;
 }
 
+void Object::setMtrx(Matrix4x4 mdlMtrx)
+{
+	this->mdlMtrx = mdlMtrx;
+}
+
 void Object::populatelinesToDraw()
 {
 	linesToDraw.clear();
