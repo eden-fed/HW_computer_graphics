@@ -32,8 +32,8 @@ int g_EndY = 0;
 int g_Op = 0;*/
 unsigned int g_Color = 0xff0000ff;
 
-int g_Swidth = 1366;
-int g_Sheight = 768;
+double g_Swidth = 1366;
+double g_Sheight = 768;
 
 double g_near = 0.01;
 double g_far = 10000;
@@ -50,6 +50,7 @@ double g_zRotation = 0.0;
 double g_quaternion[4] = { 0.0, 0.0, 0.0, 1.0 };
 
 //global veriables for glut functions
+bool g_showCrdSystem = false;
 bool g_normals = false;
 bool g_bbox = false;
 bool g_projectionType = true;
@@ -149,6 +150,10 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z .' ");
 	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, " help='apply scale'");
 
+	TwAddVarRW(bar, "OW Crd System", TW_TYPE_BOOLCPP, &g_showCrdSystem, " help='boolean variable to indicate if to show WO coordinate system or not.' ");
+
+
+	bool g_showCrdSystem = false;
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
 
@@ -397,8 +402,11 @@ void Display()
 		if (g_normals) {
 			sceneObject.drawNormals(g_normals_size);
 		}
-		sceneObject.drawObject();
-		//sceneObject.drawObjectTriangles();
+		if (g_showCrdSystem) {
+			sceneObject.drawObjectCrdSystem({ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1 });
+		}
+		//sceneObject.drawObject();
+		sceneObject.drawObjectTriangles();
 #endif
 
 	}
