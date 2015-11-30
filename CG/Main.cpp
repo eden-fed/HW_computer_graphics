@@ -32,6 +32,9 @@ int g_EndY = 0;
 int g_Op = 0;*/
 unsigned int g_Color = 0xff0000ff;
 
+int g_Swidth = 1366;
+int g_Sheight = 768;
+
 double g_near = 0.01;
 double g_far = 10000;
 double g_fovy = 60;
@@ -247,7 +250,7 @@ void initGraphics(int argc, char *argv[])
 	// Initialize GLUT
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(1366, 768);
+	glutInitWindowSize(g_Swidth, g_Sheight);
 	glutCreateWindow("Computer Graphics Skeleton using AntTweakBar and free GLUT");
 	glutCreateMenu(NULL);
 
@@ -397,12 +400,8 @@ void Reshape(int width, int height)
 {
 	glUseScreenCoordinates(width, height);
 
-	//////////////////////////////////////
-	///////add your reshape code here/////////////
-
-
-
-	//////////////////////////////////////
+	g_Swidth = width;
+	g_Sheight = height;
 
 	// Send the new window size to AntTweakBar
 	TwWindowSize(width, height);
