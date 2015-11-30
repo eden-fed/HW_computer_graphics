@@ -243,12 +243,14 @@ void TW_CALL applyScale(void* clientData) {
 void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
 		double teta = g_xRotation*PI / 180.0;
+		double y = transform[3][1];
+		double z = transform[3][2];
+		//mat=move to center, rotate, and then move back
 		Matrix4x4 mat(1, 0, 0, 0,
 					  0, cos(teta), sin(teta), 0,
 					  0, -sin(teta), cos(teta), 0,
-				 	  0, 0, 0, 1);
-		//model.transformMshMdl(mat);
-		//model.transformNormals(mat);
+				 	  0, y - y*cos(teta) + z*sin(teta), z - z*cos(teta) - y*sin(teta), 1);
+		
 		transform *= mat;
 		axisTransform *= mat;
 
@@ -258,12 +260,13 @@ void TW_CALL applyXrotation(void* clientData) {
 void TW_CALL applyYrotation(void* clientData) {
 	if (g_yRotation != 0.0) {
 		double teta = g_yRotation*PI / 180.0;
+		double x = transform[3][0];
+		double z = transform[3][2];
+		//mat=move to center, rotate, and then move back
 		Matrix4x4 mat(cos(teta), 0, -sin(teta), 0,
-							  	  0, 1, 0 ,0,
-								  sin(teta),0, cos(teta), 0,
-								  0, 0, 0, 1);
-		//model.transformMshMdl(mat);
-		//model.transformNormals(mat);
+			  	      0, 1, 0 ,0,
+				      sin(teta),0, cos(teta), 0,
+					  x - x*cos(teta) - z*sin(teta), 0, z - z*cos(teta) + x*sin(teta), 1);
 		transform *= mat;
 		axisTransform *= mat;
 
@@ -273,13 +276,13 @@ void TW_CALL applyYrotation(void* clientData) {
 void TW_CALL applyZrotation(void* clientData) {
 	if (g_zRotation != 0.0) {
 		double teta = g_zRotation*PI / 180.0;
+		double x = transform[3][0];
+		double y = transform[3][1];
+		//mat=move to center, rotate, and then move back
 		Matrix4x4 mat(cos(teta), sin(teta), 0, 0,
-								  -sin(teta), cos(teta), 0, 0,
-								  0, 0, 1, 0,
-								  0, 0, 0, 1);
-		
-		//model.transformMshMdl(mat);
-		//model.transformNormals(mat);
+					-sin(teta), cos(teta), 0, 0,
+					0, 0, 1, 0,
+					x - x*cos(teta) + y*sin(teta), y - y*cos(teta) - x*sin(teta), 0, 1);
 		transform *= mat;
 		axisTransform *= mat;
 
