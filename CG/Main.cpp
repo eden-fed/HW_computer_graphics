@@ -132,8 +132,8 @@ int main(int argc, char *argv[])
 	//point the camera to the center of the model 
 	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
 
-	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-15 max=15 keyIncr=z keyDecr=Z .' ");
-	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-15 max=15 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-15 max=15 keyIncr=x keyDecr=X .' ");
+	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-15 max=15 keyIncr=y keyDecr=Y .' ");
 	TwAddVarRW(bar, "translate Z", TW_TYPE_DOUBLE, &g_translationZ, "min=-15 max=15 keyIncr=z keyDecr=Z .' ");
 	TwAddButton(bar, "apply translation", applyTranslation, NULL, "help='apply translation'");
 
@@ -375,18 +375,18 @@ void Display()
 
 	if (!clear) {
 		//drawScene();
-		Object sceneObject(model, { 50, 0, 0, 0, 0, 50, 0, 0, 0, 0, 50, 0, 0, 0, 0, 1 });//this is the model matrix
+		Object sceneObject(model, { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });//this is the model matrix
 #define test
 #ifdef test
-		Vector4 z_10(0,0,10,1);
-		Camera cam(sceneObject.getMshMdl().getCentroid() + z_10, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 }); //setting camera to look at object from z=10
+		Vector4 positionCamProportionalToObj(0,0,10,1);
+		Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 }); 
 		sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
 		cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType,1);//
 		sceneObject.getMshMdl().transformMshMdl(cam.getProjectionMtrx());
 
 
 		//like view to screen matrix
-		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1366 / 2, 768 / 2, 0, 1);
+		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
 		sceneObject.getMshMdl().transformMshMdl(matTest);
 
 		//sceneObject.drawObject();
