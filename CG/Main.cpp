@@ -57,9 +57,11 @@ bool g_projectionType = true;
 double g_normals_size = 5.0;
 
 Object sceneObject;
-MeshModel model;
+//MeshModel model;
 BBox box;
 Matrix4x4 transform;
+Matrix4x4 axisTransform;
+
 bool clear = true;
 
 void TW_CALL loadOBJModel(void* clientData);
@@ -182,6 +184,8 @@ void TW_CALL loadOBJModel(void *data)
 		MeshModel m(objScene);
 		//model = m;
 		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
+		axisTransform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
+
 		sceneObject.setModel(m, transform);
 	}
 	else
@@ -215,6 +219,7 @@ void TW_CALL applyScale(void* clientData) {
 		//sceneObject.getMshMdl().transformMshMdl(mat);
 		//model.transformMshMdl(mat);
 		transform *= mat;
+		axisTransform *= mat;
 	}
 	glutPostRedisplay();
 }
@@ -245,6 +250,8 @@ void TW_CALL applyXrotation(void* clientData) {
 		//model.transformMshMdl(mat);
 		//model.transformNormals(mat);
 		transform *= mat;
+		axisTransform *= mat;
+
 	}
 	glutPostRedisplay();
 }
@@ -258,6 +265,8 @@ void TW_CALL applyYrotation(void* clientData) {
 		//model.transformMshMdl(mat);
 		//model.transformNormals(mat);
 		transform *= mat;
+		axisTransform *= mat;
+
 	}
 	glutPostRedisplay();
 }
@@ -272,6 +281,8 @@ void TW_CALL applyZrotation(void* clientData) {
 		//model.transformMshMdl(mat);
 		//model.transformNormals(mat);
 		transform *= mat;
+		axisTransform *= mat;
+
 	}
 	glutPostRedisplay();
 }
@@ -363,7 +374,7 @@ void Display()
 			model.drawNormals(g_normals_size);
 		}
 		if (g_showCrdSystem) {
-			sceneObject.drawObjectCrdSystem({ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1 });
+			sceneObject.drawObjectCrdSystem(axisTransform*matTest);
 		}
 		//sceneObject.drawObject();
 //		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
