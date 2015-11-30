@@ -32,6 +32,6 @@ public:
 	void drawObjectTriangles();
 	void drawObject();
 	void drawNormals(double normSize);
-	void drawObjectCrdSystem();
+	void drawObjectCrdSystem(Matrix4x4 transMtrx);
 };
 #endif
