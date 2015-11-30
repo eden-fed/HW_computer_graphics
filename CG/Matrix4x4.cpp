@@ -85,14 +85,22 @@ const Matrix4x4 Matrix4x4::operator-(const Matrix4x4 & m) const
 }
 
 const Matrix4x4 Matrix4x4::operator*(const Matrix4x4 & m) const
-{
+{//return this*m
 	Matrix4x4 newMat;
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 			newMat[i][j] = v1[i][0]*m[0][j]+v1[i][1]*m[1][j]+v1[i][2]*m[2][j]+v1[i][3]*m[3][j];
 	return newMat;
 }
-
+const Matrix4x4& Matrix4x4::operator*=(const Matrix4x4 & m) 
+{//this=this*m
+/*	Matrix4x4 newMat;
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			newMat[i][j] = v1[i][0] * m[0][j] + v1[i][1] * m[1][j] + v1[i][2] * m[2][j] + v1[i][3] * m[3][j];*/
+	*this = (*this)*m;
+	return *this;
+}
 const Matrix4x4 Matrix4x4::transpose()
 {
 	Matrix4x4 ret;

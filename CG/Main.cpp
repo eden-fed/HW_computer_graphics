@@ -59,6 +59,7 @@ double g_normals_size = 5.0;
 Object sceneObject;
 MeshModel model;
 BBox box;
+Matrix4x4 transform;
 bool clear = true;
 
 void TW_CALL loadOBJModel(void* clientData);
@@ -179,7 +180,9 @@ void TW_CALL loadOBJModel(void *data)
 		//store the values in Object, MeshModel...
 		//draw the object for the first time
 		MeshModel m(objScene);
-		model = m;
+		//model = m;
+		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
+		sceneObject.setModel(m, transform);
 	}
 	else
 	{
@@ -198,18 +201,20 @@ void TW_CALL centerCamera(void* clientData) {
 }
 void TW_CALL applyTranslation(void* clientData) {
 	if (g_translationX != 0.0 || g_translationY != 0.0 || g_translationZ != 0.0) {
-		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
+		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
 		//sceneObject.getMshMdl().transformMshMdl(mat);
-		model.transformMshMdl(mat);
+		//model.transformMshMdl(mat);
+		transform *= mat;
 	}
 	glutPostRedisplay();
 }
 void TW_CALL applyScale(void* clientData) {
 
 	if (g_scale != 1.0) {
-		Matrix4x4 mat = Matrix4x4(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
+		Matrix4x4 mat(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
 		//sceneObject.getMshMdl().transformMshMdl(mat);
-		model.transformMshMdl(mat);
+		//model.transformMshMdl(mat);
+		transform *= mat;
 	}
 	glutPostRedisplay();
 }
@@ -233,36 +238,40 @@ void TW_CALL applyScale(void* clientData) {
 void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
 		double teta = g_xRotation*PI / 180.0;
-		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0,
-								  0, cos(teta), sin(teta), 0,
-								  0, -sin(teta), cos(teta), 0,
-							  	  0, 0, 0, 1);
-		model.transformMshMdl(mat);
-		model.transformNormals(mat);
+		Matrix4x4 mat(1, 0, 0, 0,
+					  0, cos(teta), sin(teta), 0,
+					  0, -sin(teta), cos(teta), 0,
+				 	  0, 0, 0, 1);
+		//model.transformMshMdl(mat);
+		//model.transformNormals(mat);
+		transform *= mat;
 	}
 	glutPostRedisplay();
 }
 void TW_CALL applyYrotation(void* clientData) {
 	if (g_yRotation != 0.0) {
 		double teta = g_yRotation*PI / 180.0;
-		Matrix4x4 mat = Matrix4x4(cos(teta), 0, -sin(teta), 0,
+		Matrix4x4 mat(cos(teta), 0, -sin(teta), 0,
 							  	  0, 1, 0 ,0,
 								  sin(teta),0, cos(teta), 0,
 								  0, 0, 0, 1);
-		model.transformMshMdl(mat);
-		model.transformNormals(mat);
+		//model.transformMshMdl(mat);
+		//model.transformNormals(mat);
+		transform *= mat;
 	}
 	glutPostRedisplay();
 }
 void TW_CALL applyZrotation(void* clientData) {
 	if (g_zRotation != 0.0) {
 		double teta = g_zRotation*PI / 180.0;
-		Matrix4x4 mat = Matrix4x4(cos(teta), sin(teta), 0, 0,
+		Matrix4x4 mat(cos(teta), sin(teta), 0, 0,
 								  -sin(teta), cos(teta), 0, 0,
 								  0, 0, 1, 0,
 								  0, 0, 0, 1);
-		model.transformMshMdl(mat);
-		model.transformNormals(mat);
+		
+		//model.transformMshMdl(mat);
+		//model.transformNormals(mat);
+		transform *= mat;
 	}
 	glutPostRedisplay();
 }
@@ -292,62 +301,6 @@ void initGraphics(int argc, char *argv[])
 	}
 }
 
-
-/*drawScene of hw1
-void drawScene()
-{
-Coordinate startCrd(g_StartX, g_StartY, g_Color);
-Coordinate endCrd(g_EndX, g_EndY, g_Color);
-Line ln(startCrd, endCrd);
-
-switch (g_Op) {
-case 0:
-ln.drawline();
-break;
-case 1:
-ln.setStartCrd(300, 200, g_Color);
-ln.setEndCrd(600, 200, g_Color);
-ln.drawline();
-ln.setStartCrd(600, 200, g_Color);
-ln.setEndCrd(600, 400, g_Color);
-ln.drawline();
-ln.setStartCrd(600, 400, g_Color);
-ln.setEndCrd(300, 400, g_Color);
-ln.drawline();
-ln.setStartCrd(300, 400, g_Color);
-ln.setEndCrd(300, 200, g_Color);
-ln.drawline();
-ln.setStartCrd(300, 400, g_Color);
-ln.setEndCrd(450, 500, g_Color);
-ln.drawline();
-ln.setStartCrd(600, 400, g_Color);
-ln.setEndCrd(450, 500, g_Color);
-ln.drawline();
-break;
-case 2:
-ln.setStartCrd(300, 200, g_Color);
-ln.setEndCrd(450, 500, g_Color);
-ln.drawline();
-ln.setStartCrd(450, 500, g_Color);
-ln.setEndCrd(600, 200, g_Color);
-ln.drawline();
-ln.setStartCrd(600, 200, g_Color);
-ln.setEndCrd(300, 200, g_Color);
-ln.drawline();
-ln.setStartCrd(300, 400, g_Color);
-ln.setEndCrd(600, 400, g_Color);
-ln.drawline();
-ln.setStartCrd(600, 400, g_Color);
-ln.setEndCrd(450, 100, g_Color);
-ln.drawline();
-ln.setStartCrd(450, 100, g_Color);
-ln.setEndCrd(300, 400, g_Color);
-ln.drawline();
-
-break;
-}
-
-}*/
 void drawScene() {
 	//draw the scene with new values
 }
@@ -380,34 +333,44 @@ void Display()
 
 	if (!clear) {
 		//drawScene();
-		Object sceneObject(model, { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });//this is the model matrix
-#define test
-#ifdef test
+		Matrix4x4 modelMtrx;
 		Vector4 positionCamProportionalToObj(0,0,5,1);
 		Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 }); 
-		sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
+		//sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
+		modelMtrx = cam.getViewMtrx();
 		cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType,1);//
-		sceneObject.getMshMdl().transformMshMdl(cam.getProjectionMtrx());
+		//sceneObject.getMshMdl().transformMshMdl(cam.getProjectionMtrx());
+		modelMtrx *= cam.getProjectionMtrx();
 
-
+		//tranform the model martix by the transform matrix
+		//modelMtrx *= transform;
+		modelMtrx = transform*modelMtrx;
 		//like view to screen matrix
 		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
-		sceneObject.getMshMdl().transformMshMdl(matTest);
-
+		//sceneObject.getMshMdl().transformMshMdl(matTest);
+		modelMtrx *= matTest;
+		MeshModel model = sceneObject.getMshMdl();
+		model.transformMshMdl(modelMtrx);
+		//sceneObject.setMtrx(modelMtrx);
+		//sceneObject.getMshMdl().transformMshMdl(modelMtrx);
 		//sceneObject.drawObject();
 		if (g_bbox) {
-			box.setVertices(sceneObject.getMshMdl());
+			box.setVertices(model);
 			box.drawBox();
 		}
 		if (g_normals) {
-			sceneObject.drawNormals(g_normals_size);
+			//sceneObject.drawNormals(g_normals_size);
+			model.drawNormals(g_normals_size);
 		}
 		if (g_showCrdSystem) {
 			sceneObject.drawObjectCrdSystem({ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1 });
 		}
 		//sceneObject.drawObject();
-		sceneObject.drawObjectTriangles();
-#endif
+//		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+//		modelMtrx.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		model.drawModel();
+		//sceneObject.drawObjectTriangles();
+
 
 	}
 
