@@ -111,10 +111,10 @@ int main(int argc, char *argv[])
 	TwDefine(" GLOBAL help='This example shows how to integrate AntTweakBar with GLUT and OpenGL.' "); // Message added to the help bar.
 	TwDefine(" TweakBar size='200 400' color='96 216 224' "); // change default tweak bar size and color
 
-															  //***********************************************************************************
-															  //add 'g_Scale' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
-															  //TwAddVarRW(bar, "Scale", TW_TYPE_DOUBLE, &g_Scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z help='Scale the object (1=original size).' ");
-															  //***********************************************************************************
+	//***********************************************************************************
+	//add 'g_Scale' to 'bar': this is a modifiable (RW) variable of type TW_TYPE_DOUBLE. Its key shortcuts are [z] and [Z].
+	//TwAddVarRW(bar, "Scale", TW_TYPE_DOUBLE, &g_Scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z help='Scale the object (1=original size).' ");
+	//***********************************************************************************
 
 
 	TwAddButton(bar, "LoadOBJ", loadOBJModel, NULL, "help='button to load obf file'");
@@ -122,9 +122,9 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=100 step=0.01 help='Change notmals size (20=original size).' ");
 	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
 	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projection, " help='true = orthographic, false = perspective.' ");
-	TwAddVarRW(bar, "perspective-near", TW_TYPE_DOUBLE, &g_near, " keyIncr=z keyDecr=Z .' ");
-	TwAddVarRW(bar, "perspective-far", TW_TYPE_DOUBLE, &g_far, " keyIncr=z keyDecr=Z .' ");
-	TwAddVarRW(bar, "perspective-fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=z keyDecr=Z ' ");
+	TwAddVarRW(bar, "near", TW_TYPE_DOUBLE, &g_near, " keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "far", TW_TYPE_DOUBLE, &g_far, " keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=z keyDecr=Z ' ");
 
 	//point the camera to the center of the model 
 	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
