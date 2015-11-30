@@ -72,3 +72,28 @@ void Object::drawNormals(double normSize)
 		
 	}
 }
+
+void Object::drawObjectCrdSystem()
+{
+	Line ln;
+	Vector4 X(75,0,0,1);
+	Vector4 Y(0, 75, 0, 1);
+	Vector4 Z(75, 75, 0, 1);
+
+	ln.setStartCrd(0,0, 0xff0000ff);
+	ln.setEndCrd(X, 0xff0000ff);
+	ln.drawline();
+
+	ln.setStartCrd(0, 0, 0x0000ffff);
+	ln.setEndCrd(Y, 0x0000ffff);
+	ln.drawline();
+
+	ln.setStartCrd(0, 0, 0x00ff00ff);
+	ln.setEndCrd(Z, 0x00ff00ff);
+	ln.drawline();
+
+
+	
+
+
+}

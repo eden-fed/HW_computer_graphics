@@ -32,5 +32,6 @@ public:
 	void drawObjectTriangles();
 	void drawObject();
 	void drawNormals(double normSize);
+	void drawObjectCrdSystem();
 };
 #endif
