@@ -82,6 +82,7 @@ void MeshModel::transformMshMdl(Matrix4x4 &M)
 			faces[j][k] = faces[j][k] * M;
 		}
 	}
+	calcCentroid();
 }
 
 void MeshModel::transformMshMdlonlyVertices(Matrix4x4 &M)
@@ -90,6 +91,7 @@ void MeshModel::transformMshMdlonlyVertices(Matrix4x4 &M)
 		vertices[i].vertex = vertices[i].vertex*M;
 		//vertices[i].normal = vertices[i].normal*M;
 	}
+	calcCentroid();
 }
 
 void MeshModel::transformNormals(Matrix4x4 & M)
