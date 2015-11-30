@@ -73,27 +73,28 @@ void Object::drawNormals(double normSize)
 	}
 }
 
-void Object::drawObjectCrdSystem()
+void Object::drawObjectCrdSystem(Matrix4x4 transMtrx)
 {
 	Line ln;
-	Vector4 X(75,0,0,1);
-	Vector4 Y(0, 75, 0, 1);
-	Vector4 Z(75, 75, 0, 1);
+	Vector4 _XX_YY_ZZ[6];
+	int Scl = 50;
+	_XX_YY_ZZ[0].setVlaues(-Scl,0,0,1);
+	_XX_YY_ZZ[1].setVlaues( Scl, 0, 0, 1);
+	_XX_YY_ZZ[2].setVlaues(0,-Scl, 0, 1);
+	_XX_YY_ZZ[3].setVlaues(0, Scl, 0, 1);
+	_XX_YY_ZZ[4].setVlaues(0, 0,-Scl, 1);
+	_XX_YY_ZZ[5].setVlaues(0, 0, Scl, 1);
 
-	ln.setStartCrd(0,0, 0xff0000ff);
-	ln.setEndCrd(X, 0xff0000ff);
+	for (int i = 0; i < 6; i+=2) {
+		_XX_YY_ZZ[i] *= transMtrx;
+		_XX_YY_ZZ[i + 1] *= transMtrx;
+		ln.setStartCrd(_XX_YY_ZZ[i], 0x000000ff + (0xff000000 >> (4 * i)));
+		ln.setEndCrd(_XX_YY_ZZ[i+1], 0x000000ff + (0xff000000 >> (4 * i)));
+		ln.drawline();
+	}
+
+
+
+
 	ln.drawline();
-
-	ln.setStartCrd(0, 0, 0x0000ffff);
-	ln.setEndCrd(Y, 0x0000ffff);
-	ln.drawline();
-
-	ln.setStartCrd(0, 0, 0x00ff00ff);
-	ln.setEndCrd(Z, 0x00ff00ff);
-	ln.drawline();
-
-
-	
-
-
 }
