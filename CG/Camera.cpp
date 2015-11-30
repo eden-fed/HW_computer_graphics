@@ -105,7 +105,7 @@ void Camera::setViewMtrx(Vector4 vEye, Vector4 vAt, Vector4 vUp)
 
 void Camera::setProjectionMatrix(double flFovy = 60, double flNear = 0.01, double flFar = 10000, eProjectionType pType = PERSPECTIVE, double flAspectRatio = 1)
 {
-	Matrix4x4 matTest(100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 1);
+	Matrix4x4 matTest;
 	this->flFovy = flFovy;
 	this->flFar = flFar;
 	this->flNear = flNear;
@@ -121,10 +121,13 @@ void Camera::setProjectionMatrix(double flFovy = 60, double flNear = 0.01, doubl
 	switch (pType) {
 	case PERSPECTIVE:
 		projectionMtrx.setAllValues(((2 * flNear) / (r - l)), 0, 0, 0, 0, ((2 * flNear) / (t - b)), 0, 0, ((r + l) / (r - l)), ((t + b) / (t - b)), (flFar + flNear) / (flNear - flFar), -1, 0, 0, (2 * flFar*flNear) / (flNear - flFar), 0);
+		matTest.setAllValues(100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 100, 0, 0, 0, 0, 1);
 		projectionMtrx = projectionMtrx * matTest;
 		break;
 	case ORTHOGRAPHIC:
 		projectionMtrx.setAllValues((2 / (r - l)), 0, 0, 0, 0, (2 / (t - b)), 0, 0, 0, 0, (2 / (flNear - flFar)), 0, ((r + l) / (l - r)), ((t + b) / (b - t)), ((flFar + flNear) / (flNear - flFar)), 1);
+		matTest.setAllValues(0.3, 0, 0, 0, 0, 0.3, 0, 0, 0, 0, 0.3, 0, 0, 0, 0, 1);
+		projectionMtrx = projectionMtrx * matTest;
 		break;
 	}
 

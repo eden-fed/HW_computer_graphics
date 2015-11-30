@@ -378,7 +378,7 @@ void Display()
 		Object sceneObject(model, { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });//this is the model matrix
 #define test
 #ifdef test
-		Vector4 positionCamProportionalToObj(0,0,10,1);
+		Vector4 positionCamProportionalToObj(0,0,5,1);
 		Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 }); 
 		sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
 		cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType,1);//
