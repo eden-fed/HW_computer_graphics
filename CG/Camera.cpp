@@ -74,10 +74,10 @@ void Camera::setProjectionMatrix(float flFovy = 60, float flNear = 0.01, float f
 
 	switch (pType) {
 	case PERSPECTIVE:
-		perspectiveMtrx.setAllValues(((2 * flNear) / (r - l)), 0, 0, 0, 0, ((2 * flNear) / (t - b)), 0, 0, ((r + l) / (r - l)), ((t + b) / (t - b)), (flFar + flNear) / (flNear - flFar), -1, 0, 0, (2 * flFar*flNear) / (flNear - flFar), 0);
+		ProjectionMtrx.setAllValues(((2 * flNear) / (r - l)), 0, 0, 0, 0, ((2 * flNear) / (t - b)), 0, 0, ((r + l) / (r - l)), ((t + b) / (t - b)), (flFar + flNear) / (flNear - flFar), -1, 0, 0, (2 * flFar*flNear) / (flNear - flFar), 0);
 		break;
 	case ORTHOGRAPHIC:
-		perspectiveMtrx.setAllValues((2 / (r - l)), 0, 0, 0, 0, (2 / (t - b)), 0, 0, 0, 0, (2 / (flNear - flFar)), 0, ((r + l) / (l - r)), ((t + b) / (b - t)), ((flFar + flNear) / (flNear - flFar)), 1);
+		ProjectionMtrx.setAllValues((2 / (r - l)), 0, 0, 0, 0, (2 / (t - b)), 0, 0, 0, 0, (2 / (flNear - flFar)), 0, ((r + l) / (l - r)), ((t + b) / (b - t)), ((flFar + flNear) / (flNear - flFar)), 1);
 		break;
 	}
 

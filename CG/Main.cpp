@@ -360,7 +360,7 @@ void Display()
 #ifdef test
 		Camera cam;
 		sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
-		sceneObject.getMshMdl().transformMshMdl(cam.getPerspectiveMtrx());
+		sceneObject.getMshMdl().transformMshMdl(cam.getProjectionMtrx());
 		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1366 / 2, 768 / 2, 0, 1);
 		sceneObject.getMshMdl().transformMshMdl(matTest);
 
