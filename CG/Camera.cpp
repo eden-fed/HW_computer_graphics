@@ -5,22 +5,17 @@
 
 Camera::Camera()
 {
-	
-	setViewMtrx({ 0 , 0 , 100,0 }, { 0, 0, 0,0 }, { 0,1,0,0 });
+	float screenResolution[] = { 1366,768 };
+	setViewMtrx({ 0 , 0 , 100,0 }, { 0, 0, 0,0 }, { 0,1,0,0 }, screenResolution);
 	//setViewMtrx({ 0,200,0,0 }, { 0,0,0,0 }, { -1,0,0,0 });
 	setProjectionMatrix(60, 0.01, 10000, 1, ORTHOGRAPHIC);
-}
-
-Camera::Camera(Vector4 vPosition, Vector4 vDirection, Vector4 vUp)
-{
-	setViewMtrx(vPosition, vDirection, vUp);
 }
 
 Camera::~Camera()
 {
 }
 
-void Camera::setViewMtrx(Vector4 vEye, Vector4 vAt, Vector4 vUp)
+void Camera::setViewMtrx(Vector4 vEye, Vector4 vAt, Vector4 vUp, float screenResolution[2])
 {
 	Vector4 zaxis = (vEye - vAt).normalize();
 	Vector4 xaxis = (vUp ^ zaxis).normalize();
