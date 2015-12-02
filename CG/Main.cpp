@@ -323,6 +323,7 @@ void drawScene() {
 		box2.drawBox();
 	}
 	if (g_normals) {
+		model.transformNormals(axisTransform);
 		model.drawNormals(g_normals_size);
 	}
 	if (g_showCrdSystem) {
