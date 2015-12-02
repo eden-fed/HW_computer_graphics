@@ -7,7 +7,7 @@
 #include <vector>
 #include <Windows.h>
 #include <assert.h>
-
+#include <math.h>
 
 #include "Utils.h"
 #include "Renderer.h"
@@ -24,6 +24,9 @@ LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing
 LARGE_INTEGER Frequency;
 
 #define PI 3.14159265359
+#define OBJ_SPACE 0
+#define WORLD_SPACE 1
+#define TEST_SPACE(x) ((x)==0 ? (1) : (-1))
 
 /*int g_StartX = 0;
 int g_StartY = 0;
@@ -154,7 +157,7 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
 	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, " help='apply scale'");
 
-	TwAddVarRW(bar, "space", TW_TYPE_BOOLCPP, &g_space, " help='true=transforma in world space ,false=transform in object space' ");
+	TwAddVarRW(bar, "OW space", TW_TYPE_BOOLCPP, &g_space, " help='true=transforma in world space ,false=transform in object space' ");
 
 	TwAddVarRW(bar, "OW Crd System", TW_TYPE_BOOLCPP, &g_showCrdSystem, " help='boolean variable to indicate if to show WO coordinate system or not.' ");
 
@@ -207,18 +210,20 @@ void TW_CALL centerCamera(void* clientData) {
 }
 void TW_CALL applyTranslation(void* clientData) {
 	if (g_translationX != 0.0 || g_translationY != 0.0 || g_translationZ != 0.0) {
-		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
+		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX*(pow(-1, g_space)), g_translationY*(pow(-1, g_space)), g_translationZ*(pow(-1, g_space)), 1);
 		//sceneObject.getMshMdl().transformMshMdl(mat);
 		//model.transformMshMdl(mat);
 		transform *= mat;
 		//axisTransform *= mat;
 	}
+
 	glutPostRedisplay();
 }
 void TW_CALL applyScale(void* clientData) {
 
 	if (g_scale != 1.0) {
-		Matrix4x4 mat(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
+		double scale = pow(g_scale, (TEST_SPACE(g_space)));
+		Matrix4x4 mat(scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, 1);
 		//sceneObject.getMshMdl().transformMshMdl(mat);
 		//model.transformMshMdl(mat);
 		transform *= mat;
@@ -229,7 +234,7 @@ void TW_CALL applyScale(void* clientData) {
 
 void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
-		double teta = g_xRotation*PI / 180.0;
+		double teta = (g_xRotation*(pow(-1, g_space)))*PI / 180.0;
 		double y = transform[3][1];
 		double z = transform[3][2];
 		//mat=move to center, rotate, and then move back
@@ -246,7 +251,7 @@ void TW_CALL applyXrotation(void* clientData) {
 }
 void TW_CALL applyYrotation(void* clientData) {
 	if (g_yRotation != 0.0) {
-		double teta = g_yRotation*PI / 180.0;
+		double teta = (g_yRotation*(pow(-1, g_space)))*PI / 180.0;
 		double x = transform[3][0];
 		double z = transform[3][2];
 		//mat=move to center, rotate, and then move back
@@ -262,7 +267,7 @@ void TW_CALL applyYrotation(void* clientData) {
 }
 void TW_CALL applyZrotation(void* clientData) {
 	if (g_zRotation != 0.0) {
-		double teta = g_zRotation*PI / 180.0;
+		double teta = (g_zRotation*(pow(-1, g_space)))*PI / 180.0;
 		double x = transform[3][0];
 		double y = transform[3][1];
 		//mat=move to center, rotate, and then move back
