@@ -353,7 +353,7 @@ void Display()
 		Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 }); 
 		//sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
 		modelMtrx = cam.getViewMtrx();
-		cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType,1);//
+		cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, g_Sheight/ g_Swidth);//
 		//sceneObject.getMshMdl().transformMshMdl(cam.getProjectionMtrx());
 		modelMtrx *= cam.getProjectionMtrx();
 
