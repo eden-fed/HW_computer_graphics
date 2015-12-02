@@ -54,6 +54,7 @@ bool g_showCrdSystem = false;
 bool g_normals = false;
 bool g_bbox = false;
 bool g_projectionType = true;
+bool g_space = false;//initialize to object space
 double g_normals_size = 5.0;
 
 Object sceneObject;
@@ -153,8 +154,9 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
 	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, " help='apply scale'");
 
-	TwAddVarRW(bar, "OW Crd System", TW_TYPE_BOOLCPP, &g_showCrdSystem, " help='boolean variable to indicate if to show WO coordinate system or not.' ");
+	TwAddVarRW(bar, "space", TW_TYPE_BOOLCPP, &g_space, " help='true=transforma in world space ,false=transform in object space' ");
 
+	TwAddVarRW(bar, "OW Crd System", TW_TYPE_BOOLCPP, &g_showCrdSystem, " help='boolean variable to indicate if to show WO coordinate system or not.' ");
 
 	bool g_showCrdSystem = false;
 	//time display - don't delete
