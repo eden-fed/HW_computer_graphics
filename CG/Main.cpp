@@ -49,16 +49,16 @@ double g_scale = 1.0;
 double g_xRotation = 0.0;
 double g_yRotation = 0.0;
 double g_zRotation = 0.0;
-
 double g_quaternion[4] = { 0.0, 0.0, 0.0, 1.0 };
 
 //global veriables for glut functions
+bool g_center = false;
 bool g_showCrdSystem = false;
 bool g_normals = false;
 bool g_bbox = false;
 bool g_projectionType = true;
 bool g_space = false;//initialize to object space
-double g_normals_size = 5.0;
+double g_normals_size = 5.0; 
 
 Object sceneObject;
 //MeshModel model;
@@ -138,7 +138,9 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, "step=0.1 keyIncr=v keyDecr=V  ");
 
 	//point the camera to the center of the model 
-	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
+	//TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
+	TwAddVarRW(bar, "centerCamera", TW_TYPE_BOOLCPP, &g_center, "help='point the camera to the center of the model'");
+
 
 	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-30 max=30 step=1 keyIncr=right keyDecr=left  ");
 	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-30 max=30 step=1 keyIncr=up keyDecr=down  ");
@@ -308,6 +310,10 @@ void initGraphics(int argc, char *argv[])
 }
 
 void drawScene() {
+	if (g_center) {
+		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		g_center = !g_center;
+	}
 	Matrix4x4 modelMtrx;
 	Vector4 positionCamProportionalToObj(0, 0, 5, 1);
 	Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 });
@@ -321,6 +327,7 @@ void drawScene() {
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
 	modelMtrx *= v2sMatrix;
 	MeshModel model = sceneObject.getMshMdl();
+
 	model.transformMshMdl(modelMtrx);
 
 	if (g_bbox) {
