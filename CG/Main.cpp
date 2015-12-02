@@ -129,28 +129,28 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=100 step=0.01 help='Change notmals size (20=original size).' ");
 	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
 	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projectionType, " help='true = orthographic, false = perspective.' ");
-	TwAddVarRW(bar, "near", TW_TYPE_DOUBLE, &g_near, "step=0.01 keyIncr=n keyDecr=N .' ");
-	TwAddVarRW(bar, "far", TW_TYPE_DOUBLE, &g_far, " keyIncr=f keyDecr=F .' ");
-	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=y keyDecr=Y ' ");
+	TwAddVarRW(bar, "near", TW_TYPE_DOUBLE, &g_near, "step=0.01 keyIncr=n keyDecr=N  ");
+	TwAddVarRW(bar, "far", TW_TYPE_DOUBLE, &g_far, " keyIncr=f keyDecr=F  ");
+	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=y keyDecr=Y  ");
 
 	//point the camera to the center of the model 
 	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
 
-	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-15 max=15 keyIncr=x keyDecr=X .' ");
-	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-15 max=15 keyIncr=y keyDecr=Y .' ");
-	TwAddVarRW(bar, "translate Z", TW_TYPE_DOUBLE, &g_translationZ, "min=-15 max=15 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-15 max=15 keyIncr=x keyDecr=X  ");
+	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-15 max=15 keyIncr=y keyDecr=Y  ");
+	TwAddVarRW(bar, "translate Z", TW_TYPE_DOUBLE, &g_translationZ, "min=-15 max=15 keyIncr=z keyDecr=Z  ");
 	TwAddButton(bar, "apply translation", applyTranslation, NULL, "help='apply translation'");
 
-	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z  ");
 	TwAddButton(bar, "apply scale", &applyScale, NULL, "help='apply scale'");
 
-	TwAddVarRW(bar, "x-rotation", TW_TYPE_DOUBLE, &g_xRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "x-rotation", TW_TYPE_DOUBLE, &g_xRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
 	TwAddButton(bar, "apply x rotation", &applyXrotation, NULL, " help='apply scale'");
 
-	TwAddVarRW(bar, "y-rotation", TW_TYPE_DOUBLE, &g_yRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "y-rotation", TW_TYPE_DOUBLE, &g_yRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
 	TwAddButton(bar, "apply y rotation", &applyYrotation, NULL, " help='apply scale'");
 
-	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z .' ");
+	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
 	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, " help='apply scale'");
 
 	TwAddVarRW(bar, "OW Crd System", TW_TYPE_BOOLCPP, &g_showCrdSystem, " help='boolean variable to indicate if to show WO coordinate system or not.' ");
