@@ -209,6 +209,7 @@ void TW_CALL applyTranslation(void* clientData) {
 		//sceneObject.getMshMdl().transformMshMdl(mat);
 		//model.transformMshMdl(mat);
 		transform *= mat;
+		//axisTransform *= mat;
 	}
 	glutPostRedisplay();
 }
@@ -219,7 +220,7 @@ void TW_CALL applyScale(void* clientData) {
 		//sceneObject.getMshMdl().transformMshMdl(mat);
 		//model.transformMshMdl(mat);
 		transform *= mat;
-		axisTransform *= mat;
+		//axisTransform *= mat;
 	}
 	glutPostRedisplay();
 }
@@ -377,7 +378,8 @@ void Display()
 			model.drawNormals(g_normals_size);
 		}
 		if (g_showCrdSystem) {
-			sceneObject.drawObjectCrdSystem(axisTransform*matTest);
+			model.calcCentroid();
+			sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(),g_Swidth / 2, g_Sheight / 2);
 		}
 		//sceneObject.drawObject();
 //		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
