@@ -224,23 +224,7 @@ void TW_CALL applyScale(void* clientData) {
 	}
 	glutPostRedisplay();
 }
-/*void TW_CALL applyXrotation(void* clientData) {
-	if (g_xRotation != 0.0) {
-		double teta = g_xRotation*PI / 180.0;
-		Vector4 center=model.getCentroid();
-		Matrix4x4 moveToCenter= Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -center[0], -center[1], -center[2], 1);
-		Matrix4x4 moveFromCenter = Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, center[0], center[1], center[2], 1);
-		Matrix4x4 mat = Matrix4x4(1, 0, 0, 0,
-							      0, cos(teta), sin(teta), 0,
-								  0, -sin(teta), cos(teta), 0,
-								  0, 0, 0, 1);
-		model.transformNormals(mat);
-		mat = moveToCenter*mat;
-		mat = mat*moveFromCenter;
-		model.transformMshMdl(mat);
-	}
-	glutPostRedisplay();
-}*/
+
 void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
 		double teta = g_xRotation*PI / 180.0;
@@ -318,6 +302,36 @@ void initGraphics(int argc, char *argv[])
 
 void drawScene() {
 	//draw the scene with new values
+	Matrix4x4 modelMtrx;
+	Vector4 positionCamProportionalToObj(0, 0, 5, 1);
+	Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 });
+	modelMtrx = cam.getViewMtrx();
+	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, g_Sheight / g_Swidth);//
+	modelMtrx *= cam.getProjectionMtrx();
+
+
+	modelMtrx = transform*modelMtrx;
+	//like view to screen matrix
+	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
+	modelMtrx *= v2sMatrix;
+	MeshModel model = sceneObject.getMshMdl();
+	model.transformMshMdl(modelMtrx);
+
+	if (g_bbox) {
+		BBox box2 = box;
+		box2.transformBox(modelMtrx);
+		box2.drawBox();
+	}
+	if (g_normals) {
+		model.drawNormals(g_normals_size);
+	}
+	if (g_showCrdSystem) {
+		model.calcCentroid();
+		sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(), g_Swidth / 2, g_Sheight / 2);
+	}
+
+	model.drawModel();
+
 }
 
 //this will make sure that integer coordinates are mapped exactly to corresponding pixels on screen
@@ -336,9 +350,6 @@ void glUseScreenCoordinates(int width, int height)
 // Callback function called by GLUT to render screen
 void Display()
 {
-	/*static int counter = 0;
-	std::cout << "C: " << counter << std::endl;
-	counter++;*/
 
 	glClearColor(0, 0, 0, 1); //background color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -347,49 +358,7 @@ void Display()
 	QueryPerformanceCounter(&StartingTime);
 
 	if (!clear) {
-		//drawScene();
-		Matrix4x4 modelMtrx;
-		Vector4 positionCamProportionalToObj(0,0,5,1);
-		Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 }); 
-		//sceneObject.getMshMdl().transformMshMdl(cam.getViewMtrx());
-		modelMtrx = cam.getViewMtrx();
-		cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, g_Sheight/ g_Swidth);//
-		//sceneObject.getMshMdl().transformMshMdl(cam.getProjectionMtrx());
-		modelMtrx *= cam.getProjectionMtrx();
-
-		//tranform the model martix by the transform matrix
-		//modelMtrx *= transform;
-		modelMtrx = transform*modelMtrx;
-		//like view to screen matrix
-		Matrix4x4 matTest(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
-		//sceneObject.getMshMdl().transformMshMdl(matTest);
-		modelMtrx *= matTest;
-		MeshModel model = sceneObject.getMshMdl();
-		model.transformMshMdl(modelMtrx);
-		//sceneObject.setMtrx(modelMtrx);
-		//sceneObject.getMshMdl().transformMshMdl(modelMtrx);
-		//sceneObject.drawObject();
-		if (g_bbox) {
-			//box.setVertices(model);
-			BBox box2 = box;
-			box2.transformBox(modelMtrx);
-			box2.drawBox();
-		}
-		if (g_normals) {
-			//sceneObject.drawNormals(g_normals_size);
-			model.drawNormals(g_normals_size);
-		}
-		if (g_showCrdSystem) {
-			model.calcCentroid();
-			sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(),g_Swidth / 2, g_Sheight / 2);
-		}
-		//sceneObject.drawObject();
-//		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-//		modelMtrx.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-		model.drawModel();
-		//sceneObject.drawObjectTriangles();
-
-
+		drawScene();
 	}
 
 	//time measuring - don't delete
