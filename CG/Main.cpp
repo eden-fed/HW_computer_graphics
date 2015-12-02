@@ -185,7 +185,7 @@ void TW_CALL loadOBJModel(void *data)
 		//model = m;
 		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
 		axisTransform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
-
+		box.setVertices(m);
 		sceneObject.setModel(m, transform);
 	}
 	else
@@ -370,8 +370,10 @@ void Display()
 		//sceneObject.getMshMdl().transformMshMdl(modelMtrx);
 		//sceneObject.drawObject();
 		if (g_bbox) {
-			box.setVertices(model);
-			box.drawBox();
+			//box.setVertices(model);
+			BBox box2 = box;
+			box2.transformBox(modelMtrx);
+			box2.drawBox();
 		}
 		if (g_normals) {
 			//sceneObject.drawNormals(g_normals_size);

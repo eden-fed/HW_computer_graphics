@@ -18,7 +18,7 @@ public:
 	~BBox();
 
 	void setVertices(MeshModel model);
-
+	void transformBox(Matrix4x4 m);
 	void drawBox();
 
 
