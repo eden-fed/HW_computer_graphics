@@ -126,28 +126,28 @@ int main(int argc, char *argv[])
 
 	TwAddButton(bar, "LoadOBJ", loadOBJModel, NULL, "help='button to load obf file'");
 	TwAddVarRW(bar, "showNormals", TW_TYPE_BOOLCPP, &g_normals, " help='boolean variable to indicate if to show normals or not.' ");
-	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.01 max=100 step=0.01 help='Change notmals size (20=original size).' ");
+	TwAddVarRW(bar, "normalsSize", TW_TYPE_DOUBLE, &g_normals_size, " min=0.1 max=100 step=0.1 keyIncr=t keyDecr=T help='Change notmals size (20=original size).' ");
 	TwAddVarRW(bar, "showBbox", TW_TYPE_BOOLCPP, &g_bbox, " help='boolean variable to indicate if to show the bbox or not.' ");
 	TwAddVarRW(bar, "projectionType", TW_TYPE_BOOLCPP, &g_projectionType, " help='true = orthographic, false = perspective.' ");
 	TwAddVarRW(bar, "near", TW_TYPE_DOUBLE, &g_near, "step=0.01 keyIncr=n keyDecr=N  ");
-	TwAddVarRW(bar, "far", TW_TYPE_DOUBLE, &g_far, " keyIncr=f keyDecr=F  ");
-	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, " keyIncr=y keyDecr=Y  ");
+	TwAddVarRW(bar, "far", TW_TYPE_DOUBLE, &g_far, "step=0.1 keyIncr=f keyDecr=F  ");
+	TwAddVarRW(bar, "fovy", TW_TYPE_DOUBLE, &g_fovy, "step=0.1 keyIncr=v keyDecr=V  ");
 
 	//point the camera to the center of the model 
 	TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
 
-	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-15 max=15 keyIncr=x keyDecr=X  ");
-	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-15 max=15 keyIncr=y keyDecr=Y  ");
-	TwAddVarRW(bar, "translate Z", TW_TYPE_DOUBLE, &g_translationZ, "min=-15 max=15 keyIncr=z keyDecr=Z  ");
+	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-30 max=30 step=1 keyIncr=right keyDecr=left  ");
+	TwAddVarRW(bar, "translate Y", TW_TYPE_DOUBLE, &g_translationY, "min=-30 max=30 step=1 keyIncr=up keyDecr=down  ");
+	TwAddVarRW(bar, "translate Z", TW_TYPE_DOUBLE, &g_translationZ, "min=-30 max=30 step=1 keyIncr=> keyDecr=<  ");
 	TwAddButton(bar, "apply translation", applyTranslation, NULL, "help='apply translation'");
 
-	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " min=0.01 max=2.5 step=0.01 keyIncr=z keyDecr=Z  ");
+	TwAddVarRW(bar, "scale", TW_TYPE_DOUBLE, &g_scale, " min=0.01 max=2.5 step=0.01 keyIncr=+ keyDecr=-  ");
 	TwAddButton(bar, "apply scale", &applyScale, NULL, "help='apply scale'");
 
-	TwAddVarRW(bar, "x-rotation", TW_TYPE_DOUBLE, &g_xRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
+	TwAddVarRW(bar, "x-rotation", TW_TYPE_DOUBLE, &g_xRotation, "min = -360 max = 360 step=1 keyIncr=x keyDecr=X  ");
 	TwAddButton(bar, "apply x rotation", &applyXrotation, NULL, " help='apply scale'");
 
-	TwAddVarRW(bar, "y-rotation", TW_TYPE_DOUBLE, &g_yRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
+	TwAddVarRW(bar, "y-rotation", TW_TYPE_DOUBLE, &g_yRotation, "min = -360 max = 360 step=1 keyIncr=y keyDecr=Y  ");
 	TwAddButton(bar, "apply y rotation", &applyYrotation, NULL, " help='apply scale'");
 
 	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z  ");
@@ -301,7 +301,6 @@ void initGraphics(int argc, char *argv[])
 }
 
 void drawScene() {
-	//draw the scene with new values
 	Matrix4x4 modelMtrx;
 	Vector4 positionCamProportionalToObj(0, 0, 5, 1);
 	Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 });
@@ -311,7 +310,7 @@ void drawScene() {
 
 
 	modelMtrx = transform*modelMtrx;
-	//like view to screen matrix
+	//view to screen matrix
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
 	modelMtrx *= v2sMatrix;
 	MeshModel model = sceneObject.getMshMdl();
