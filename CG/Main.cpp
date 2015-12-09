@@ -23,7 +23,7 @@
 LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing 
 LARGE_INTEGER Frequency;
 
-#define PI 3.14159265359
+#define PI 3.14159265358979323846  
 #define OBJ_SPACE 0
 #define WORLD_SPACE 1
 #define TEST_SPACE(x) ((x)==0 ? (1) : (-1))
@@ -215,76 +215,85 @@ void TW_CALL centerCamera(void* clientData) {
 }
 void TW_CALL applyTranslation(void* clientData) {
 	if (g_translationX != 0.0 || g_translationY != 0.0 || g_translationZ != 0.0) {
-		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX*(pow(-1, g_space)), g_translationY*(pow(-1, g_space)), g_translationZ*(pow(-1, g_space)), 1);
-		//sceneObject.getMshMdl().transformMshMdl(mat);
-		//model.transformMshMdl(mat);
-		transform *= mat;
-		//axisTransform *= mat;
+		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
+		if (g_space){//world space
+			transform *= mat;
+		}
+		else {//object space
+			transform = mat*transform;
+		}
+		glutPostRedisplay();
 	}
-
-	glutPostRedisplay();
 }
 void TW_CALL applyScale(void* clientData) {
 
 	if (g_scale != 1.0) {
-		double scale = pow(g_scale, (TEST_SPACE(g_space)));
-		Matrix4x4 mat(scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, 1);
-		//sceneObject.getMshMdl().transformMshMdl(mat);
-		//model.transformMshMdl(mat);
-		transform *= mat;
-		//axisTransform *= mat;
+		Matrix4x4 mat(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
+		if (g_space) {//world space
+			transform *= mat;
+		}
+		else {//object space
+			transform = mat*transform;
+		}
+		glutPostRedisplay();
 	}
-	glutPostRedisplay();
 }
 
 void TW_CALL applyXrotation(void* clientData) {
+	double teta = g_xRotation*PI / 180.0;
+	Matrix4x4 mat(1, 0, 0, 0,
+		0, cos(teta), sin(teta), 0,
+		0, -sin(teta), cos(teta), 0,
+		0, 0, 0, 1);
 	if (g_xRotation != 0.0) {
-		double teta = (g_xRotation*(pow(-1, g_space)))*PI / 180.0;
-		double y = transform[3][1];
-		double z = transform[3][2];
-		//mat=move to center, rotate, and then move back
-		Matrix4x4 mat(1, 0, 0, 0,
-					  0, cos(teta), sin(teta), 0,
-					  0, -sin(teta), cos(teta), 0,
-				 	  0, y - y*cos(teta) + z*sin(teta), z - z*cos(teta) - y*sin(teta), 1);
-		
-		transform *= mat;
-		axisTransform *= mat;
+		if (!g_space)//object space
+		{
+			transform = mat*transform;
+			axisTransform = mat*axisTransform;
+		}
+		else {//world space
+			transform *= mat;
+			axisTransform *= mat;
 
+		}
+		glutPostRedisplay();
 	}
-	glutPostRedisplay();
 }
 void TW_CALL applyYrotation(void* clientData) {
+	double teta = g_yRotation*PI / 180.0;
+	Matrix4x4 mat(cos(teta), 0, -sin(teta), 0,
+		0, 1, 0, 0,
+		sin(teta), 0, cos(teta), 0,
+		0, 0, 0, 1);
 	if (g_yRotation != 0.0) {
-		double teta = (g_yRotation*(pow(-1, g_space)))*PI / 180.0;
-		double x = transform[3][0];
-		double z = transform[3][2];
-		//mat=move to center, rotate, and then move back
-		Matrix4x4 mat(cos(teta), 0, -sin(teta), 0,
-			  	      0, 1, 0 ,0,
-				      sin(teta),0, cos(teta), 0,
-					  x - x*cos(teta) - z*sin(teta), 0, z - z*cos(teta) + x*sin(teta), 1);
-		transform *= mat;
-		axisTransform *= mat;
-
+		if (!g_space) {
+			transform = mat*transform;
+			axisTransform = mat*axisTransform;
+		}
+		else {
+			transform *= mat;
+			axisTransform *= mat;
+		}
+		glutPostRedisplay();
 	}
-	glutPostRedisplay();
 }
 void TW_CALL applyZrotation(void* clientData) {
+	double teta = g_zRotation*PI / 180.0;
+	Matrix4x4 mat(cos(teta), sin(teta), 0, 0,
+		-sin(teta), cos(teta), 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
 	if (g_zRotation != 0.0) {
-		double teta = (g_zRotation*(pow(-1, g_space)))*PI / 180.0;
-		double x = transform[3][0];
-		double y = transform[3][1];
-		//mat=move to center, rotate, and then move back
-		Matrix4x4 mat(cos(teta), sin(teta), 0, 0,
-					-sin(teta), cos(teta), 0, 0,
-					0, 0, 1, 0,
-					x - x*cos(teta) + y*sin(teta), y - y*cos(teta) - x*sin(teta), 0, 1);
-		transform *= mat;
-		axisTransform *= mat;
-
+		if (!g_space) {
+			transform = mat*transform;
+			axisTransform = mat*axisTransform;
+		}
+		else {
+			transform *= mat;
+			axisTransform *= mat;
+		}
+		glutPostRedisplay();
 	}
-	glutPostRedisplay();
 }
 //do not change this function unless you really know what you are doing!
 void initGraphics(int argc, char *argv[])
