@@ -25,8 +25,16 @@ public:
 	~Light();
 
 	//set functions
+	void setIntensity(Color I);
+	void setPosition(Vector4 P);
+	void setDirection(Vector4 D);
+	void setType(eLightType T);
 
 	//get functions
+	Color getIntensity() { return this->intensity;};
+	Vector4 getPosition() { return this->position;};
+	Vector4 getDirection() { return this->direction;};
+	eLightType getType() { return this->type;};
 
 	//class methods
 
