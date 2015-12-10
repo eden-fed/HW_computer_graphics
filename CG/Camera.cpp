@@ -74,32 +74,19 @@ void Camera::setViewMtrx(Vector4 vEye, Vector4 vAt, Vector4 vUp)
 {
 	Vector4 zaxis = (vEye - vAt).normalize();
 	Vector4 xaxis = (vUp ^ zaxis).normalize();
-	Vector4 yaxis = (zaxis ^ xaxis)*(-1);
+	Vector4 yaxis = (zaxis ^ xaxis).normalize();
+	//Vector4 yaxis = (xaxis ^ zaxis).normalize();
+
+	viewMtrx.setColumn(xaxis[0], xaxis[1], xaxis[2], 0, 0);
+
+	viewMtrx.setColumn(yaxis[0], yaxis[1], yaxis[2], 0, 1);
+
+	viewMtrx.setColumn(zaxis[0], zaxis[1], zaxis[2], 0, 2);
+
+	viewMtrx.setColumn(0, 0, 0, 1, 3);
 
 
-	viewMtrx[0][0] = xaxis[0];// *(1 / (vEye - vAt).getSize());
-	viewMtrx[1][0] = xaxis[1];
-	viewMtrx[2][0] = xaxis[2];
-	viewMtrx[3][0] = 0;
-
-	viewMtrx[0][1] = yaxis[0];
-	viewMtrx[1][1] = yaxis[1];// *(1 / (vEye - vAt).getSize());
-	viewMtrx[2][1] = yaxis[2];
-	viewMtrx[3][1] = 0;
-
-	viewMtrx[0][2] = zaxis[0];
-	viewMtrx[1][2] = zaxis[1];
-	viewMtrx[2][2] = zaxis[2];// *(1 / (vEye - vAt).getSize());
-	viewMtrx[3][2] = 0;
-
-	viewMtrx[0][3] = 0;
-	viewMtrx[1][3] = 0;
-	viewMtrx[2][3] = 0;
-	viewMtrx[3][3] = 1;
-
-	viewMtrx[3][0] = -(vEye[0]); //-(xaxis*vEye);//-(vEye[0]);
-	viewMtrx[3][1] = -(vEye[1]); //-(yaxis*vEye);//-(vEye[1]);
-	viewMtrx[3][2] = -(vEye[2]); //-(zaxis*vEye);//-(vEye[2]);
+	//viewMtrx.setRow((vEye[0]) - (vAt[0]), (vEye[1]) - (vAt[1]), (vEye[2]) - (vAt[2]), 1, 3);
 
 }
 

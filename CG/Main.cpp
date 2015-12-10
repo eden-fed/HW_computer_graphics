@@ -326,28 +326,53 @@ void drawScene() {
 		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		g_reset = !g_reset;
 	}
-	Matrix4x4 modelMtrx(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -5, 1);
+	Matrix4x4 modelMtrx(1, 0, 0, 0,
+						0, 1, 0, 0,
+						0, 0, 1, 0,
+						0, 0, -5, 1);
 	Vector4 positionCamInWorld(0, 0, 0, 1);
-	Camera cam(positionCamInWorld, sceneObject.getMshMdl().getCentroid()*modelMtrx, { 0,1,0,1 });
-	modelMtrx *= cam.getViewMtrx();
+
+	modelMtrx = modelMtrx*transform;//need to adapt to world and object space
+
+	Camera cam(positionCamInWorld, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
+	if (g_centerCam) {
+		std::cout << "view" << std::endl;
+		for (int k = 0; k < 4; k++) {
+			for (int l = 0; l < 4; l++) {
+				std::cout << cam.getViewMtrx()[k][l] << " ";
+			}
+			std::cout << std::endl;
+		}
+
+		std::cout << "before view" << std::endl;
+		for (int k = 0; k < 4; k++) {
+			for (int l = 0; l < 4; l++) {
+				std::cout << modelMtrx[k][l] << " ";
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+		std::cout << std::endl;
+		modelMtrx *= cam.getViewMtrx();
+		std::cout << "after view" << std::endl;
+		for (int k = 0; k < 4; k++) {
+			for (int l = 0; l < 4; l++) {
+				std::cout << modelMtrx[k][l] << " ";
+			}
+			std::cout << std::endl;
+		}
+		transform *= cam.getViewMtrx();
+		axisTransform *= cam.getViewMtrx();
+		g_centerCam = false;
+	}
+
 	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);//
 	modelMtrx *= cam.getProjectionMtrx();
 
 
-
-	modelMtrx = transform*modelMtrx;
 	//view to screen matrix
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
 	modelMtrx *= v2sMatrix;
-
-	//center camera
-	if (g_centerCam) {
-		g_centerCam = false;
-		sceneObject.getMshMdl().calcCentroid();
-		cam.setViewMtrx(positionCamInWorld*v2sMatrix, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
-		modelMtrx = modelMtrx*cam.getViewMtrx();
-	}
-
 
 	MeshModel model = sceneObject.getMshMdl();
 

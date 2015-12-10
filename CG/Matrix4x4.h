@@ -14,6 +14,11 @@ public:
 	Matrix4x4(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4, double w1, double w2, double w3, double w4);
 	Matrix4x4(const Matrix4x4& m);
 
+
+	void setRow(double x, double y, double z, double w,unsigned int rowNum);
+	void setColumn(double x, double y, double z, double w, unsigned int colNum);
+
+
 	const double* operator[] (int i) const;
 	double* operator[](int i);
 

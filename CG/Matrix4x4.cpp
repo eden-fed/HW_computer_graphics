@@ -33,6 +33,22 @@ Matrix4x4::Matrix4x4(const Matrix4x4 & m)
 			this->v1[i][j] = m.v1[i][j];
 }
 
+void Matrix4x4::setRow(double x, double y, double z, double w, unsigned int rowNum)
+{
+	v1[rowNum][0] = x;
+	v1[rowNum][1] = y;
+	v1[rowNum][2] = z;
+	v1[rowNum][3] = w;
+}
+
+void Matrix4x4::setColumn(double x, double y, double z, double w, unsigned int colNum)
+{
+	v1[0][colNum] = x;
+	v1[1][colNum] = y;
+	v1[2][colNum] = z;
+	v1[3][colNum] = w;
+}
+
 const double*  Matrix4x4::operator[](int i) const
 {
 	return this->v1[i];
