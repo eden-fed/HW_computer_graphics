@@ -123,7 +123,7 @@ const Vector4 Vector4::operator^(const Vector4 & V)const //RH coordinate system
 {
 	Vector4 retV;
 	retV[0] = (*this)[1] * V[2] - (*this)[2] * V[1];
-	retV[1] = (*this)[0] * V[2] - (*this)[2] * V[0];
+	retV[1] = (*this)[2] * V[0] - (*this)[0] * V[2];
 	retV[2] = (*this)[0] * V[1] - (*this)[1] * V[0];
 	return retV;
 }

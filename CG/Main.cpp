@@ -323,7 +323,11 @@ void initGraphics(int argc, char *argv[])
 
 void drawScene() {
 	if (g_reset) {
-		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		transform.setAllValues( 1, 0, 0, 0,
+								0, 1, 0, 0,
+								0, 0, 1, 0,
+								0, 0, 0, 1);
+		axisTransform = transform;
 		g_reset = !g_reset;
 	}
 	Matrix4x4 modelMtrx(1, 0, 0, 0,
@@ -336,31 +340,7 @@ void drawScene() {
 
 	Camera cam(positionCamInWorld, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
 	if (g_centerCam) {
-		std::cout << "view" << std::endl;
-		for (int k = 0; k < 4; k++) {
-			for (int l = 0; l < 4; l++) {
-				std::cout << cam.getViewMtrx()[k][l] << " ";
-			}
-			std::cout << std::endl;
-		}
-
-		std::cout << "before view" << std::endl;
-		for (int k = 0; k < 4; k++) {
-			for (int l = 0; l < 4; l++) {
-				std::cout << modelMtrx[k][l] << " ";
-			}
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
-		std::cout << std::endl;
 		modelMtrx *= cam.getViewMtrx();
-		std::cout << "after view" << std::endl;
-		for (int k = 0; k < 4; k++) {
-			for (int l = 0; l < 4; l++) {
-				std::cout << modelMtrx[k][l] << " ";
-			}
-			std::cout << std::endl;
-		}
 		transform *= cam.getViewMtrx();
 		axisTransform *= cam.getViewMtrx();
 		g_centerCam = false;
