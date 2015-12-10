@@ -52,7 +52,8 @@ double g_zRotation = 0.0;
 double g_quaternion[4] = { 0.0, 0.0, 0.0, 1.0 };
 
 //global veriables for glut functions
-bool g_center = false;
+bool g_reset = false;
+bool g_centerCam = false;
 bool g_showCrdSystem = false;
 bool g_normals = false;
 bool g_bbox = false;
@@ -139,7 +140,8 @@ int main(int argc, char *argv[])
 
 	//point the camera to the center of the model 
 	//TwAddButton(bar, "centerCamera", centerCamera, NULL, "help='point the camera to the center of the model'");
-	TwAddVarRW(bar, "centerCamera", TW_TYPE_BOOLCPP, &g_center, "help='point the camera to the center of the model'");
+
+	TwAddVarRW(bar, "centerCamera", TW_TYPE_BOOLCPP, &g_centerCam, "help='point the camera to the center of the model'");
 
 
 	TwAddVarRW(bar, "translate X", TW_TYPE_DOUBLE, &g_translationX, "min=-30 max=30 step=1 keyIncr=right keyDecr=left  ");
@@ -162,6 +164,7 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "OW space", TW_TYPE_BOOLCPP, &g_space, " help='true=transforma in world space ,false=transform in object space' ");
 
 	TwAddVarRW(bar, "OW Crd System", TW_TYPE_BOOLCPP, &g_showCrdSystem, " help='boolean variable to indicate if to show WO coordinate system or not.' ");
+	TwAddVarRW(bar, "reset", TW_TYPE_BOOLCPP, &g_reset, "help='reset everything'");
 
 	bool g_showCrdSystem = false;
 	//time display - don't delete
@@ -319,39 +322,54 @@ void initGraphics(int argc, char *argv[])
 }
 
 void drawScene() {
-	if (g_center) {
+	if (g_reset) {
 		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-		g_center = !g_center;
+		g_reset = !g_reset;
 	}
-	Matrix4x4 modelMtrx;
-	Vector4 positionCamProportionalToObj(0, 0, 5, 1);
-	Camera cam(sceneObject.getMshMdl().getCentroid() + positionCamProportionalToObj, sceneObject.getMshMdl().getCentroid(), { 0,1,0,1 });
-	modelMtrx = cam.getViewMtrx();
-	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, g_Sheight / g_Swidth);//
+	Matrix4x4 modelMtrx(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -5, 1);
+	Vector4 positionCamInWorld(0, 0, 0, 1);
+	Camera cam(positionCamInWorld, sceneObject.getMshMdl().getCentroid()*modelMtrx, { 0,1,0,1 });
+	modelMtrx *= cam.getViewMtrx();
+	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);//
 	modelMtrx *= cam.getProjectionMtrx();
+
 
 
 	modelMtrx = transform*modelMtrx;
 	//view to screen matrix
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
 	modelMtrx *= v2sMatrix;
+
+	//center camera
+	if (g_centerCam) {
+		g_centerCam = false;
+		sceneObject.getMshMdl().calcCentroid();
+		cam.setViewMtrx(positionCamInWorld*v2sMatrix, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
+		modelMtrx = modelMtrx*cam.getViewMtrx();
+	}
+
+
 	MeshModel model = sceneObject.getMshMdl();
 
 	model.transformMshMdl(modelMtrx);
 
+	//show bounding box
 	if (g_bbox) {
 		BBox box2 = box;
 		box2.transformBox(modelMtrx);
 		box2.drawBox();
 	}
+	//show normals
 	if (g_normals) {
 		model.transformNormals(axisTransform);
 		model.drawNormals(g_normals_size);
 	}
+	//show coordinate systems
 	if (g_showCrdSystem) {
 		model.calcCentroid();
 		sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(), g_Swidth / 2, g_Sheight / 2);
 	}
+
 
 	model.drawModel();
 
@@ -403,8 +421,14 @@ void Reshape(int width, int height)
 {
 	glUseScreenCoordinates(width, height);
 
+	double scale=((width/ g_Swidth)*(height/ g_Sheight));
+	Matrix4x4 mat(scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, 1);
+	transform *= mat;
+
 	g_Swidth = width;
 	g_Sheight = height;
+
+	
 
 	// Send the new window size to AntTweakBar
 	TwWindowSize(width, height);

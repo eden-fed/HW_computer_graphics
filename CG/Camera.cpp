@@ -17,9 +17,10 @@ Camera::Camera(Vector4 vPosition, Vector4 vDirection, Vector4 vUp)
 Camera::Camera()
 {
 	this->flAspectRatio = 1;
-	setViewMtrx({ 0 , 0 , 100,0 }, { 0, 0, 0,0 }, { 0,1,0,0 });
+	//this->flAspectRatio = 1;
+	//setViewMtrx({ 0 , 0 , 100,0 }, { 0, 0, 0,0 }, { 0,1,0,0 });
 	//setViewMtrx({ 0,200,0,0 }, { 0,0,0,0 }, { -1,0,0,0 });
-	setProjectionMatrix(60, 0.01, 10000, ORTHOGRAPHIC, 1);
+	//setProjectionMatrix(60, 0.01, 10000, ORTHOGRAPHIC, 1);
 }
 
 Camera::~Camera()
