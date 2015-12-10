@@ -330,15 +330,19 @@ void drawScene() {
 		axisTransform = transform;
 		g_reset = !g_reset;
 	}
+	//initial position of object
 	Matrix4x4 modelMtrx(1, 0, 0, 0,
 						0, 1, 0, 0,
 						0, 0, 1, 0,
 						0, 0, -5, 1);
-	Vector4 positionCamInWorld(0, 0, 0, 1);
 
+	//transforming object with all required transformations
 	modelMtrx = modelMtrx*transform;//need to adapt to world and object space
 
-	Camera cam(positionCamInWorld, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
+	//creating a camera object
+	Camera cam({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
+
+	//pointing camera at object
 	if (g_centerCam) {
 		modelMtrx *= cam.getViewMtrx();
 		transform *= cam.getViewMtrx();
@@ -346,6 +350,7 @@ void drawScene() {
 		g_centerCam = false;
 	}
 
+	//creating projection matrix and aplying it
 	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);//
 	modelMtrx *= cam.getProjectionMtrx();
 
@@ -354,8 +359,8 @@ void drawScene() {
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
 	modelMtrx *= v2sMatrix;
 
+	//creating a mesh model and aplying all the transformations
 	MeshModel model = sceneObject.getMshMdl();
-
 	model.transformMshMdl(modelMtrx);
 
 	//show bounding box
@@ -375,7 +380,7 @@ void drawScene() {
 		sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(), g_Swidth / 2, g_Sheight / 2);
 	}
 
-
+	//draw the object
 	model.drawModel();
 
 }
