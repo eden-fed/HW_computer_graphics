@@ -421,6 +421,7 @@ void Reshape(int width, int height)
 {
 	glUseScreenCoordinates(width, height);
 
+	//resizing the object to fit the screen size
 	double scale=((width/ g_Swidth)*(height/ g_Sheight));
 	Matrix4x4 mat(scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, 1);
 	transform *= mat;

@@ -12,7 +12,7 @@ public:
 	void setColor(unsigned int C);
 
 	//get functions
-	unsigned int getColor() {return this->color};
+	unsigned int getColor() { return this->color; };
 
 	//class methods
 	int getRedPortion();
