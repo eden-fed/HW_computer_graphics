@@ -217,10 +217,12 @@ void TW_CALL applyTranslation(void* clientData) {
 	if (g_translationX != 0.0 || g_translationY != 0.0 || g_translationZ != 0.0) {
 		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
 		if (g_space){//world space
-			transform *= mat;
+			//transform *= mat;
+			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 		}
 		else {//object space
-			transform = mat*transform;
+			//transform = mat*transform;
+			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 		}
 		glutPostRedisplay();
 	}
@@ -230,10 +232,12 @@ void TW_CALL applyScale(void* clientData) {
 	if (g_scale != 1.0) {
 		Matrix4x4 mat(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
 		if (g_space) {//world space
-			transform *= mat;
+			//transform *= mat;
+			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 		}
 		else {//object space
-			transform = mat*transform;
+			//transform = mat*transform;
+			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 		}
 		glutPostRedisplay();
 	}
@@ -248,11 +252,13 @@ void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
 		if (!g_space)//object space
 		{
-			transform = mat*transform;
+			//transform = mat*transform;
+			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 			axisTransform = mat*axisTransform;
 		}
 		else {//world space
-			transform *= mat;
+			//transform *= mat;
+			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 			axisTransform *= mat;
 
 		}
@@ -267,11 +273,13 @@ void TW_CALL applyYrotation(void* clientData) {
 		0, 0, 0, 1);
 	if (g_yRotation != 0.0) {
 		if (!g_space) {
-			transform = mat*transform;
+			//transform = mat*transform;
+			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 			axisTransform = mat*axisTransform;
 		}
 		else {
-			transform *= mat;
+			//transform *= mat;
+			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 			axisTransform *= mat;
 		}
 		glutPostRedisplay();
@@ -285,11 +293,13 @@ void TW_CALL applyZrotation(void* clientData) {
 		0, 0, 0, 1);
 	if (g_zRotation != 0.0) {
 		if (!g_space) {
-			transform = mat*transform;
+			//transform = mat*transform;
+			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 			axisTransform = mat*axisTransform;
 		}
 		else {
-			transform *= mat;
+			//transform *= mat;
+			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 			axisTransform *= mat;
 		}
 		glutPostRedisplay();
@@ -323,11 +333,16 @@ void initGraphics(int argc, char *argv[])
 
 void drawScene() {
 	if (g_reset) {
-		transform.setAllValues( 1, 0, 0, 0,
+		/*transform.setAllValues( 1, 0, 0, 0,
 								0, 1, 0, 0,
 								0, 0, 1, 0,
 								0, 0, 0, 1);
-		axisTransform = transform;
+		axisTransform = transform;*/
+		sceneObject.getMtrx().setAllValues(1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1);
+		axisTransform = sceneObject.getMtrx();
 		g_reset = !g_reset;
 	}
 	//initial position of object
@@ -337,21 +352,25 @@ void drawScene() {
 						0, 0, -5, 1);
 
 	//transforming object with all required transformations
-	modelMtrx = modelMtrx*transform;//need to adapt to world and object space
+	//modelMtrx = modelMtrx*transform;//need to adapt to world and object space
+	modelMtrx *= sceneObject.getMtrx();
+	//Matrix4x4 modelMtrx=sceneObject.getMtrx();
 
 	//creating a camera object
-	Camera cam({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
+	Camera cam({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });;
 
+	
 	//pointing camera at object
 	if (g_centerCam) {
+		//cam.setViewMtrx({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
 		modelMtrx *= cam.getViewMtrx();
-		transform *= cam.getViewMtrx();
+		sceneObject.getMtrx() *= cam.getViewMtrx();
 		axisTransform *= cam.getViewMtrx();
 		g_centerCam = false;
 	}
 
 	//creating projection matrix and aplying it
-	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);//
+	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);
 	modelMtrx *= cam.getProjectionMtrx();
 
 
@@ -434,8 +453,8 @@ void Reshape(int width, int height)
 	//resizing the object to fit the screen size
 	double scale=((width/ g_Swidth)*(height/ g_Sheight));
 	Matrix4x4 mat(scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, 1);
-	transform *= mat;
-
+	//transform *= mat;
+	sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 	g_Swidth = width;
 	g_Sheight = height;
 
