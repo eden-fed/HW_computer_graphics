@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector4.h"
+#include "Coordinate.h"
 
 class Triangle
 {
@@ -20,6 +21,7 @@ public:
 	//get functions
 	double getArea();
 	Vector4 getNormal();
+	Vector4 getBarycentricCrd(Vector4 CartesianCrd);
 
 	inline Vector4& operator[](int index) { return vertices[index]; }
 	inline const Vector4& operator[](int index) const { return vertices[index]; }
@@ -27,5 +29,6 @@ public:
 	//class methods
 	Vector4 calcNormal();
 	const bool isVertexInTriangle(Vector4& V);
+	void triangleScanConversion(std::vector<Coordinate>& crdVec);
 
 };
