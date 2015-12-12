@@ -21,7 +21,6 @@ public:
 	//get functions
 	double getArea();
 	Vector4 getNormal();
-	Vector4 getBarycentricCrd(Vector4 CartesianCrd);
 
 	inline Vector4& operator[](int index) { return vertices[index]; }
 	inline const Vector4& operator[](int index) const { return vertices[index]; }
