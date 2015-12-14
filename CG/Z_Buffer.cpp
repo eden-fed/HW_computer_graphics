@@ -2,6 +2,11 @@
 
 Z_Buffer::Z_Buffer()
 {
+	for (int i = 0; i < buffer.size(); i++) {
+		for (int j = 0; j = buffer[i].size(); j++) {
+			buffer[i][j].zValue = -DBL_MAX;
+		}
+	}
 }
 
 Z_Buffer::~Z_Buffer()

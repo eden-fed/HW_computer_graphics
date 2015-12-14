@@ -3,10 +3,15 @@
 #define Z_BUFFER_H
 #include <vector>
 #include "Triangle.h"
+#include "Color.h"
 
 class Z_Buffer
 {
-	std::vector<std::vector<double>> Pixels;
+	typedef struct {
+		double zValue;
+		Color color;
+	}Zpixel;
+	std::vector<std::vector<Zpixel>> buffer;
 
 public:
 	//constructors
