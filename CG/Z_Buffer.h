@@ -10,6 +10,7 @@ class Z_Buffer
 	typedef struct {
 		double zValue;
 		Color color;
+		bool to_print;
 	}Zpixel;
 	std::vector<std::vector<Zpixel>> buffer;
 
@@ -22,6 +23,7 @@ public:
 
 	//class methods
 	double Depth(Triangle Q, double X, double Y);
+	void FillBuffer(std::vector<Triangle> sceneTriangles);
 };
 
 

@@ -29,5 +29,6 @@ public:
 	Vector4 calcNormal();
 	const bool isVertexInTriangle(Vector4& V);
 	void triangleScanConversion(std::vector<Coordinate>& crdVec);
+	Color getColorOfPoint(int x, int y);
 
 };
