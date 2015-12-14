@@ -113,6 +113,11 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 
 }
 
+Color Triangle::getColorOfPoint(int x, int y)
+{
+	return Color();
+}
+
 
 /*Vector4 Triangle::getBarycentricCrd(Vector4 CartesianCrd)
 {

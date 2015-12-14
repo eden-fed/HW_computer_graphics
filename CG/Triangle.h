@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector4.h"
 #include "Coordinate.h"
+#include "Color.h"
 
 class Triangle
 {
