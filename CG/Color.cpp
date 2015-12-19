@@ -7,6 +7,10 @@ Color::Color()
 {
 	color=0;
 }
+Color::Color(unsigned int C)
+{
+	this->color = C;
+}
 Color::Color(int r,int g,int b)
 {
 	setColor(r,g,b);
@@ -38,4 +42,10 @@ void Color::setColor(int r, int g, int b)
 	CUT_TO_FIT_UBYTE(g);
 	CUT_TO_FIT_UBYTE(b);
 	color = (b << 16) | (g << 8) | r;
+}
+
+const Color& Color::operator=(const Color & C)
+{
+	this->color = C.getColor();
+	return *this;
 }
