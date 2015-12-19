@@ -17,7 +17,8 @@
 #include "Object.h"
 #include "Matrix4x4.h"
 #include "Camera.h"
-#include "BBox.h"""
+#include "BBox.h"
+#include "Z_Buffer.h"
 
 
 LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing 
@@ -73,7 +74,7 @@ double g_zLightDirection = 0.0;
 bool g_lightType = false;
 unsigned int lightColor = 0;
 double g_ambientLight = 0.0;
-
+Z_Buffer g_zBuffer(g_Swidth, g_Sheight);
 
 
 
@@ -443,7 +444,10 @@ void drawScene() {
 	}
 
 	//draw the object
-	model.drawModel();
+	//model.drawModelEdges();
+
+	g_zBuffer.FillBuffer(model.getAllFaces());
+	g_zBuffer.drawBuffer();
 
 }
 
@@ -501,7 +505,8 @@ void Reshape(int width, int height)
 	g_Swidth = width;
 	g_Sheight = height;
 
-	
+	g_zBuffer.reshape(width, height);
+
 
 	// Send the new window size to AntTweakBar
 	TwWindowSize(width, height);

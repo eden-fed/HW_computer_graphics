@@ -152,7 +152,7 @@ void MeshModel::populatelinesToDraw()
 	}
 }
 
-void MeshModel::drawModel()
+void MeshModel::drawModelEdges()
 {
 	populatelinesToDraw();
 	Line ln;

@@ -1,18 +1,22 @@
 #include "Z_Buffer.h"
+#include "Renderer.h"
 
-Z_Buffer::Z_Buffer()
+Z_Buffer::Z_Buffer(int width, int height)
 {
-	for (int i = 0; i < buffer.size(); i++) {
-		for (int j = 0; j = buffer[i].size(); j++) {
-			buffer[i][j].zValue = -DBL_MAX;
-			buffer[i][j].color.setColor(0, 0, 0);
-			buffer[i][j].to_print = false;
-		}
+	this->zWidth = width;
+	this->zHeight = height;
+	buffer = new Zpixel*[width];
+	for (int x = 0; x < width; x++) {
+		buffer[x] = new Zpixel[height];
 	}
 }
 
 Z_Buffer::~Z_Buffer()
 {
+	for (int x = 0; x < this->zWidth; ++x) {
+		delete[] buffer[x];
+	}
+	delete[] buffer;
 }
 
 double Z_Buffer::Depth(Triangle Q, double X, double Y)
@@ -32,6 +36,7 @@ double Z_Buffer::Depth(Triangle Q, double X, double Y)
 
 void Z_Buffer::FillBuffer(std::vector<Triangle> sceneTriangles)
 {
+	emptyBuffer();
 	std::vector<Coordinate> TriangleCrd;
 
 	for (int i = 0; i < sceneTriangles.size(); i++) {
@@ -46,6 +51,56 @@ void Z_Buffer::FillBuffer(std::vector<Triangle> sceneTriangles)
 				buffer[x][y].color = sceneTriangles[i].getColorOfPoint(x, y);
 				buffer[x][y].to_print = true;
 			}
+		}
+	}
+}
+
+void Z_Buffer::drawBuffer()
+{
+	Renderer renderer;
+	Pixel pxlToPush;
+	std::vector<Pixel> pixels;
+
+	for (int x = 0; x < this->zWidth; x++) {
+		for (int y = 0; y < this->zHeight; y++) {
+			if (buffer[x][y].to_print) {
+				pxlToPush.x = x;
+				pxlToPush.y = y;
+				pxlToPush.color = buffer[x][y].color.getColor();
+				pixels.push_back(pxlToPush);
+			}
+		}
+	}
+
+	renderer.drawPixels(pixels);
+
+}
+
+void Z_Buffer::reshape(int width, int height)
+{
+
+
+	for (int x = 0; x < this->zWidth; ++x) {
+		delete[] buffer[x];
+	}
+	delete[] buffer;
+
+	this->zWidth = width;
+	this->zHeight = height;
+
+	buffer = new Zpixel*[width];
+	for (int x = 0; x < width; x++) {
+		buffer[x] = new Zpixel[height];
+	}
+}
+
+void Z_Buffer::emptyBuffer()
+{
+	for (int x = 0; x < this->zWidth; x++) {
+		for (int y = 0; y < this->zHeight; y++) {
+			buffer[x][y].zValue = -DBL_MAX;
+			buffer[x][y].color.setColor(0, 0, 0);
+			buffer[x][y].to_print = false;
 		}
 	}
 }

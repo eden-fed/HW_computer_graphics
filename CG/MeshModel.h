@@ -21,6 +21,7 @@ class MeshModel
 	std::set<Line> linesToDraw;
 
 public:
+
 	//constructors
 	MeshModel();
 	MeshModel(Wavefront_obj& J);
@@ -36,6 +37,7 @@ public:
 	inline Vector4 getVertex(int index) { return vertices[index].vertex; };//get vertex by index
 	inline Vector4 getNormal(int index) { return vertices[index].normal; }; // get normal by index
 	inline Triangle getFace(int index) { return faces[index]; }; // get normal by index
+	inline std::vector<Triangle>& getAllFaces() { return faces; }; // get normal by index
 
 
 	//class methods 
@@ -48,7 +50,7 @@ public:
 	void scale10units();
 	void moveCentroidToOrigin();
 	void populatelinesToDraw();
-	void drawModel();
+	void drawModelEdges();
 	void drawNormals(double normSize);
 
 };

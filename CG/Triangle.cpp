@@ -186,7 +186,7 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 
 Color Triangle::getColorOfPoint(int x, int y)
 {
-	return Color();
+	return Color(0xff0000ff);
 }
 
 
