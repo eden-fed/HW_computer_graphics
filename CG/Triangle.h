@@ -3,11 +3,22 @@
 #include "Coordinate.h"
 #include "Color.h"
 
+
 class Triangle
 {
+
+	typedef enum {
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
+	} eScanConvMovement;
+
 	Vector4 vertices[3];
 	double area;
 	Vector4 normal;
+
+	float gradient[7];
 
 public:
 	//constructors
@@ -29,6 +40,9 @@ public:
 	//class methods
 	Vector4 calcNormal();
 	const bool isVertexInTriangle(Vector4& V);
+
+	Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M);
+
 	void triangleScanConversion(std::vector<Coordinate>& crdVec);
 	Color getColorOfPoint(int x, int y);
 
