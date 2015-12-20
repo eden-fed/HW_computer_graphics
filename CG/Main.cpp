@@ -443,12 +443,11 @@ void drawScene() {
 		sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(), g_Swidth / 2, g_Sheight / 2);
 	}
 
-	//draw the object
-	//model.drawModelEdges();
 
 	g_zBuffer.FillBuffer(model.getAllFaces());
 	g_zBuffer.drawBuffer();
 
+	model.drawModelEdges();
 }
 
 //this will make sure that integer coordinates are mapped exactly to corresponding pixels on screen

@@ -8,6 +8,11 @@
 #define B2DY 5
 #define IS_FILLED 6
 
+#define X 0
+#define Y 1
+#define Z 3
+
+
 Triangle::Triangle()
 {
 }
@@ -84,14 +89,15 @@ Vector4 Triangle::getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M)
 
 	//The gradient for barecentryc coordinates
 	if (gradient[IS_FILLED] == 0.0) { //false=0.0
-		gradient[B0DX] = ((*this)[2][1] - (*this)[1][1])*(1 / this->getArea());
-		gradient[B0DY] = ((*this)[1][0] - (*this)[2][0])*(1 / this->getArea());
 
-		gradient[B1DX] = ((*this)[0][1] - (*this)[2][1])*(1 / this->getArea());
-		gradient[B1DY] = ((*this)[2][0] - (*this)[0][0])*(1 / this->getArea());
+		gradient[B0DX] = ((*this)[1][Y] - (*this)[2][Y])*(1 / (((*this)[1][Y] - (*this)[2][Y])*(*this)[0][X] + ((*this)[2][X] - (*this)[1][X])*(*this)[0][Y] + (*this)[1][X] * (*this)[2][Y] - (*this)[2][X] * (*this)[1][Y]));
+		gradient[B0DY] = ((*this)[2][X] - (*this)[1][X])*(1 / (((*this)[1][Y] - (*this)[2][Y])*(*this)[0][X] + ((*this)[2][X] - (*this)[1][X])*(*this)[0][Y] + (*this)[1][X] * (*this)[2][Y] - (*this)[2][X] * (*this)[1][Y]));
 
-		gradient[B2DX] = ((*this)[1][1] - (*this)[0][1])*(1 / this->getArea());
-		gradient[B2DY] = ((*this)[0][0] - (*this)[1][0])*(1 / this->getArea());
+		gradient[B1DX] = ((*this)[2][Y] - (*this)[0][Y])*(1 / (((*this)[2][Y] - (*this)[0][Y])*(*this)[1][X] + ((*this)[0][X] - (*this)[2][X])*(*this)[1][Y] + (*this)[2][X] * (*this)[0][Y] - (*this)[0][X] * (*this)[2][Y]));
+		gradient[B1DY] = ((*this)[0][X] - (*this)[2][X])*(1 / (((*this)[2][Y] - (*this)[0][Y])*(*this)[1][X] + ((*this)[0][X] - (*this)[2][X])*(*this)[1][Y] + (*this)[2][X] * (*this)[0][Y] - (*this)[0][X] * (*this)[2][Y]));
+
+		gradient[B2DX] = ((*this)[0][Y] - (*this)[1][Y])*(1 / (((*this)[0][Y] - (*this)[1][Y])*(*this)[2][X] + ((*this)[1][X] - (*this)[0][X])*(*this)[2][Y] + (*this)[0][X] * (*this)[1][Y] - (*this)[1][X] * (*this)[0][Y]));
+		gradient[B2DY] = ((*this)[1][X] - (*this)[0][X])*(1 / (((*this)[0][Y] - (*this)[1][Y])*(*this)[2][X] + ((*this)[1][X] - (*this)[0][X])*(*this)[2][Y] + (*this)[0][X] * (*this)[1][Y] - (*this)[1][X] * (*this)[0][Y]));
 
 		gradient[IS_FILLED]=1.0; //true=1.0
 	}
@@ -130,7 +136,7 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 	crdVec.clear();
 
 	//bounding rectangle parameters
-	int minX, maxX, minY, maxY;
+	float minX, maxX, minY, maxY;
 	bool changeDirection=false;
 
 	//find bounding rectangle
@@ -159,16 +165,16 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 	//     * D *
 	//  V0*******V2
 	Vector4 V1D;
-	Vector4 V1V0= vertices[0]- vertices[1];
-	Vector4 V1V2=vertices[0] - vertices[2];
+	Vector4 V1V0= vertices[1]- vertices[0];
+	Vector4 V1V2=vertices[1] - vertices[2];
 	V1V0[2] = V1V2[2] = 0; //3d to 2d
 	Vector4 bCrd;
 	Coordinate crdToDraw;
 
-	V1D.setVlaues(minX - vertices[0][0], minY - vertices[0][1], 0, 1);
-	bCrd[0] = (((V1D^V1V2).getSize())/2) / this->getArea(); // V1V2D / V1V2V3
-	bCrd[1] = ((V1D^V1V0).getSize() / 2) / this->getArea(); // V1V0D / V1V2V3
-	bCrd[2] = 1 - (bCrd[0] + bCrd[1]);
+	V1D.setVlaues(vertices[1][X] - minX, vertices[1][Y] - minY, 0, 1);
+	bCrd[0] = ((V1D^V1V2).getSize()) / ((V1V0^V1V2).getSize()); // V1V2D / V1V2V3
+	bCrd[1] = ((V1D^V1V0).getSize())/ ((V1V0^V1V2).getSize()); // V1V0D / V1V2V3
+	bCrd[2] = 1.0 - (bCrd[0] + bCrd[1]);
 
 
 	for (int x = minX; x <= maxX; x++) {
@@ -194,7 +200,7 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 
 Color Triangle::getColorOfPoint(int x, int y)
 {
-	return Color(0xff0000ff);
+	return Color(0x00ff00);
 }
 
 
