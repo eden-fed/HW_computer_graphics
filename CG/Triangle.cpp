@@ -90,14 +90,14 @@ Vector4 Triangle::getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M)
 	//The gradient for barecentryc coordinates
 	if (gradient[IS_FILLED] == 0.0) { //false=0.0
 
-		gradient[B0DX] = ((*this)[1][Y] - (*this)[2][Y])*(1 / (((*this)[1][Y] - (*this)[2][Y])*(*this)[0][X] + ((*this)[2][X] - (*this)[1][X])*(*this)[0][Y] + (*this)[1][X] * (*this)[2][Y] - (*this)[2][X] * (*this)[1][Y]));
-		gradient[B0DY] = ((*this)[2][X] - (*this)[1][X])*(1 / (((*this)[1][Y] - (*this)[2][Y])*(*this)[0][X] + ((*this)[2][X] - (*this)[1][X])*(*this)[0][Y] + (*this)[1][X] * (*this)[2][Y] - (*this)[2][X] * (*this)[1][Y]));
+		gradient[B0DX] = ((*this)[1][Y] - (*this)[2][Y])*(1 / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]));
+		gradient[B0DY] = ((*this)[2][X] - (*this)[1][X])*(1 / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]));
 
-		gradient[B1DX] = ((*this)[2][Y] - (*this)[0][Y])*(1 / (((*this)[2][Y] - (*this)[0][Y])*(*this)[1][X] + ((*this)[0][X] - (*this)[2][X])*(*this)[1][Y] + (*this)[2][X] * (*this)[0][Y] - (*this)[0][X] * (*this)[2][Y]));
-		gradient[B1DY] = ((*this)[0][X] - (*this)[2][X])*(1 / (((*this)[2][Y] - (*this)[0][Y])*(*this)[1][X] + ((*this)[0][X] - (*this)[2][X])*(*this)[1][Y] + (*this)[2][X] * (*this)[0][Y] - (*this)[0][X] * (*this)[2][Y]));
+		gradient[B1DX] = ((*this)[2][Y] - (*this)[0][Y])*(1 / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]));
+		gradient[B1DY] = ((*this)[0][X] - (*this)[2][X])*(1 / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]));
 
-		gradient[B2DX] = ((*this)[0][Y] - (*this)[1][Y])*(1 / (((*this)[0][Y] - (*this)[1][Y])*(*this)[2][X] + ((*this)[1][X] - (*this)[0][X])*(*this)[2][Y] + (*this)[0][X] * (*this)[1][Y] - (*this)[1][X] * (*this)[0][Y]));
-		gradient[B2DY] = ((*this)[1][X] - (*this)[0][X])*(1 / (((*this)[0][Y] - (*this)[1][Y])*(*this)[2][X] + ((*this)[1][X] - (*this)[0][X])*(*this)[2][Y] + (*this)[0][X] * (*this)[1][Y] - (*this)[1][X] * (*this)[0][Y]));
+		gradient[B2DX] = ((*this)[0][Y] - (*this)[1][Y])*(1 / helpGNBC(0, 1, (*this)[2][X], (*this)[2][Y]));
+		gradient[B2DY] = ((*this)[1][X] - (*this)[0][X])*(1 / helpGNBC(0, 1, (*this)[2][X], (*this)[2][Y]));
 
 		gradient[IS_FILLED]=1.0; //true=1.0
 	}
@@ -137,7 +137,6 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 
 	//bounding rectangle parameters
 	float minX, maxX, minY, maxY;
-	bool changeDirection=false;
 
 	//find bounding rectangle
 	{
@@ -164,16 +163,13 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 	//      * *
 	//     * D *
 	//  V0*******V2
-	Vector4 V1D;
-	Vector4 V1V0= vertices[1]- vertices[0];
-	Vector4 V1V2=vertices[1] - vertices[2];
-	V1V0[2] = V1V2[2] = 0; //3d to 2d
+
 	Vector4 bCrd;
 	Coordinate crdToDraw;
+	bool changeDirection = false;
 
-	V1D.setVlaues(vertices[1][X] - minX, vertices[1][Y] - minY, 0, 1);
-	bCrd[0] = ((V1D^V1V2).getSize()) / ((V1V0^V1V2).getSize()); // V1V2D / V1V2V3
-	bCrd[1] = ((V1D^V1V0).getSize())/ ((V1V0^V1V2).getSize()); // V1V0D / V1V2V3
+	bCrd[0] = helpGNBC(1, 2, minX, minY) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]); // V1V2D / V1V2V0
+	bCrd[1] = helpGNBC(2, 0, minX, minY) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]); // V1V0D / V1V2V0
 	bCrd[2] = 1.0 - (bCrd[0] + bCrd[1]);
 
 
@@ -201,6 +197,11 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 Color Triangle::getColorOfPoint(int x, int y)
 {
 	return Color(0x00ff00);
+}
+
+float Triangle::helpGNBC(int a, int b, float x, float y) 
+{
+	return (((*this)[a][Y] - (*this)[b][Y])*x) + (((*this)[b][X] - (*this)[a][X])*y) + (*this)[a][X] * (*this)[b][Y] - (*this)[b][X] * (*this)[a][Y];
 }
 
 

@@ -40,10 +40,9 @@ public:
 	//class methods
 	Vector4 calcNormal();
 	const bool isVertexInTriangle(Vector4& V);
-
 	Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M);
-
 	void triangleScanConversion(std::vector<Coordinate>& crdVec);
 	Color getColorOfPoint(int x, int y);
+	float helpGNBC(int a, int b, float x, float y);
 
 };
