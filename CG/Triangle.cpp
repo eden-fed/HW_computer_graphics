@@ -130,12 +130,13 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 	crdVec.clear();
 
 	//bounding rectangle parameters
-	double minX, maxX, minY, maxY;
+	int minX, maxX, minY, maxY;
+	bool changeDirection=false;
 
 	//find bounding rectangle
 	{
 		minX = maxX = vertices[0][0];
-		minY = maxY = vertices[0][0];
+		minY = maxY = vertices[0][1];
 		for (int i = 1; i < 3; i++) {
 			if (vertices[i][0] < minX) {
 				minX = vertices[i][0];
@@ -167,19 +168,26 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 	V1D.setVlaues(minX - vertices[0][0], minY - vertices[0][1], 0, 1);
 	bCrd[0] = (((V1D^V1V2).getSize())/2) / this->getArea(); // V1V2D / V1V2V3
 	bCrd[1] = ((V1D^V1V0).getSize() / 2) / this->getArea(); // V1V0D / V1V2V3
-	bCrd[2] = bCrd[0] + bCrd[1];
+	bCrd[2] = 1 - (bCrd[0] + bCrd[1]);
 
 
 	for (int x = minX; x <= maxX; x++) {
-		getNewBarycentricCrd(bCrd, RIGHT);
 		for (int y = minY; y <= maxY; y++) {
-			getNewBarycentricCrd(bCrd, UP);
-			if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] <1) {
+			if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
 				crdToDraw.setX(x);
 				crdToDraw.setY(y);
 				crdVec.push_back(crdToDraw);
 			}
+			if (changeDirection) {
+				bCrd = getNewBarycentricCrd(bCrd, DOWN);
+			}
+			else {
+				bCrd = getNewBarycentricCrd(bCrd, UP);
+			}
+			
 		}
+		changeDirection = (!changeDirection);
+		bCrd = getNewBarycentricCrd(bCrd, RIGHT);
 	}
 
 }
