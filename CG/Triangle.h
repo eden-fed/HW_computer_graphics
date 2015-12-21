@@ -6,6 +6,10 @@
 
 class Triangle
 {
+	typedef struct {
+		Vector4 baryCrd;
+		Coordinate cartCrd;
+	} stBaryAndCartCrd;
 
 	typedef enum {
 		UP,
@@ -39,7 +43,7 @@ public:
 	Vector4 calcNormal();
 	const bool isVertexInTriangle(Vector4& V);
 	Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsigned int numOfMoves);
-	void triangleScanConversion(std::vector<Coordinate>& crdVec);
+	void triangleScanConversion(std::vector<stBaryAndCartCrd>& crdVec);
 	Color getColorOfPoint(int x, int y);
 	float helpGNBC(int a, int b, float x, float y);
 

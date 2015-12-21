@@ -120,7 +120,7 @@ Vector4 Triangle::getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsign
 }
 
 
-void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
+void Triangle::triangleScanConversion(std::vector<stBaryAndCartCrd>& crdVec)
 {
 	crdVec.clear();
 
@@ -155,7 +155,7 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 
 
 	Vector4 bCrd,firstBaryCrd;
-	Coordinate crdToDraw;
+	stBaryAndCartCrd crdInfo;
 
 	firstBaryCrd[0] = helpGNBC(1, 2, (int)minX, (int)minY) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]); // V1V2D / V1V2V0
 	firstBaryCrd[1] = helpGNBC(2, 0, (int)minX, (int)minY) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]); // V1V0D / V1V2V0
@@ -165,9 +165,10 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 		bCrd = getNewBarycentricCrd(firstBaryCrd, RIGHT ,x-(int)minX);
 		for (int y = minY; y <= maxY; y++) {
 			if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
-				crdToDraw.setX(x);
-				crdToDraw.setY(y);
-				crdVec.push_back(crdToDraw);
+				crdInfo.cartCrd.setX(x);
+				crdInfo.cartCrd.setY(y);
+				crdInfo.baryCrd = bCrd;
+				crdVec.push_back(crdInfo);
 			}
 			bCrd = getNewBarycentricCrd(bCrd, UP,1);
 		}
