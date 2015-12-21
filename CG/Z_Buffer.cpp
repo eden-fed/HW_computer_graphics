@@ -18,7 +18,11 @@ Z_Buffer::~Z_Buffer()
 	}
 	delete[] buffer;
 }
-
+double Z_Buffer::Depth(Triangle Q, Vector4 baryCrd)
+{
+	return Q[0][2] * baryCrd[0] + Q[1][2] * baryCrd[1] + Q[2][2] * baryCrd[2];
+}
+/*
 double Z_Buffer::Depth(Triangle Q, double X, double Y)
 {
 	//Ax + By +Cz + D = 0 Normal Vector: N=(A, B, C)
@@ -32,23 +36,26 @@ double Z_Buffer::Depth(Triangle Q, double X, double Y)
 
 	//Z = (-AX -BY -D)/C
 	return -((A*X) + (B*Y) + D) / C;
-}
+}*/
 
 void Z_Buffer::FillBuffer(std::vector<Triangle> sceneTriangles)
 {
 	emptyBuffer();
-	std::vector<Coordinate> TriangleCrd;
+	std::vector<stBaryAndCartCrd> TriangleCrd;
 
 	for (int i = 0; i < sceneTriangles.size(); i++) {
 		sceneTriangles[i].triangleScanConversion(TriangleCrd);
-
+		unsigned int rnd = rand() << 8;
 		for (int j = 0; j < TriangleCrd.size(); j++) {
-			int x = TriangleCrd[j].getX();
-			int y = TriangleCrd[j].getY();
-			double z = Depth(sceneTriangles[i], (double)x, (double)y);
+			int x = TriangleCrd[j].cartCrd.getX();
+			int y = TriangleCrd[j].cartCrd.getY();
+			if (x < 0 || y < 0 || x > this->zWidth || y > this->zHeight)
+				continue;
+			double z = Depth(sceneTriangles[i], TriangleCrd[j].baryCrd);
 			if (z > this->buffer[x][y].zValue) {
 				buffer[x][y].zValue = z;
-				buffer[x][y].color = sceneTriangles[i].getColorOfPoint(x, y);
+				//buffer[x][y].color = sceneTriangles[i].getColorOfPoint(x, y);
+				buffer[x][y].color.setColor(0x00ff00 + rnd);
 				buffer[x][y].to_print = true;
 			}
 		}

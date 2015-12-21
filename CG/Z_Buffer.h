@@ -26,7 +26,8 @@ public:
 	~Z_Buffer();
 
 	//class methods
-	double Depth(Triangle Q, double X, double Y);
+	//double Depth(Triangle Q, double X, double Y);
+	double Depth(Triangle Q, Vector4 baryCrd);
 	void FillBuffer(std::vector<Triangle> sceneTriangles);
 	void drawBuffer();
 	void reshape(int width, int height);

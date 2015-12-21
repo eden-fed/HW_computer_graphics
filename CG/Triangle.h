@@ -3,14 +3,13 @@
 #include "Coordinate.h"
 #include "Color.h"
 
+typedef struct {
+	Vector4 baryCrd;
+	Coordinate cartCrd;
+} stBaryAndCartCrd;
 
 class Triangle
 {
-	typedef struct {
-		Vector4 baryCrd;
-		Coordinate cartCrd;
-	} stBaryAndCartCrd;
-
 	typedef enum {
 		UP,
 		RIGHT
@@ -23,6 +22,7 @@ class Triangle
 	float gradient[7];
 
 public:
+
 	//constructors
 	Triangle();
 	Triangle(Vector4& v1, Vector4& v2, Vector4& v3);
