@@ -76,7 +76,7 @@ const bool Triangle::isVertexInTriangle(Vector4 & V)
 	}
 	return false;
 }
-
+/*
 Vector4 Triangle::getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsigned int numOfMoves)
 {
 	//       V1
@@ -117,10 +117,10 @@ Vector4 Triangle::getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsign
 		break;
 	}
 		return retVal;
-}
+}*/
 
-
-void Triangle::triangleScanConversion(std::vector<stBaryAndCartCrd>& crdVec)
+/*
+void Triangle::triangleScanConversion(std::vector<stZbufferInfo>& crdVec)
 {
 	crdVec.clear();
 
@@ -155,7 +155,7 @@ void Triangle::triangleScanConversion(std::vector<stBaryAndCartCrd>& crdVec)
 
 
 	Vector4 bCrd,firstBaryCrd;
-	stBaryAndCartCrd crdInfo;
+	stZbufferInfo crdInfo;
 
 	firstBaryCrd[0] = helpGNBC(1, 2, (int)minX, (int)minY) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]); // V1V2D / V1V2V0
 	firstBaryCrd[1] = helpGNBC(2, 0, (int)minX, (int)minY) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]); // V1V0D / V1V2V0
@@ -175,16 +175,16 @@ void Triangle::triangleScanConversion(std::vector<stBaryAndCartCrd>& crdVec)
 	}
 
 }
-
+*/
 Color Triangle::getColorOfPoint(int x, int y)
 {
 	return Color(0x00ff00);
 }
-
+/*
 float Triangle::helpGNBC(int a, int b, float x, float y) 
 {
 	return (((*this)[a][Y] - (*this)[b][Y])*x) + (((*this)[b][X] - (*this)[a][X])*y) + (*this)[a][X] * (*this)[b][Y] - (*this)[b][X] * (*this)[a][Y];
-}
+}*/
 
 
 /*Vector4 Triangle::getBarycentricCrd(Vector4 CartesianCrd)

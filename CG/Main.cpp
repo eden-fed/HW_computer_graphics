@@ -19,6 +19,8 @@
 #include "Camera.h"
 #include "BBox.h"
 #include "Z_Buffer.h"
+#include "Shader.h"
+#include "Light.h"
 
 
 LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds;//for the timing 
@@ -444,7 +446,13 @@ void drawScene() {
 	}
 
 
-	g_zBuffer.FillBuffer(model.getAllFaces());
+	//g_zBuffer.FillBuffer(model.getAllFaces());
+	//g_zBuffer.drawBuffer();
+	Light light1, light2;
+	Shader shader(FLAT);
+	std::vector<MeshModel> meshVec;
+	meshVec.push_back(model);
+	shader.draw(meshVec, light1, light2, g_zBuffer);
 	g_zBuffer.drawBuffer();
 
 	model.drawModelEdges();

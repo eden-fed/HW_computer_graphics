@@ -9,6 +9,7 @@ Z_Buffer::Z_Buffer(int width, int height)
 	for (int x = 0; x < width; x++) {
 		buffer[x] = new Zpixel[height];
 	}
+	this->emptyBuffer();
 }
 
 Z_Buffer::~Z_Buffer()
@@ -23,25 +24,10 @@ double Z_Buffer::Depth(Triangle Q, Vector4 baryCrd)
 	return Q[0][2] * baryCrd[0] + Q[1][2] * baryCrd[1] + Q[2][2] * baryCrd[2];
 }
 /*
-double Z_Buffer::Depth(Triangle Q, double X, double Y)
-{
-	//Ax + By +Cz + D = 0 Normal Vector: N=(A, B, C)
-	Vector4 N = Q.getNormal();
-
-	double A = N[0];
-	double B = N[1];
-	double C = N[2];
-	double D = -(A*Q[1][0] + B*Q[1][0] + C*Q[1][0]);
-
-
-	//Z = (-AX -BY -D)/C
-	return -((A*X) + (B*Y) + D) / C;
-}*/
-
 void Z_Buffer::FillBuffer(std::vector<Triangle> sceneTriangles)
 {
 	emptyBuffer();
-	std::vector<stBaryAndCartCrd> TriangleCrd;
+	std::vector<stZbufferInfo> TriangleCrd;
 
 	for (int i = 0; i < sceneTriangles.size(); i++) {
 		sceneTriangles[i].triangleScanConversion(TriangleCrd);
@@ -59,6 +45,21 @@ void Z_Buffer::FillBuffer(std::vector<Triangle> sceneTriangles)
 				buffer[x][y].to_print = true;
 			}
 		}
+
+	}
+}*/
+
+void Z_Buffer::FillPixelInBuffer(stZbufferInfo& pixel)
+{
+	int x = pixel.cartCrd.getX();
+	int y = pixel.cartCrd.getY();
+	if (x < 0 || y < 0 || x > this->zWidth || y > this->zHeight)
+		return;
+	double z = Depth(pixel.trl, pixel.baryCrd);
+	if (z > this->buffer[x][y].zValue) {
+		buffer[x][y].zValue = z;
+		buffer[x][y].color = pixel.clr;
+		buffer[x][y].to_print = true;
 	}
 }
 

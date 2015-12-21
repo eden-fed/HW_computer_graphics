@@ -2,27 +2,28 @@
 #include "Vector4.h"
 #include "Coordinate.h"
 #include "Color.h"
-
+/*
 typedef struct {
 	Vector4 baryCrd;
 	Coordinate cartCrd;
-} stBaryAndCartCrd;
+	Color clr;
+} stZbufferInfo;*/
 
 class Triangle
 {
-	typedef enum {
+	/*typedef enum {
 		UP,
 		RIGHT
-	} eScanConvMovement;
+	} eScanConvMovement;*/
 
 	Vector4 vertices[3];
 	double area;
 	Vector4 normal;
 
-	float gradient[7];
+	
 
 public:
-
+	float gradient[7];
 	//constructors
 	Triangle();
 	Triangle(Vector4& v1, Vector4& v2, Vector4& v3);
@@ -42,9 +43,9 @@ public:
 	//class methods
 	Vector4 calcNormal();
 	const bool isVertexInTriangle(Vector4& V);
-	Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsigned int numOfMoves);
-	void triangleScanConversion(std::vector<stBaryAndCartCrd>& crdVec);
+	//Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsigned int numOfMoves);
+	//void triangleScanConversion(std::vector<stZbufferInfo>& crdVec);
 	Color getColorOfPoint(int x, int y);
-	float helpGNBC(int a, int b, float x, float y);
+	//float helpGNBC(int a, int b, float x, float y);
 
 };

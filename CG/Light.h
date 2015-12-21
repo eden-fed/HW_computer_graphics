@@ -6,7 +6,7 @@
 #include "Color.h"
 
 typedef enum {
-	POINT,
+	_POINT,
 	DIRECTION,
 } eLightType;
 
