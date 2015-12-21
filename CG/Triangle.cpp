@@ -90,14 +90,14 @@ Vector4 Triangle::getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M)
 	//The gradient for barecentryc coordinates
 	if (gradient[IS_FILLED] == 0.0) { //false=0.0
 
-		gradient[B0DX] = ((*this)[1][Y] - (*this)[2][Y])*(1 / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]));
-		gradient[B0DY] = ((*this)[2][X] - (*this)[1][X])*(1 / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]));
+		gradient[B0DX] = ((*this)[1][Y] - (*this)[2][Y]) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]);
+		gradient[B0DY] = ((*this)[2][X] - (*this)[1][X]) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]);
 
-		gradient[B1DX] = ((*this)[2][Y] - (*this)[0][Y])*(1 / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]));
-		gradient[B1DY] = ((*this)[0][X] - (*this)[2][X])*(1 / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]));
+		gradient[B1DX] = ((*this)[2][Y] - (*this)[0][Y]) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]);
+		gradient[B1DY] = ((*this)[0][X] - (*this)[2][X]) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]);
 
-		gradient[B2DX] = ((*this)[0][Y] - (*this)[1][Y])*(1 / helpGNBC(0, 1, (*this)[2][X], (*this)[2][Y]));
-		gradient[B2DY] = ((*this)[1][X] - (*this)[0][X])*(1 / helpGNBC(0, 1, (*this)[2][X], (*this)[2][Y]));
+		gradient[B2DX] = ((*this)[0][Y] - (*this)[1][Y]) / helpGNBC(0, 1, (*this)[2][X], (*this)[2][Y]);
+		gradient[B2DY] = ((*this)[1][X] - (*this)[0][X]) / helpGNBC(0, 1, (*this)[2][X], (*this)[2][Y]);
 
 		gradient[IS_FILLED]=1.0; //true=1.0
 	}
@@ -164,29 +164,35 @@ void Triangle::triangleScanConversion(std::vector<Coordinate>& crdVec)
 	//     * D *
 	//  V0*******V2
 
-	Vector4 bCrd;
+	Vector4 bCrd,bCrdTest;
 	Coordinate crdToDraw;
 	bool changeDirection = false;
 
-	bCrd[0] = helpGNBC(1, 2, minX, minY) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]); // V1V2D / V1V2V0
-	bCrd[1] = helpGNBC(2, 0, minX, minY) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]); // V1V0D / V1V2V0
+	bCrd[0] = helpGNBC(1, 2, (int)minX, (int)minY) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]); // V1V2D / V1V2V0
+	bCrd[1] = helpGNBC(2, 0, (int)minX, (int)minY) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]); // V1V0D / V1V2V0
 	bCrd[2] = 1.0 - (bCrd[0] + bCrd[1]);
+
+	bCrdTest = bCrd;
 
 
 	for (int x = minX; x <= maxX; x++) {
 		for (int y = minY; y <= maxY; y++) {
-			if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
+			bCrdTest[0] = helpGNBC(1, 2, x, y) / helpGNBC(1, 2, (*this)[0][X], (*this)[0][Y]); // V1V2D / V1V2V0
+			bCrdTest[1] = helpGNBC(2, 0, x, y) / helpGNBC(2, 0, (*this)[1][X], (*this)[1][Y]); // V1V0D / V1V2V0
+			bCrdTest[2] = 1.0 - (bCrdTest[0] + bCrdTest[1]);
+			if (bCrdTest[0] > 0 && bCrdTest[1] > 0 && bCrdTest[2] > 0) {
 				crdToDraw.setX(x);
 				crdToDraw.setY(y);
 				crdVec.push_back(crdToDraw);
 			}
-			if (changeDirection) {
-				bCrd = getNewBarycentricCrd(bCrd, DOWN);
-			}
-			else {
-				bCrd = getNewBarycentricCrd(bCrd, UP);
-			}
-			
+			if (y!=(int)maxY) {
+				if (changeDirection) {
+					bCrd = getNewBarycentricCrd(bCrd, DOWN);
+				}
+				else {
+					bCrd = getNewBarycentricCrd(bCrd, UP);
+				}
+			}	
 		}
 		changeDirection = (!changeDirection);
 		bCrd = getNewBarycentricCrd(bCrd, RIGHT);
