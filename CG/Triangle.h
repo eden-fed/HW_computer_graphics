@@ -9,8 +9,6 @@ class Triangle
 
 	typedef enum {
 		UP,
-		DOWN,
-		LEFT,
 		RIGHT
 	} eScanConvMovement;
 
@@ -40,7 +38,7 @@ public:
 	//class methods
 	Vector4 calcNormal();
 	const bool isVertexInTriangle(Vector4& V);
-	Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M);
+	Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsigned int numOfMoves);
 	void triangleScanConversion(std::vector<Coordinate>& crdVec);
 	Color getColorOfPoint(int x, int y);
 	float helpGNBC(int a, int b, float x, float y);
