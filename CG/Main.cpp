@@ -85,7 +85,10 @@ Object sceneObject;
 BBox box;
 Matrix4x4 transform;
 Matrix4x4 axisTransform;
-
+Matrix4x4 saveCamera(1, 0, 0, 0,
+					 0, 1, 0, 0,
+					 0, 0, 1, 0,
+					 0, 0, 0, 1);
 bool clear = true;
 
 void TW_CALL loadOBJModel(void* clientData);
@@ -398,9 +401,7 @@ void drawScene() {
 						0, 0, -5, 1);
 
 	//transforming object with all required transformations
-	//modelMtrx = modelMtrx*transform;//need to adapt to world and object space
-	modelMtrx *= sceneObject.getMtrx();
-	//Matrix4x4 modelMtrx=sceneObject.getMtrx();
+	modelMtrx = sceneObject.getMtrx()*modelMtrx;
 
 	//creating a camera object
 	Camera cam({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });;
@@ -409,16 +410,19 @@ void drawScene() {
 	//pointing camera at object
 	if (g_centerCam) {
 		//cam.setViewMtrx({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
-		modelMtrx *= cam.getViewMtrx();
-		sceneObject.getMtrx() *= cam.getViewMtrx();
-		axisTransform *= cam.getViewMtrx();
+		saveCamera.setAllValues(1, 0, 0, 0,
+								0, 1, 0, 0,
+								0, 0, 1, 0,
+								0, 0, 0, 1);
+		saveCamera*=cam.getViewMtrx();
 		g_centerCam = false;
 	}
+	modelMtrx *= saveCamera;
+	axisTransform *= saveCamera;
 
 	//creating projection matrix and aplying it
 	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);
-	modelMtrx *= cam.getProjectionMtrx();
-
+	modelMtrx *= cam.getProjectionMtrx(); 
 
 	//view to screen matrix
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
@@ -445,15 +449,16 @@ void drawScene() {
 		sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(), g_Swidth / 2, g_Sheight / 2);
 	}
 
-
-	//g_zBuffer.FillBuffer(model.getAllFaces());
-	//g_zBuffer.drawBuffer();
+//#define TEST
+#ifdef TEST
+	Color ambientLight(0xff0000);
 	Light light1, light2;
 	Shader shader(FLAT);
 	std::vector<MeshModel> meshVec;
 	meshVec.push_back(model);
-	shader.draw(meshVec, light1, light2, g_zBuffer);
+	shader.draw(meshVec, ambientLight, light1, light2, g_zBuffer);
 	g_zBuffer.drawBuffer();
+#endif
 
 	model.drawModelEdges();
 }
