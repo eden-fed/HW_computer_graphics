@@ -19,7 +19,7 @@ Z_Buffer::~Z_Buffer()
 	}
 	delete[] buffer;
 }
-double Z_Buffer::Depth(Triangle Q, Vector4 baryCrd)
+double Z_Buffer::Depth(Triangle& Q, Vector4& baryCrd)
 {
 	return Q[0][2] * baryCrd[0] + Q[1][2] * baryCrd[1] + Q[2][2] * baryCrd[2];
 }

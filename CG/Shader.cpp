@@ -27,7 +27,7 @@ Shader::~Shader()
 {
 }
 
-void Shader::draw(std::vector<MeshModel>& meshVec, Light light1, Light light2, Z_Buffer& zBuffer)
+void Shader::draw(std::vector<MeshModel>& meshVec, Light& light1, Light& light2, Z_Buffer& zBuffer)
 {
 	switch (ShadingType) {
 	case FLAT:
@@ -42,7 +42,7 @@ void Shader::draw(std::vector<MeshModel>& meshVec, Light light1, Light light2, Z
 	}
 }
 
-void Shader::flatShading(std::vector<MeshModel>& meshVec, Light light1, Light light2, Z_Buffer& zBuffer)
+void Shader::flatShading(std::vector<MeshModel>& meshVec, Light& light1, Light& light2, Z_Buffer& zBuffer)
 {
 	Color clr(0x0FFF00);
 	for (int i = 0; i < meshVec.size(); i++) {
@@ -54,31 +54,13 @@ void Shader::flatShading(std::vector<MeshModel>& meshVec, Light light1, Light li
 			float minX, maxX, minY, maxY;
 
 			//find bounding rectangle
-			{
-				minX = maxX = T[0][0];
-				minY = maxY = T[0][1];
-				for (int i = 1; i < 3; i++) {
-					if (T[i][0] < minX) {
-						minX = T[i][0];
-					}
-					if (T[i][0] > maxX) {
-						maxX = T[i][0];
-					}
-					if (T[i][1] < minY) {
-						minY = T[i][1];
-					}
-					if (T[i][1] > maxY) {
-						maxY = T[i][1];
-					}
-				}
-			}
+			T.calcBoundingRectangle(minX, maxX, minY, maxY);
 
 			//       V1
 			//       *
 			//      * *
 			//     * D *
 			//  V0*******V2
-
 
 			Vector4 bCrd, firstBaryCrd;
 			stZbufferInfo crdInfo;
@@ -106,15 +88,15 @@ void Shader::flatShading(std::vector<MeshModel>& meshVec, Light light1, Light li
 	}
 }
 
-void Shader::gouraudShading(std::vector<MeshModel>& meshVec, Light light1, Light light2, Z_Buffer & zBuffer)
+void Shader::gouraudShading(std::vector<MeshModel>& meshVec, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
 }
 
-void Shader::phongShading(std::vector<MeshModel>& meshVec, Light light1, Light light2, Z_Buffer & zBuffer)
+void Shader::phongShading(std::vector<MeshModel>& meshVec, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
 }
 
-Vector4 Shader::getNewBarycentricCrd(Triangle& T, Vector4 bCrd, eScanConvMovement M, unsigned int numOfMoves)
+Vector4 Shader::getNewBarycentricCrd(Triangle& T, Vector4& bCrd, eScanConvMovement M, unsigned int numOfMoves)
 {
 	//       V1
 	//       *

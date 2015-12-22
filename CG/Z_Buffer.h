@@ -33,7 +33,7 @@ public:
 
 	//class methods
 	//double Depth(Triangle Q, double X, double Y);
-	double Depth(Triangle Q, Vector4 baryCrd);
+	double Depth(Triangle& Q, Vector4& baryCrd);
 	//void FillBuffer(std::vector<Triangle> sceneTriangles);
 	void FillPixelInBuffer(stZbufferInfo& pixel);
 	void drawBuffer();

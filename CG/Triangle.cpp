@@ -180,6 +180,25 @@ Color Triangle::getColorOfPoint(int x, int y)
 {
 	return Color(0x00ff00);
 }
+void Triangle::calcBoundingRectangle(float & minX, float & maxX, float & minY, float & maxY)
+{
+	minX = maxX = (*this)[0][0];
+	minY = maxY = (*this)[0][1];
+	for (int i = 1; i < 3; i++) {
+		if ((*this)[i][0] < minX) {
+			minX = (*this)[i][0];
+		}
+		if ((*this)[i][0] > maxX) {
+			maxX = (*this)[i][0];
+		}
+		if ((*this)[i][1] < minY) {
+			minY = (*this)[i][1];
+		}
+		if ((*this)[i][1] > maxY) {
+			maxY = (*this)[i][1];
+		}
+	}
+}
 /*
 float Triangle::helpGNBC(int a, int b, float x, float y) 
 {

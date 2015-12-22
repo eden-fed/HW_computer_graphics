@@ -46,6 +46,7 @@ public:
 	//Vector4 getNewBarycentricCrd(Vector4 bCrd, eScanConvMovement M, unsigned int numOfMoves);
 	//void triangleScanConversion(std::vector<stZbufferInfo>& crdVec);
 	Color getColorOfPoint(int x, int y);
+	void calcBoundingRectangle(float& minX, float& maxX, float& minY, float& maxY);
 	//float helpGNBC(int a, int b, float x, float y);
 
 };

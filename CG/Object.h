@@ -41,6 +41,6 @@ public:
 	void drawObjectTriangles();
 	void drawObject();
 	void drawNormals(double normSize);
-	void drawObjectCrdSystem(Matrix4x4 objMtrx,Vector4 objCentroid,double x, double y);
+	void drawObjectCrdSystem(Matrix4x4& objMtrx,Vector4& objCentroid,double x, double y);
 };
 #endif

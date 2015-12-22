@@ -27,20 +27,20 @@ Camera::~Camera()
 {
 }
 
-void Camera::setCamPosition(Vector4 vPosition)
+void Camera::setCamPosition(Vector4& vPosition)
 {
 	this->vPosition = vPosition;
 	setViewMtrx(this->vPosition, this->vDirection, this->vUp);
 }
 
-void Camera::setCamDirection(Vector4 vDirection)
+void Camera::setCamDirection(Vector4& vDirection)
 {
-	this->vPosition = vPosition;
+	this->vDirection = vDirection;
 	setViewMtrx(this->vPosition, this->vDirection, this->vUp);
 
 }
 
-void Camera::setCamUp(Vector4 vUp)
+void Camera::setCamUp(Vector4& vUp)
 {
 	this->vUp = vUp;
 	setViewMtrx(this->vPosition, this->vDirection, this->vUp);
@@ -70,7 +70,7 @@ void Camera::setProjectionType(eProjectionType pType)
 	setProjectionMatrix(this->flFovy, this->flNear, this->flFar, this->pType, this->flAspectRatio);
 }
 
-void Camera::setViewMtrx(Vector4 vEye, Vector4 vAt, Vector4 vUp)
+void Camera::setViewMtrx(Vector4& vEye, Vector4& vAt, Vector4& vUp)
 {
 	Vector4 zaxis = (vEye - vAt).normalize();
 	Vector4 xaxis = (vUp ^ zaxis).normalize();

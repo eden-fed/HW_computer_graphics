@@ -73,7 +73,7 @@ void Object::drawNormals(double normSize)
 	}
 }
 
-void Object::drawObjectCrdSystem(Matrix4x4 objMtrx, Vector4 objCentroid,double x,double y)
+void Object::drawObjectCrdSystem(Matrix4x4& objMtrx, Vector4& objCentroid,double x,double y)
 {
 	Line ln;
 	Matrix4x4 TwMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x , y , 0, 1);

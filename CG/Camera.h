@@ -30,9 +30,9 @@ public:
 	Matrix4x4 getProjectionMtrx() { return projectionMtrx; };
 
 	//set functions
-	void setCamPosition(Vector4 vPosition);
-	void setCamDirection(Vector4 vDirection);
-	void setCamUp(Vector4 vUp);
+	void setCamPosition(Vector4& vPosition);
+	void setCamDirection(Vector4& vDirection);
+	void setCamUp(Vector4& vUp);
 
 	void setNear(double flNear);
 	void setFar(double flFar);
@@ -40,7 +40,7 @@ public:
 	void setProjectionType(eProjectionType pType);
 
 
-	void setViewMtrx(Vector4 vPosition, Vector4 vDirection, Vector4 vUp);
+	void setViewMtrx(Vector4& vPosition, Vector4& vDirection, Vector4& vUp);
 	void setProjectionMatrix(double flFovy, double flNear, double flFar, eProjectionType pType, double fAspectRatio);
 
 	//operators
