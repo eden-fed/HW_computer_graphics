@@ -20,9 +20,10 @@ class MeshModel
 	std::vector<Triangle> faces;
 	Vector4 centroid;//****temp**** may not need it 
 	std::set<Line> linesToDraw;
-	Material material;
+	
 
 public:
+	Material material;
 
 	//constructors
 	MeshModel();

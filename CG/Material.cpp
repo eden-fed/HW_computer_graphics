@@ -29,3 +29,8 @@ void Material::setSpecular(double S)
 {
 	this->specular = S;
 }
+
+void Material::setspecularExp(double SE)
+{
+	this->specularExp = SE;
+}

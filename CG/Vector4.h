@@ -38,6 +38,7 @@ public:
 	const Vector4 operator + (const Vector4& V)const;
 	const Vector4& operator -= (const Vector4& V);
 	const Vector4 operator - (const Vector4& V)const;
+	const Vector4 operator / (const double num)const;
 
 	const double operator*(const Vector4& V)const; //Dot product 
 	const Vector4 operator^(const Vector4& V)const; //Cross product

@@ -31,14 +31,18 @@ public:
 	~Shader();
 
 	//class methods
-	void draw(std::vector<MeshModel>& meshVec, Light& light1, Light& light2,Z_Buffer& zBuffer);
+	void draw(std::vector<MeshModel>& meshVec,Color ambientLight, Light& light1, Light& light2,Z_Buffer& zBuffer);
 
-	void flatShading(std::vector<MeshModel>& meshVec,Light& light1, Light& light2, Z_Buffer& zBuffer);
-	void gouraudShading(std::vector<MeshModel>& meshVec, Light& light1, Light& light2, Z_Buffer& zBuffer);
-	void phongShading(std::vector<MeshModel>& meshVec, Light& light1, Light& light2, Z_Buffer& zBuffer);
+	void flatShading(std::vector<MeshModel>& meshVec, Color ambientLight,Light& light1, Light& light2, Z_Buffer& zBuffer);
+	void gouraudShading(std::vector<MeshModel>& meshVec, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer);
+	void phongShading(std::vector<MeshModel>& meshVec, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer);
 
 	Vector4 getNewBarycentricCrd(Triangle& T,Vector4& bCrd, eScanConvMovement M, unsigned int numOfMoves);
 	float helpGNBC(Triangle& T, int a, int b, float x, float y);
+
+	Color getFlatColor(Triangle& T,Material& M, Color& ambientLight, Light& light1, Light& light2);
+	Color clacDiffuseLight(Vector4& point, Vector4& norm, Light& light, double Kdiffuse);
+	Color clacSpecularLight(Vector4& point, Vector4& norm, Light& light, double Kspecular, double spec_exp);
 };
 
 

@@ -8,6 +8,7 @@ class Material
 	double ambient;
 	double diffuse;
 	double specular;
+	double specularExp;
 
 public:
 	//constructors
@@ -21,11 +22,13 @@ public:
 	void setAmbient(double A);
 	void setDiffuse(double D);
 	void setSpecular(double S);
+	void setspecularExp(double SE);
 
 	//get functions
 	double getAmbient() { return this->ambient; };
 	double getDiffuse() { return this->diffuse; };
 	double getSpecular() { return this->specular; };
+	double getspecularExp() { return this->specularExp; };
 	//class methods
 
 };

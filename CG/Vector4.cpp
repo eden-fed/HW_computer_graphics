@@ -107,6 +107,16 @@ const Vector4 Vector4::operator-(const Vector4 & V) const
 	return retV;
 }
 
+const Vector4 Vector4::operator/(const double num) const
+{
+	Vector4 retVal;
+	for (int i = 0; i < 3; i++) {
+		retVal[i] = (*this)[i] / num;
+	}
+
+	return retVal;
+}
+
 const double Vector4::operator*(const Vector4 & V)const
 {
 	double retVal=0;
