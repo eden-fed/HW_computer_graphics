@@ -148,7 +148,7 @@ Color Shader::getFlatColor(Triangle & T, Material& M, Color& ambientLight, Light
 {
 	
 	double A = M.getAmbient();
-	Vector4 tCentroid = (T[0] + T[1] + T[2])/3;
+	Vector4 tCentroid = (T[0] + T[1] + T[2])*(1/3);
 
 	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
 
@@ -162,37 +162,60 @@ Color Shader::getFlatColor(Triangle & T, Material& M, Color& ambientLight, Light
 	return color;
 }
 
-Color Shader::clacDiffuseLight(Vector4 & point, Vector4 & norm, Light & light, double Kdiffuse)
+Color Shader::clacDiffuseLight(Vector4& point, Vector4 & normal, Light& light, double Kd)
 {
-	Color tmp_color;
-	Vector4 N = norm;
-	Vector4 L = light.getPosition() - point;
+
+	Vector4 N = normal;
+	Vector4 L;
+
+	//get light direction
 	if (light.getType() == DIRECTION)
 		L = light.getPosition() - light.getDirection();
-	L = L*(1 / L.getSize());
-	N[3] = 0; L[3] = 0;
-	double factor = (N*L);
-	if (factor<0)factor = 0;
-	tmp_color.setColor(Kdiffuse*factor*light.getIntensity().getRedPortion(), Kdiffuse*factor*light.getIntensity().getGreenPortion(), Kdiffuse*factor*light.getIntensity().getBluePortion());
-	return tmp_color;
+	else
+		L = light.getPosition() - point;
+	//normalize light
+	L = L.normalize();
+	N[3] = L[3] = 0;
+
+	//calc NL
+	double NL = (N*L);
+	double factor = (NL) < 0 ? (0) : (NL);
+
+	//equation from class
+	Color& Ip = light.getIntensity();
+	Color retColor(Kd*NL*Ip.getRedPortion(), Kd*NL*Ip.getGreenPortion(), Kd*NL*Ip.getBluePortion());
+	return retColor;
 }
 
-Color Shader::clacSpecularLight(Vector4 & point, Vector4 & norm, Light & light, double Kspecular, double specularExp)
+Color Shader::clacSpecularLight(Vector4& point, Vector4& normal, Light& light, double Ks, double specularExp)
 {
-	Color tmp_color;
-	Vector4 L = light.getPosition() - point;
+	Vector4 N = normal;
+	Vector4 L;
+	//get light direction
 	if (light.getType() == DIRECTION)
 		L = light.getPosition() - light.getDirection();
-	L = L*(1 / L.getSize());
-	Vector4 N = norm;
+	else
+		L = light.getPosition() - point;
+
+	//normalize light
+	L = L.normalize();
 	N[3] = 0; L[3] = 0;
+
 	double dotNL = (N*L);
-	if (dotNL<0) dotNL = 0;
-	Vector4 V = N*(2 * (dotNL)) - L;
-	V = V*(1 / V.getSize());
-	Vector4 R(0, 0, -1, 1);
-	double factor = (R*V);
-	factor = pow(factor, specularExp);
-	tmp_color.setColor(Kspecular*factor*light.getIntensity().getRedPortion(), Kspecular*factor*light.getIntensity().getGreenPortion(), Kspecular*factor*light.getIntensity().getBluePortion());
-	return tmp_color;
+	double dotNL = (dotNL) < 0 ? (0) : (dotNL);
+
+	//calculate R
+	Vector4 R = (N * (dotNL*2)) - L;
+	R = R.normalize();// = R*(1 / R.getSize());
+
+	//calculate 
+	Vector4 V = point*(-1); //eye - point 
+	V = V.normalize();
+
+	double RV = (R*V);
+	RV = pow(RV, specularExp);
+
+	Color& Ip = light.getIntensity();
+	Color retColor(Ks*RV*Ip.getRedPortion(), Ks*RV*Ip.getGreenPortion(), Ks*RV*Ip.getBluePortion());
+	return retColor;
 }
