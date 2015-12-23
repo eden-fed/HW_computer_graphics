@@ -2,6 +2,10 @@
 
 Light::Light()
 {
+	intensity.setColor(0, 0, 0);
+	position.setVlaues(0,0,0,1);
+	direction.setVlaues(0, 0, 0, 1);;
+	type=_POINT;
 }
 
 Light::~Light()

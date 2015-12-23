@@ -74,8 +74,10 @@ double g_xLightDirection = 0.0;
 double g_yLightDirection = 0.0;
 double g_zLightDirection = 0.0;
 bool g_lightType = false;
-unsigned int lightColor = 0;
-double g_ambientLight = 0.0;
+unsigned int lightIntensity = 0;
+unsigned int g_ambientLight = 0;
+Light light1;
+Light light2;
 Z_Buffer g_zBuffer(g_Swidth, g_Sheight);
 
 
@@ -200,10 +202,10 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "y-direction", TW_TYPE_DOUBLE, &g_yLightDirection, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
 	TwAddVarRW(bar, "z-direction", TW_TYPE_DOUBLE, &g_zLightDirection, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
 	TwAddVarRW(bar, "point/directional", TW_TYPE_BOOLCPP, &g_lightType, "help='false=point, true=directional'  group='light'");
-	TwAddVarRW(bar, "Color", TW_TYPE_COLOR32, &lightColor, " coloralpha=true group='light'");
+	TwAddVarRW(bar, "Color", TW_TYPE_COLOR32, &lightIntensity, " coloralpha=true group='light'");
 	TwAddButton(bar, "apply on light 1", &applyLight1, NULL, " help='apply scale' group='light' ");
 	TwAddButton(bar, "apply on light 2", &applyLight2, NULL, " help='apply scale' group='light' ");
-	TwAddVarRW(bar, "ambient light intensity", TW_TYPE_DOUBLE, &g_ambientLight, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "ambient light intensity", TW_TYPE_COLOR32, &g_ambientLight, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
 
 	TwAddSeparator(bar, NULL, NULL);
 
@@ -349,10 +351,24 @@ void TW_CALL applyZrotation(void* clientData) {
 	}
 }
 void TW_CALL applyLight1(void* clientData) {
-	
+	Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
+	Vector4 P(g_xLightPosition, g_yLightPosition, g_zLightPosition, 1);
+	light1.setDirection(D);
+	light1.setPosition(P);
+	light1.setIntensity(lightIntensity);
+	if(g_lightType)
+		light1.setType(DIRECTION);
+	else light1.setType(_POINT);
 }
 void TW_CALL applyLight2(void* clientData) {
-
+	Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
+	Vector4 P(g_xLightPosition, g_yLightPosition, g_zLightPosition, 1);
+	light2.setDirection(D);
+	light2.setPosition(P);
+	light2.setIntensity(lightIntensity);
+	if (g_lightType)
+		light2.setType(DIRECTION);
+	else light2.setType(_POINT);
 }
 //do not change this function unless you really know what you are doing!
 void initGraphics(int argc, char *argv[])
@@ -449,14 +465,13 @@ void drawScene() {
 		sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(), g_Swidth / 2, g_Sheight / 2);
 	}
 
-//#define TEST
+#define TEST
 #ifdef TEST
-	Color ambientLight(0xff0000);
-	Light light1, light2;
+	//Color ambientLight(0xff0000);
 	Shader shader(FLAT);
 	std::vector<MeshModel> meshVec;
 	meshVec.push_back(model);
-	shader.draw(meshVec, ambientLight, light1, light2, g_zBuffer);
+	shader.draw(meshVec, g_ambientLight, light1, light2, g_zBuffer);
 	g_zBuffer.drawBuffer();
 #endif
 
