@@ -9,14 +9,11 @@
 
 class MeshModel
 {
-	typedef struct {
-		Vector4 vertex;
-		Vector4 normal;
-		//bool normalIsSet;
-	}vertexInfo;
+
 
 	//Wavefront_obj obj;
-	std::vector<vertexInfo>  vertices;
+	std::vector<Vector4>  vertices;
+	std::vector<Vector4>  normals;
 	std::vector<Triangle> faces;
 	Vector4 centroid;//****temp**** may not need it 
 	std::set<Line> linesToDraw;
@@ -37,8 +34,8 @@ public:
 	inline int getNumberOfFaces() { return faces.size(); };//get number of triangles
 	inline int getNumberOfVertices() { return vertices.size(); };//get number of vertices
 	inline int getNumberOfNormals() { return vertices.size(); };//get number of normals
-	inline Vector4 getVertex(int index) { return vertices[index].vertex; };//get vertex by index
-	inline Vector4 getNormal(int index) { return vertices[index].normal; }; // get normal by index
+	inline Vector4 getVertex(int index) { return vertices[index]; };//get vertex by index
+	//inline Vector4 getNormal(int index) { return normals[index]; }; // get normal by index
 	inline Triangle getFace(int index) { return faces[index]; }; // get normal by index
 	inline std::vector<Triangle>& getAllFaces() { return faces; }; // get normal by index
 

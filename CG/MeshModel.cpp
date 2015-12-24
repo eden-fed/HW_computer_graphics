@@ -13,11 +13,7 @@ MeshModel::MeshModel(Wavefront_obj & J)
 		has_normals = true;
 	}
 	for (int i = 0; i < J.m_points.size(); i++) {
-		vertexInfo v;
-		v.vertex = J.m_points[i];
-		if (has_normals)
-			v.normal = J.m_normals[i];
-		vertices.push_back(v);
+		vertices.push_back(J.m_points[i]);
 	}
 
 	this->moveCentroidToOrigin();
@@ -27,13 +23,25 @@ MeshModel::MeshModel(Wavefront_obj & J)
 		J.m_points[i] = vertices[i].vertex;
 	}*/
 
-	for (int i = 0; i < J.m_faces.size(); i++) {
-		Triangle t(vertices[J.m_faces[i].v[0]].vertex, vertices[J.m_faces[i].v[1]].vertex, vertices[J.m_faces[i].v[2]].vertex);
-		faces.push_back(t);
+	if (has_normals) {
+		for (int i = 0; i < J.m_normals.size(); i++) {
+			normals.push_back(J.m_normals[i]);
+		}
+		for (int i = 0; i < J.m_faces.size(); i++) {
+			Triangle t(vertices[J.m_faces[i].v[0]], vertices[J.m_faces[i].v[1]], vertices[J.m_faces[i].v[2]], normals[J.m_faces[i].n[0]], normals[J.m_faces[i].n[1]], normals[J.m_faces[i].n[2]]);
+			faces.push_back(t);
+		}
+	}
+	else {
+		for (int i = 0; i < J.m_faces.size(); i++) {
+			Triangle t(vertices[J.m_faces[i].v[0]], vertices[J.m_faces[i].v[1]], vertices[J.m_faces[i].v[2]]);
+			faces.push_back(t);
+		}
+		this->calcNormals();
 	}
 
-	if (!has_normals)
-		this->calcNormals();
+
+
 }
 
 MeshModel::~MeshModel()
@@ -53,12 +61,19 @@ void MeshModel::calcNormals()
 		sumVector.setVlaues(0, 0, 0, 1);
 		sumArea = 0;
 		for (int j = 0; j < faces.size(); j++) {
-			if (faces[j].isVertexInTriangle(vertices[i].vertex)) {
-				sumVector += faces[j].getNormal()*faces[j].getArea();
+			if (faces[j].isVertexInTriangle(vertices[i])!=-1) {
+				sumVector += faces[j].getCrossNormal()*faces[j].getArea();
 				sumArea += faces[j].getArea();
 			}
 		}
-		vertices[i].normal = sumVector * (1.0 / sumArea);
+		Vector4 normal = sumVector * (1.0 / sumArea);
+
+		for (int j = 0; j < faces.size(); j++) {
+			int x = faces[j].isVertexInTriangle(vertices[i]);
+			if (x!=-1) {
+				faces[j].getNormal(x) = normal;
+			}
+		}
 	}
 }
 
@@ -66,7 +81,7 @@ void MeshModel::calcCentroid()
 {
 	Vector4 sum;
 	for (int i = 0; i < vertices.size(); i++) {
-		sum += vertices[i].vertex;
+		sum += vertices[i];
 	}
 	this->centroid = sum * (1.0 / vertices.size());
 }
@@ -74,12 +89,12 @@ void MeshModel::calcCentroid()
 void MeshModel::transformMshMdl(Matrix4x4 &M)
 {
 	for (int i = 0; i < vertices.size(); i++) {
-		vertices[i].normal = vertices[i].normal.normalize();
-		vertices[i].normal = (vertices[i].vertex + vertices[i].normal) * M;
-		vertices[i].vertex = vertices[i].vertex*M;
+		vertices[i] = vertices[i]*M;
 	}
 	for (int j = 0; j < faces.size(); j++) {
 		for (int k = 0; k < 3; k++) {
+			faces[j].getNormal(k) = faces[j].getNormal(k).normalize();
+			faces[j].getNormal(k) = (faces[j][k] + faces[j].getNormal(k))*M;
 			faces[j][k] = faces[j][k] * M;
 		}
 	}
@@ -89,19 +104,19 @@ void MeshModel::transformMshMdl(Matrix4x4 &M)
 void MeshModel::transformMshMdlonlyVertices(Matrix4x4 &M)
 {
 	for (int i = 0; i < vertices.size(); i++) {
-		vertices[i].vertex = vertices[i].vertex*M;
+		vertices[i] = vertices[i]*M;
 		//vertices[i].normal = vertices[i].normal*M;
 	}
 	calcCentroid();
 }
-
+/*
 void MeshModel::transformNormals(Matrix4x4 & M, double normSize)
 {
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].normal = vertices[i].vertex + vertices[i].normal.normalize();
 		vertices[i].normal = vertices[i].normal * M;
 	}
-}
+}*/
 
 
 
@@ -112,16 +127,16 @@ void MeshModel::moveCentroidToOrigin()
 	transformMshMdlonlyVertices(M);
 }
 void MeshModel::getMinMaxValues(double& maxX, double& minX, double& maxY, double& minY, double& maxZ, double& minZ) {
-	minX = maxX = vertices[0].vertex[0];
-	minY = maxY = vertices[0].vertex[1];
-	minZ = maxZ = vertices[0].vertex[2];
+	minX = maxX = vertices[0][0];
+	minY = maxY = vertices[0][1];
+	minZ = maxZ = vertices[0][2];
 	for (int i = 1; i < vertices.size(); i++) {
-		if (vertices[i].vertex[0] > maxX) maxX = vertices[i].vertex[0];
-		else if (vertices[i].vertex[0] < minX) minX = vertices[i].vertex[0];
-		if (vertices[i].vertex[1] > maxY) maxY = vertices[i].vertex[1];
-		else if (vertices[i].vertex[1] < minY) minY = vertices[i].vertex[1];
-		if (vertices[i].vertex[2] > maxZ) maxZ = vertices[i].vertex[2];
-		else if (vertices[i].vertex[2] < minZ) minZ = vertices[i].vertex[2];
+		if (vertices[i][0] > maxX) maxX = vertices[i][0];
+		else if (vertices[i][0] < minX) minX = vertices[i][0];
+		if (vertices[i][1] > maxY) maxY = vertices[i][1];
+		else if (vertices[i][1] < minY) minY = vertices[i][1];
+		if (vertices[i][2] > maxZ) maxZ = vertices[i][2];
+		else if (vertices[i][2] < minZ) minZ = vertices[i][2];
 	}
 }
 void MeshModel::scale10units()
@@ -167,10 +182,11 @@ void MeshModel::drawModelEdges()
 void MeshModel::drawNormals()
 {
 	Line ln; 
-	for (int i = 0; i < getNumberOfNormals(); i++) {
-		ln.setStartCrd(getVertex(i), 0x00ff0000);
-		//end = getVertex(i) + ((getNormal(i).normalize())*normSize);
-		ln.setEndCrd(getNormal(i), 0x00ff0000);
+	for (int i = 0; i < faces.size(); i++) {
+		for (int j = 0; j < 3; j++) {
+			ln.setStartCrd(faces[i][j], 0x00ff0000);
+			ln.setEndCrd(faces[i].getNormal(j), 0x00ff0000);
+		}
 		ln.drawline();
 
 	}
