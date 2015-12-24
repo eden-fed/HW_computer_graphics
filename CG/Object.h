@@ -19,14 +19,14 @@ public:
 	Material material;
 
 	//constructors
-	Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx);
+	Object(MeshModel& mshMdl, Matrix4x4& mdlMtrx);
 	Object();
 
 	//destructor
 	~Object();
 
 	//set functions
-	void setModel(MeshModel& mshMdl, Matrix4x4 mdlMtrx);
+	void setModel(MeshModel& mshMdl, Matrix4x4& mdlMtrx);
 	void setMtrx(Matrix4x4 mdlMtrx);
 
 

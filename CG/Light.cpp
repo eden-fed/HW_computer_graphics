@@ -17,12 +17,12 @@ void Light::setIntensity(Color I)
 	this->intensity = I;
 }
 
-void Light::setPosition(Vector4 P)
+void Light::setPosition(Vector4& P)
 {
 	this->position = P;
 }
 
-void Light::setDirection(Vector4 D)
+void Light::setDirection(Vector4& D)
 {
 	this->direction = D;
 }
