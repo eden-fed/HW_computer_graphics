@@ -482,7 +482,7 @@ void drawScene() {
 	//show normals
 	if (g_normals) {
 	//	model.transformNormals(axisTransform);
-		model.drawNormals();
+		model.drawNormals(g_normals_size);
 	}
 	//show coordinate systems
 	if (g_showCrdSystem) {
