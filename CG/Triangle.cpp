@@ -99,6 +99,16 @@ Vector4 Triangle::getCrossNormal()
 	return ((vertices[1].vertex - vertices[0].vertex) ^ (vertices[2].vertex - vertices[0].vertex)).normalize();
 }
 
+vertexInfo& Triangle::getVertexInfo(unsigned int index)
+{
+	return this->vertices[index];
+}
+
+void Triangle::setNormal(Vector4 n)
+{
+	this->normal = n;
+}
+
 Vector4 Triangle::calcNormal()
 {
 	return (vertices[0].normal + vertices[1].normal + vertices[2].normal) / 3;

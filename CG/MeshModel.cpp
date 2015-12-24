@@ -97,6 +97,7 @@ void MeshModel::transformMshMdl(Matrix4x4 &M)
 			faces[j].getNormal(k) = (faces[j][k] + faces[j].getNormal(k))*M;
 			faces[j][k] = faces[j][k] * M;
 		}
+		faces[j].setNormal(faces[j].calcNormal());
 	}
 	calcCentroid();
 }

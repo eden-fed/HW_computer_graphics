@@ -34,11 +34,14 @@ public:
 	double getArea();
 	Vector4 getNormal();
 	Vector4 getCrossNormal();
+	vertexInfo& getVertexInfo(unsigned int index);
 
 
 	inline Vector4& operator[](int index) { return vertices[index].vertex; }
 	inline const Vector4& operator[](int index) const { return vertices[index].vertex; }
 	inline Vector4& getNormal(int index) { return vertices[index].normal; }
+	void setNormal(Vector4 n);
+
 	//class methods
 	Vector4 calcNormal();
 	const int isVertexInTriangle(Vector4& V);

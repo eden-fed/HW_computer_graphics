@@ -90,13 +90,15 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
 	for (int j = 0; j < mesh.getAllFaces().size(); j++) {
-		//clr.setColor(clr.getColor() + 0x05050500);
 		Triangle& T = mesh.getAllFaces()[j];
 
 		//calculate Trinagle vertex colors
-		Color clr0 = (0x00006400); //getFlatColor(T, mesh.material, ambientLight, light1, light2);//should be changed to getVertxColor
-		Color clr1 = (0x00006400 << 8);//getFlatColor(T, mesh.material, ambientLight, light1, light2);//should be changed to getVertxColor
-		Color clr2 = (0x00006400 << 16); //getFlatColor(T, mesh.material, ambientLight, light1, light2);//should be changed to getVertxColor
+		//Color clr0 = (0x00006400); 
+		//Color clr1 = (0x00006400 << 8);
+		//Color clr2 = (0x00006400 << 16);
+		Color clr0 = getVertxColor(T.getVertexInfo(0), mesh.material, ambientLight, light1, light2);
+		Color clr1 = getVertxColor(T.getVertexInfo(1), mesh.material, ambientLight, light1, light2);
+		Color clr2 = getVertxColor(T.getVertexInfo(2), mesh.material, ambientLight, light1, light2);
 
 
 		//bounding rectangle parameters
@@ -255,13 +257,15 @@ Color Shader::getFlatColor(Triangle & T, Material& M, Color& ambientLight, Light
 Color Shader::getVertxColor(vertexInfo& vInfo, Material & M, Color & ambientLight, Light & light1, Light & light2)
 {
 	double A = M.getAmbient();
+	Vector4& P = vInfo.vertex;
+	Vector4 N = vInfo.normal.normalize();
 
 	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
 
-	Color diffuse1 = clacDiffuseLight(vInfo.vertex, vInfo.normal, light1, M.getDiffuse());
-	Color specular1 = clacSpecularLight(vInfo.vertex, vInfo.normal, light1, M.getSpecular(), M.getspecularExp());
-	Color diffuse2 = clacDiffuseLight(vInfo.vertex, vInfo.normal, light2, M.getDiffuse());
-	Color specular2 = clacSpecularLight(vInfo.vertex, vInfo.normal, light2, M.getSpecular(), M.getspecularExp());
+	Color diffuse1  = clacDiffuseLight(P, N, light1, M.getDiffuse());
+	Color specular1 = clacSpecularLight(P, N, light1, M.getSpecular(), M.getspecularExp());
+	Color diffuse2  = clacDiffuseLight(P, N, light2, M.getDiffuse());
+	Color specular2 = clacSpecularLight(P, N, light2, M.getSpecular(), M.getspecularExp());
 	Color color((ambient.getRedPortion() + diffuse1.getRedPortion() + diffuse2.getRedPortion() + specular1.getRedPortion() + specular2.getRedPortion()),
 		(ambient.getGreenPortion() + diffuse1.getGreenPortion() + diffuse2.getGreenPortion() + specular1.getGreenPortion() + specular2.getGreenPortion()),
 		(ambient.getBluePortion() + diffuse1.getBluePortion() + diffuse2.getBluePortion() + specular1.getBluePortion() + specular2.getBluePortion()));
