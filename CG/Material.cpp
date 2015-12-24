@@ -1,10 +1,12 @@
 #include "Material.h"
 
-Material::Material(double A, double D, double S)
+Material::Material(double A, double D, double S, double SE)
 {
 	this->ambient = A;
 	this->diffuse = D;
 	this->specular = S;
+	this->specularExp = SE;
+
 }
 
 Material::Material()
@@ -32,5 +34,13 @@ void Material::setSpecular(double S)
 
 void Material::setspecularExp(double SE)
 {
+	this->specularExp = SE;
+}
+
+void Material::setAll(double A, double D, double S, double SE)
+{
+	this->ambient = A;
+	this->diffuse = D;
+	this->specular = S;
 	this->specularExp = SE;
 }

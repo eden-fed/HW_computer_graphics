@@ -12,7 +12,7 @@ class Material
 
 public:
 	//constructors
-	Material(double A,double D, double S);
+	Material(double A,double D, double S, double SE);
 	Material();
 
 	//destructor
@@ -23,6 +23,7 @@ public:
 	void setDiffuse(double D);
 	void setSpecular(double S);
 	void setspecularExp(double SE);
+	void setAll(double A, double D, double S, double SE);
 
 	//get functions
 	double getAmbient() { return this->ambient; };

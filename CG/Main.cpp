@@ -64,22 +64,22 @@ bool g_projectionType = true;
 bool g_space = false;//initialize to object space
 double g_normals_size = 5.0; 
 
-double g_ambient = 0.0;
-double g_diffuse = 0.0;
-double g_specular = 0.0;
+double g_ambient = 0.1;
+double g_diffuse = 0.6;
+double g_specular = 0.7;
+double g_specularExp = 32;
 double g_xLightPosition = 0.0;
 double g_yLightPosition = 0.0;
 double g_zLightPosition = 0.0;
 double g_xLightDirection = 0.0;
 double g_yLightDirection = 0.0;
-double g_zLightDirection = 0.0;
+double g_zLightDirection = -5;
 bool g_lightType = false;
-unsigned int lightIntensity = 0;
-unsigned int g_ambientLight = 0;
+unsigned int lightIntensity = 0xff0000ff;
+unsigned int g_ambientLight = 0xffffff;
 Light light1;
 Light light2;
 Z_Buffer g_zBuffer(g_Swidth, g_Sheight);
-
 
 
 Object sceneObject;
@@ -190,22 +190,22 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "z-rotation", TW_TYPE_DOUBLE, &g_zRotation, "min = -360 max = 360 step=1 keyIncr=z keyDecr=Z   group='tranfromations' ");
 	TwAddButton(bar, "apply z rotation", &applyZrotation, NULL, " help='apply scale' group='tranfromations' ");
 
-	TwAddVarRW(bar, "ambient", TW_TYPE_DOUBLE, &g_ambient, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='material' ");
-	TwAddVarRW(bar, "diffuse", TW_TYPE_DOUBLE, &g_diffuse, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='material' ");
-	TwAddVarRW(bar, "specular", TW_TYPE_DOUBLE, &g_specular, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='material' ");
+	TwAddVarRW(bar, "ambient", TW_TYPE_DOUBLE, &g_ambient, "min = 0 max = 1000 step=0.1 keyIncr=z keyDecr=Z   group='material' ");
+	TwAddVarRW(bar, "diffuse", TW_TYPE_DOUBLE, &g_diffuse, "min = 0 max = 1000 step=0.1 keyIncr=z keyDecr=Z   group='material' ");
+	TwAddVarRW(bar, "specular", TW_TYPE_DOUBLE, &g_specular, "min = 0 max = 1000 step=0.1 keyIncr=z keyDecr=Z   group='material' ");
+	TwAddVarRW(bar, "specularExp", TW_TYPE_DOUBLE, &g_specularExp, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='material' ");
 
-
-	TwAddVarRW(bar, "x-position", TW_TYPE_DOUBLE, &g_xLightPosition, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
-	TwAddVarRW(bar, "y-position", TW_TYPE_DOUBLE, &g_yLightPosition, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
-	TwAddVarRW(bar, "z-position", TW_TYPE_DOUBLE, &g_zLightPosition, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
-	TwAddVarRW(bar, "x-direction", TW_TYPE_DOUBLE, &g_xLightDirection, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
-	TwAddVarRW(bar, "y-direction", TW_TYPE_DOUBLE, &g_yLightDirection, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
-	TwAddVarRW(bar, "z-direction", TW_TYPE_DOUBLE, &g_zLightDirection, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "x-position", TW_TYPE_DOUBLE, &g_xLightPosition, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "y-position", TW_TYPE_DOUBLE, &g_yLightPosition, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "z-position", TW_TYPE_DOUBLE, &g_zLightPosition, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "x-direction", TW_TYPE_DOUBLE, &g_xLightDirection, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "y-direction", TW_TYPE_DOUBLE, &g_yLightDirection, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "z-direction", TW_TYPE_DOUBLE, &g_zLightDirection, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
 	TwAddVarRW(bar, "point/directional", TW_TYPE_BOOLCPP, &g_lightType, "help='false=point, true=directional'  group='light'");
-	TwAddVarRW(bar, "Color", TW_TYPE_COLOR32, &lightIntensity, " coloralpha=true group='light'");
+	TwAddVarRW(bar, "light intensity", TW_TYPE_COLOR32, &lightIntensity, " coloralpha=true colormode=rgb group='light'");
 	TwAddButton(bar, "apply on light 1", &applyLight1, NULL, " help='apply scale' group='light' ");
 	TwAddButton(bar, "apply on light 2", &applyLight2, NULL, " help='apply scale' group='light' ");
-	TwAddVarRW(bar, "ambient light intensity", TW_TYPE_COLOR32, &g_ambientLight, "min = 0 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
+	TwAddVarRW(bar, "ambient light intensity", TW_TYPE_COLOR32, &g_ambientLight, "coloralpha=true colormode=rgb group='light' ");
 
 	TwAddSeparator(bar, NULL, NULL);
 
@@ -469,13 +469,14 @@ void drawScene() {
 #ifdef TEST
 	//Color ambientLight(0xff0000);
 	Shader shader(FLAT);
+	model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
 	std::vector<MeshModel> meshVec;
 	meshVec.push_back(model);
 	shader.draw(meshVec, g_ambientLight, light1, light2, g_zBuffer);
 	g_zBuffer.drawBuffer();
 #endif
 
-	model.drawModelEdges();
+	//model.drawModelEdges();
 }
 
 //this will make sure that integer coordinates are mapped exactly to corresponding pixels on screen
