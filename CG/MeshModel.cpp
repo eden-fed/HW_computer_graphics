@@ -74,8 +74,9 @@ void MeshModel::calcCentroid()
 void MeshModel::transformMshMdl(Matrix4x4 &M)
 {
 	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].normal = vertices[i].normal.normalize();
+		vertices[i].normal = (vertices[i].vertex + vertices[i].normal) * M;
 		vertices[i].vertex = vertices[i].vertex*M;
-		//vertices[i].normal = vertices[i].normal*M;
 	}
 	for (int j = 0; j < faces.size(); j++) {
 		for (int k = 0; k < 3; k++) {
@@ -94,10 +95,11 @@ void MeshModel::transformMshMdlonlyVertices(Matrix4x4 &M)
 	calcCentroid();
 }
 
-void MeshModel::transformNormals(Matrix4x4 & M)
+void MeshModel::transformNormals(Matrix4x4 & M, double normSize)
 {
 	for (int i = 0; i < vertices.size(); i++) {
-		vertices[i].normal = vertices[i].normal*M;
+		vertices[i].normal = vertices[i].vertex + vertices[i].normal.normalize();
+		vertices[i].normal = vertices[i].normal * M;
 	}
 }
 
@@ -162,13 +164,13 @@ void MeshModel::drawModelEdges()
 	}
 }
 
-void MeshModel::drawNormals(double normSize)
+void MeshModel::drawNormals()
 {
-	Line ln; Vector4 end;
+	Line ln; 
 	for (int i = 0; i < getNumberOfNormals(); i++) {
-		ln.setStartCrd(getVertex(i), 0xff0000);
-		end = getVertex(i) + ((getNormal(i).normalize())*normSize);
-		ln.setEndCrd(end, 0xff0000);
+		ln.setStartCrd(getVertex(i), 0x00ff0000);
+		//end = getVertex(i) + ((getNormal(i).normalize())*normSize);
+		ln.setEndCrd(getNormal(i), 0x00ff0000);
 		ln.drawline();
 
 	}

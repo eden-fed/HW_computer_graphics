@@ -62,7 +62,7 @@ bool g_normals = false;
 bool g_bbox = false;
 bool g_projectionType = true;
 bool g_space = false;//initialize to object space
-double g_normals_size = 5.0; 
+double g_normals_size = 1; 
 
 double g_ambient = 0.1;
 double g_diffuse = 0.6;
@@ -94,7 +94,6 @@ Matrix4x4 saveCamera(1, 0, 0, 0,
 bool clear = true;
 
 void TW_CALL loadOBJModel(void* clientData);
-void TW_CALL centerCamera(void* clientData);
 void TW_CALL applyTranslation(void* clientData);
 void TW_CALL applyScale(void* clientData);
 void TW_CALL applyXrotation(void* clientData);
@@ -262,10 +261,6 @@ void TW_CALL loadOBJModel(void *data)
 	glutPostRedisplay();
 }
 
-void TW_CALL centerCamera(void* clientData) {
-	//code for centering the camera
-
-}
 void TW_CALL applyTranslation(void* clientData) {
 	if (g_translationX != 0.0 || g_translationY != 0.0 || g_translationZ != 0.0) {
 		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
@@ -446,11 +441,11 @@ void drawScene() {
 		g_centerCam = false;
 	}
 	modelMtrx *= saveCamera;
-	axisTransform *= saveCamera;
 
 	//creating projection matrix and aplying it
 	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);
 	modelMtrx *= cam.getProjectionMtrx(); 
+	//axisTransform *= cam.getProjectionMtrx();
 
 	//view to screen matrix
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
@@ -458,19 +453,25 @@ void drawScene() {
 
 	//creating a mesh model and aplying all the transformations
 	MeshModel model = sceneObject.getMshMdl();
+
+	//model.transformNormals(modelMtrx, g_normals_size);
 	model.transformMshMdl(modelMtrx);
+	//model.transformNormals(axisTransform);
+
+
+
 
 
 
 	//Color ambientLight(0xff0000);
-	g_zBuffer.emptyBuffer();
+/*	g_zBuffer.emptyBuffer();
 	Shader shader(FLAT);
 	model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
 	shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer);
-	g_zBuffer.drawBuffer();
+	g_zBuffer.drawBuffer();*/
 
 
-	//model.drawModelEdges();
+	model.drawModelEdges();
 
 	//show bounding box
 	if (g_bbox) {
@@ -480,8 +481,8 @@ void drawScene() {
 	}
 	//show normals
 	if (g_normals) {
-		model.transformNormals(axisTransform);
-		model.drawNormals(g_normals_size);
+	//	model.transformNormals(axisTransform);
+		model.drawNormals();
 	}
 	//show coordinate systems
 	if (g_showCrdSystem) {

@@ -80,7 +80,7 @@ const Vector4 & Vector4::operator+=(const Vector4 & V)
 
 }
 
-const Vector4 Vector4::operator+(const Vector4 & V)const
+Vector4 Vector4::operator+(const Vector4 & V)const
 {
 	Vector4 retV = *this;
 		for (int i = 0; i <= 2; i++) {
@@ -194,7 +194,7 @@ int Vector4::helpRoundNum(float f)
 Vector4 Vector4::normalize() const
 {
 	Vector4 ret;
-	float size = this->getSize();
+	double size = this->getSize();
 	if (size != 0) {
 		for (int i = 0; i < 3; i++) {
 			ret[i] = (*this)[i] / size;
