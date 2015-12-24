@@ -41,6 +41,9 @@ public:
 	float helpGNBC(Triangle& T, int a, int b, float x, float y);
 
 	Color getFlatColor(Triangle& T,Material& M, Color& ambientLight, Light& light1, Light& light2);
+	Color getVertxColor(vertexInfo& vInfo, Material& M, Color& ambientLight, Light& light1, Light& light2);
+	
+
 	Color clacDiffuseLight(Vector4& point, Vector4 & normal, Light& light, double Kd);
 	Color clacSpecularLight(Vector4& point, Vector4& normal, Light& light, double Ks, double specularExp);
 };

@@ -89,6 +89,55 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 
 void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
+	for (int j = 0; j < mesh.getAllFaces().size(); j++) {
+		//clr.setColor(clr.getColor() + 0x05050500);
+		Triangle& T = mesh.getAllFaces()[j];
+
+		Color clr0 = (0x00006400); //getFlatColor(T, mesh.material, ambientLight, light1, light2);//should be changed to getVertxColor
+		Color clr1 = (0x00006400 << 8);//getFlatColor(T, mesh.material, ambientLight, light1, light2);//should be changed to getVertxColor
+		Color clr2 = (0x00006400 << 16); //getFlatColor(T, mesh.material, ambientLight, light1, light2);//should be changed to getVertxColor
+
+
+		//bounding rectangle parameters
+		float minX, maxX, minY, maxY;
+
+		//find bounding rectangle
+		T.calcBoundingRectangle(minX, maxX, minY, maxY);
+
+		//       V1
+		//       *
+		//      * *
+		//     * D *
+		//  V0*******V2
+
+		Vector4 bCrd, firstBaryCrd;
+		stZbufferInfo crdInfo;
+
+		firstBaryCrd[0] = helpGNBC(T, 1, 2, (int)minX, (int)minY) / helpGNBC(T, 1, 2, T[0][X], T[0][Y]); // V1V2D / V1V2V0
+		firstBaryCrd[1] = helpGNBC(T, 2, 0, (int)minX, (int)minY) / helpGNBC(T, 2, 0, T[1][X], T[1][Y]); // V1V0D / V1V2V0
+		firstBaryCrd[2] = 1.0 - (firstBaryCrd[0] + firstBaryCrd[1]);
+
+		for (int x = minX; x <= maxX; x++) {
+			bCrd = getNewBarycentricCrd(T, firstBaryCrd, RIGHT, x - (int)minX);
+			for (int y = minY; y <= maxY; y++) {
+				if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
+					crdInfo.cartCrd.setX(x);
+					crdInfo.cartCrd.setY(y);
+					crdInfo.baryCrd = bCrd;
+
+					Color finalColor(clr0.getRedPortion()*bCrd[0] + clr1.getRedPortion()*bCrd[1] + clr2.getRedPortion()*bCrd[2],
+									clr0.getGreenPortion()*bCrd[0] + clr1.getGreenPortion()*bCrd[1] + clr2.getGreenPortion()*bCrd[2],
+									clr0.getBluePortion()*bCrd[0] + clr1.getBluePortion()*bCrd[1] + clr2.getBluePortion()*bCrd[2]);
+
+					crdInfo.clr.setColor(finalColor.getColor());
+					crdInfo.trl = T;
+
+					zBuffer.FillPixelInBuffer(crdInfo);
+				}
+				bCrd = getNewBarycentricCrd(T, bCrd, UP, 1);
+			}
+		}
+	}
 }
 
 void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
@@ -157,6 +206,22 @@ Color Shader::getFlatColor(Triangle & T, Material& M, Color& ambientLight, Light
 	Color color((ambient.getRedPortion() + diffuse1.getRedPortion() + diffuse2.getRedPortion() + specular1.getRedPortion() + specular2.getRedPortion()),
 				(ambient.getGreenPortion() + diffuse1.getGreenPortion() + diffuse2.getGreenPortion() + specular1.getGreenPortion() + specular2.getGreenPortion()),
 				(ambient.getBluePortion() + diffuse1.getBluePortion() + diffuse2.getBluePortion() + specular1.getBluePortion() + specular2.getBluePortion()));
+	return color;
+}
+
+Color Shader::getVertxColor(vertexInfo& vInfo, Material & M, Color & ambientLight, Light & light1, Light & light2)
+{
+	double A = M.getAmbient();
+
+	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
+
+	Color diffuse1 = clacDiffuseLight(vInfo.vertex, vInfo.normal, light1, M.getDiffuse());
+	Color specular1 = clacSpecularLight(vInfo.vertex, vInfo.normal, light1, M.getSpecular(), M.getspecularExp());
+	Color diffuse2 = clacDiffuseLight(vInfo.vertex, vInfo.normal, light2, M.getDiffuse());
+	Color specular2 = clacSpecularLight(vInfo.vertex, vInfo.normal, light2, M.getSpecular(), M.getspecularExp());
+	Color color((ambient.getRedPortion() + diffuse1.getRedPortion() + diffuse2.getRedPortion() + specular1.getRedPortion() + specular2.getRedPortion()),
+		(ambient.getGreenPortion() + diffuse1.getGreenPortion() + diffuse2.getGreenPortion() + specular1.getGreenPortion() + specular2.getGreenPortion()),
+		(ambient.getBluePortion() + diffuse1.getBluePortion() + diffuse2.getBluePortion() + specular1.getBluePortion() + specular2.getBluePortion()));
 	return color;
 }
 
