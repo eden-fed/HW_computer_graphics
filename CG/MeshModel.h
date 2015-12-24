@@ -51,6 +51,6 @@ public:
 	void moveCentroidToOrigin();
 	void populatelinesToDraw();
 	void drawModelEdges();
-	void drawNormals();
+	void drawNormals(double normSize);
 
 };

@@ -96,6 +96,7 @@ void MeshModel::transformMshMdl(Matrix4x4 &M)
 			faces[j].getNormal(k) = faces[j].getNormal(k).normalize();
 			faces[j].getNormal(k) = (faces[j][k] + faces[j].getNormal(k))*M;
 			faces[j][k] = faces[j][k] * M;
+			faces[j].getNormal(k) = (faces[j].getNormal(k) - faces[j][k]).normalize();
 		}
 		faces[j].setNormal(faces[j].calcNormal());
 	}
@@ -180,13 +181,15 @@ void MeshModel::drawModelEdges()
 	}
 }
 
-void MeshModel::drawNormals()
+void MeshModel::drawNormals(double normSize)
 {
 	Line ln; 
+	Vector4 end;
 	for (int i = 0; i < faces.size(); i++) {
 		for (int j = 0; j < 3; j++) {
 			ln.setStartCrd(faces[i][j], 0x00ff0000);
-			ln.setEndCrd(faces[i].getNormal(j), 0x00ff0000);
+			end = faces[i][j] + faces[i].getNormal(j)*normSize;
+			ln.setEndCrd(end, 0x00ff0000);
 		}
 		ln.drawline();
 
