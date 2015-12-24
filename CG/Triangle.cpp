@@ -64,7 +64,7 @@ Vector4 Triangle::getNormal()
 
 Vector4 Triangle::calcNormal()
 {
-	return (vertices[1] - vertices[0])^(vertices[2] - vertices[0]);
+	return ((vertices[1] - vertices[0])^(vertices[2] - vertices[0])).normalize();
 }
 
 const bool Triangle::isVertexInTriangle(Vector4 & V)
