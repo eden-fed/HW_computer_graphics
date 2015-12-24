@@ -202,7 +202,7 @@ Color Shader::clacSpecularLight(Vector4& point, Vector4& normal, Light& light, d
 	N[3] = 0; L[3] = 0;
 
 	double dotNL = (N*L);
-	double dotNL = (dotNL) < 0 ? (0) : (dotNL);
+	dotNL = (dotNL) < 0 ? (0) : (dotNL);
 
 	//calculate R
 	Vector4 R = (N * (dotNL*2)) - L;
