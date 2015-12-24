@@ -1,6 +1,6 @@
 #include "Object.h"
 
-Object::Object(MeshModel& mshMdl, Matrix4x4 mdlMtrx ){
+Object::Object(MeshModel& mshMdl, Matrix4x4& mdlMtrx ){
 	this->mshMdl = mshMdl;
 	this->mdlMtrx = mdlMtrx;
 }
@@ -15,7 +15,7 @@ Object::~Object()
 
 
 
-void Object::setModel(MeshModel & mshMdl, Matrix4x4 mdlMtrx)
+void Object::setModel(MeshModel & mshMdl, Matrix4x4& mdlMtrx)
 {
 	this->mshMdl = mshMdl;
 	this->mdlMtrx = mdlMtrx;

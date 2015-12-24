@@ -14,10 +14,11 @@ Vector4::Vector4(const double valX, const double valY, const double valZ, const 
 
 Vector4::Vector4(const Vector4 & V)
 {
-
-	for (int i = 0; i <= 3; i++) {
-		this->vectorValues[i] = V.vectorValues[i];
-	}
+	//void * memcpy ( void * destination, const void * source, size_t num );
+	memcpy(this, &V,sizeof(Vector4));
+	//for (int i = 0; i <= 3; i++) {
+	//	this->vectorValues[i] = V.vectorValues[i];
+	//}
 }
 
 Vector4::~Vector4()
@@ -50,9 +51,10 @@ const double & Vector4::operator[](int i) const
 
 const Vector4 & Vector4::operator=(const Vector4 & V)
 {
-	for (int i = 0; i <= 3; i++) {
+	memcpy(this, &V, sizeof(Vector4));
+	/*for (int i = 0; i <= 3; i++) {
 		this->vectorValues[i] = V.vectorValues[i];
-	}
+	}*/
 	return *this;
 }
 

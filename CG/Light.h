@@ -26,8 +26,8 @@ public:
 
 	//set functions
 	void setIntensity(Color I);
-	void setPosition(Vector4 P);
-	void setDirection(Vector4 D);
+	void setPosition(Vector4& P);
+	void setDirection(Vector4& D);
 	void setType(eLightType T);
 
 	//get functions
