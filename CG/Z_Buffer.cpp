@@ -86,8 +86,6 @@ void Z_Buffer::drawBuffer()
 
 void Z_Buffer::reshape(int width, int height)
 {
-
-
 	for (int x = 0; x < this->zWidth; ++x) {
 		delete[] buffer[x];
 	}
@@ -104,11 +102,28 @@ void Z_Buffer::reshape(int width, int height)
 
 void Z_Buffer::emptyBuffer()
 {
-	for (int x = 0; x < this->zWidth; x++) {
+	Zpixel initVal;
+	Zpixel* iterPtr;
+	initVal.zValue = -DBL_MAX;
+	initVal.color.setColor(0, 0, 0);
+	initVal.to_print = false;
+
+	//seting all y valuse in one array
+	iterPtr = buffer[0];
+	for (int y = 0; y < this->zHeight; y++) {
+		memcpy(iterPtr, &initVal, sizeof(Zpixel));
+		iterPtr++;
+	}
+
+	//coppying the one array to all of them
+	for (int x = 1; x < this->zWidth; x++) {
+		memcpy(buffer[x], buffer[0], sizeof(Zpixel) *zHeight);
+	}
+	/*for (int x = 0; x < this->zWidth; x++) {
 		for (int y = 0; y < this->zHeight; y++) {
 			buffer[x][y].zValue = -DBL_MAX;
 			buffer[x][y].color.setColor(0, 0, 0);
 			buffer[x][y].to_print = false;
 		}
-	}
+	}*/
 }

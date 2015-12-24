@@ -7,7 +7,7 @@
 
 typedef enum {
 	_POINT,
-	DIRECTION,
+	_DIRECTION,
 } eLightType;
 
 

@@ -75,12 +75,12 @@ double g_xLightDirection = 0.0;
 double g_yLightDirection = 0.0;
 double g_zLightDirection = -5;
 bool g_lightType = false;
-unsigned int lightIntensity = 0xff0000ff;
+unsigned int g_lightIntensity = 0xff0000ff;
 unsigned int g_ambientLight = 0xffffff;
-Light light1;
-Light light2;
+Light g_light1;
+Light g_light2;
 Z_Buffer g_zBuffer(g_Swidth, g_Sheight);
-
+//red=0xff0000ff
 
 Object sceneObject;
 //MeshModel model;
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
 	TwAddVarRW(bar, "y-direction", TW_TYPE_DOUBLE, &g_yLightDirection, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
 	TwAddVarRW(bar, "z-direction", TW_TYPE_DOUBLE, &g_zLightDirection, "min = -1000 max = 1000 step=1 keyIncr=z keyDecr=Z   group='light' ");
 	TwAddVarRW(bar, "point/directional", TW_TYPE_BOOLCPP, &g_lightType, "help='false=point, true=directional'  group='light'");
-	TwAddVarRW(bar, "light intensity", TW_TYPE_COLOR32, &lightIntensity, " coloralpha=true colormode=rgb group='light'");
+	TwAddVarRW(bar, "light intensity", TW_TYPE_COLOR32, &g_lightIntensity, " coloralpha=true colormode=rgb group='light'");
 	TwAddButton(bar, "apply on light 1", &applyLight1, NULL, " help='apply scale' group='light' ");
 	TwAddButton(bar, "apply on light 2", &applyLight2, NULL, " help='apply scale' group='light' ");
 	TwAddVarRW(bar, "ambient light intensity", TW_TYPE_COLOR32, &g_ambientLight, "coloralpha=true colormode=rgb group='light' ");
@@ -242,6 +242,14 @@ void TW_CALL loadOBJModel(void *data)
 		axisTransform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
 		box.setVertices(m);
 		sceneObject.setModel(m, transform);
+
+		Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
+		Vector4 P(g_xLightPosition, g_yLightPosition, g_zLightPosition, 1);
+		g_light1.setDirection(D);
+		g_light1.setPosition(P);
+		g_light1.setIntensity(g_lightIntensity);
+		g_light1.setType(_POINT);
+
 	}
 	else
 	{
@@ -353,22 +361,26 @@ void TW_CALL applyZrotation(void* clientData) {
 void TW_CALL applyLight1(void* clientData) {
 	Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
 	Vector4 P(g_xLightPosition, g_yLightPosition, g_zLightPosition, 1);
-	light1.setDirection(D);
-	light1.setPosition(P);
-	light1.setIntensity(lightIntensity);
+	g_light1.setDirection(D);
+	g_light1.setPosition(P);
+	g_light1.setIntensity(g_lightIntensity);
 	if(g_lightType)
-		light1.setType(DIRECTION);
-	else light1.setType(_POINT);
+		g_light1.setType(_DIRECTION);
+	else 
+		g_light1.setType(_POINT);
+
+	glutPostRedisplay();
+
 }
 void TW_CALL applyLight2(void* clientData) {
 	Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
 	Vector4 P(g_xLightPosition, g_yLightPosition, g_zLightPosition, 1);
-	light2.setDirection(D);
-	light2.setPosition(P);
-	light2.setIntensity(lightIntensity);
+	g_light2.setDirection(D);
+	g_light2.setPosition(P);
+	g_light2.setIntensity(g_lightIntensity);
 	if (g_lightType)
-		light2.setType(DIRECTION);
-	else light2.setType(_POINT);
+		g_light2.setType(_DIRECTION);
+	else g_light2.setType(_POINT);
 }
 //do not change this function unless you really know what you are doing!
 void initGraphics(int argc, char *argv[])
@@ -448,6 +460,18 @@ void drawScene() {
 	MeshModel model = sceneObject.getMshMdl();
 	model.transformMshMdl(modelMtrx);
 
+
+
+	//Color ambientLight(0xff0000);
+	g_zBuffer.emptyBuffer();
+	Shader shader(FLAT);
+	model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
+	shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer);
+	g_zBuffer.drawBuffer();
+
+
+	//model.drawModelEdges();
+
 	//show bounding box
 	if (g_bbox) {
 		BBox box2 = box;
@@ -464,19 +488,6 @@ void drawScene() {
 		model.calcCentroid();
 		sceneObject.drawObjectCrdSystem(axisTransform, model.getCentroid(), g_Swidth / 2, g_Sheight / 2);
 	}
-
-#define TEST
-#ifdef TEST
-	//Color ambientLight(0xff0000);
-	Shader shader(FLAT);
-	model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
-	std::vector<MeshModel> meshVec;
-	meshVec.push_back(model);
-	shader.draw(meshVec, g_ambientLight, light1, light2, g_zBuffer);
-	g_zBuffer.drawBuffer();
-#endif
-
-	//model.drawModelEdges();
 }
 
 //this will make sure that integer coordinates are mapped exactly to corresponding pixels on screen
@@ -546,13 +557,13 @@ void Reshape(int width, int height)
 void MouseButton(int button, int state, int x, int y)
 {
 	TwEventMouseButtonGLUT(button, state, x, y);
-	//glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 void MouseMotion(int x, int y)
 {
 	TwEventMouseMotionGLUT(x, y);
-	//glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 void PassiveMouseMotion(int x, int y)

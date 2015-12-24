@@ -111,7 +111,7 @@ const Vector4 Vector4::operator/(const double num) const
 {
 	Vector4 retVal;
 	for (int i = 0; i < 3; i++) {
-		retVal[i] = (*this)[i] / num;
+		retVal[i] = (*this)[i] * (1/num);
 	}
 
 	return retVal;

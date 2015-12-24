@@ -27,29 +27,28 @@ Shader::~Shader()
 {
 }
 
-void Shader::draw(std::vector<MeshModel>& meshVec, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer)
+void Shader::draw(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer)
 {
 	switch (ShadingType) {
 	case FLAT:
-		flatShading(meshVec, ambientLight, light1, light2, zBuffer);
+		flatShading(mesh, ambientLight, light1, light2, zBuffer);
 		break;
 	case GOURAUD:
-		gouraudShading(meshVec, ambientLight, light1, light2, zBuffer);
+		gouraudShading(mesh, ambientLight, light1, light2, zBuffer);
 		break;
 	case PHONG:
-		phongShading(meshVec, ambientLight, light1, light2, zBuffer);
+		phongShading(mesh, ambientLight, light1, light2, zBuffer);
 		break;
 	}
 }
 
-void Shader::flatShading(std::vector<MeshModel>& meshVec, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer)
+void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer)
 {
-	for (int i = 0; i < meshVec.size(); i++) {
-		for (int j = 0; j < meshVec[i].getAllFaces().size(); j++) {
+		for (int j = 0; j < mesh.getAllFaces().size(); j++) {
 			//clr.setColor(clr.getColor() + 0x05050500);
-			Triangle& T = meshVec[i].getAllFaces()[j];
+			Triangle& T = mesh.getAllFaces()[j];
 
-			Color clr = getFlatColor(T, meshVec[i].material, ambientLight, light1, light2);
+			Color clr = getFlatColor(T, mesh.material, ambientLight, light1, light2);
 
 			//bounding rectangle parameters
 			float minX, maxX, minY, maxY;
@@ -86,14 +85,13 @@ void Shader::flatShading(std::vector<MeshModel>& meshVec, Color ambientLight, Li
 				}
 			}
 		}
-	}
 }
 
-void Shader::gouraudShading(std::vector<MeshModel>& meshVec, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
+void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
 }
 
-void Shader::phongShading(std::vector<MeshModel>& meshVec, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
+void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
 }
 
@@ -148,7 +146,7 @@ Color Shader::getFlatColor(Triangle & T, Material& M, Color& ambientLight, Light
 {
 	
 	double A = M.getAmbient();
-	Vector4 tCentroid = (T[0] + T[1] + T[2])*(1/3);
+	Vector4 tCentroid = ((T[0] + T[1]) + T[2]) / 3.0;
 
 	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
 
@@ -165,11 +163,11 @@ Color Shader::getFlatColor(Triangle & T, Material& M, Color& ambientLight, Light
 Color Shader::clacDiffuseLight(Vector4& point, Vector4 & normal, Light& light, double Kd)
 {
 
-	Vector4 N = normal;
+	Vector4 N =normal.normalize();
 	Vector4 L;
 
 	//get light direction
-	if (light.getType() == DIRECTION)
+	if (light.getType() == _DIRECTION)
 		L = light.getPosition() - light.getDirection();
 	else
 		L = light.getPosition() - point;
@@ -179,7 +177,7 @@ Color Shader::clacDiffuseLight(Vector4& point, Vector4 & normal, Light& light, d
 
 	//calc NL
 	double NL = (N*L);
-	double factor = (NL) < 0 ? (0) : (NL);
+	NL = (NL) < 0 ? (0) : (NL);
 
 	//equation from class
 	Color& Ip = light.getIntensity();
@@ -189,10 +187,10 @@ Color Shader::clacDiffuseLight(Vector4& point, Vector4 & normal, Light& light, d
 
 Color Shader::clacSpecularLight(Vector4& point, Vector4& normal, Light& light, double Ks, double specularExp)
 {
-	Vector4 N = normal;
+	Vector4 N = normal.normalize();
 	Vector4 L;
 	//get light direction
-	if (light.getType() == DIRECTION)
+	if (light.getType() == _DIRECTION)
 		L = light.getPosition() - light.getDirection();
 	else
 		L = light.getPosition() - point;
