@@ -28,9 +28,7 @@ Matrix4x4::Matrix4x4(double x1, double x2, double x3, double x4, double y1, doub
 
 Matrix4x4::Matrix4x4(const Matrix4x4 & m)
 {
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 4; j++)
-			this->v1[i][j] = m.v1[i][j];
+	memcpy(this, &m, sizeof(Matrix4x4));
 }
 
 void Matrix4x4::setRow(double x, double y, double z, double w, unsigned int rowNum)
@@ -61,20 +59,16 @@ double * Matrix4x4::operator[](int i)
 
 const Matrix4x4 & Matrix4x4::operator=(const Matrix4x4 & m)
 {
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 4; j++)
-			this->v1[i][j] = m.v1[i][j];
-	
+	memcpy(this, &m, sizeof(Matrix4x4));
 	return *this;
 }
 
 const bool Matrix4x4::operator==(const Matrix4x4 & m) const
 {
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 4; j++)
-			if (v1[i][j] != m.v1[i][j])
-				return false;
-	return true;
+	if (memcmp(this, &m, sizeof(Matrix4x4)) == 0)
+		return true;
+	else
+		return false;
 }
 
 const bool Matrix4x4::operator!=(const Matrix4x4 & m) const

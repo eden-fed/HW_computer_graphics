@@ -36,15 +36,13 @@ void Coordinate::setColor(const int valColor)
 
 const Coordinate & Coordinate::operator=(const Coordinate & coordinate)
 {
-	this->X = coordinate.getX();
-	this->Y = coordinate.getY();
-	this->color = coordinate.getColor();
+	memcpy(this, &coordinate, sizeof(Coordinate));
 	return *this;
 }
 
 const bool Coordinate::operator==(const Coordinate & coordinate) const
 {
-	if (this->X == coordinate.getX() && this->Y == coordinate.getY() && this->color == coordinate.getColor())
+	if (memcmp(this, &coordinate, sizeof(Coordinate)) == 0)
 		return true;
 	else
 		return false;
@@ -52,10 +50,10 @@ const bool Coordinate::operator==(const Coordinate & coordinate) const
 
 const bool Coordinate::operator!=(const Coordinate & coordinate) const
 {
-	if (this->X != coordinate.getX() || this->Y != coordinate.getY() || this->color != coordinate.getColor())
-		return true;
-	else
+	if (memcmp(this, &coordinate, sizeof(Coordinate)) == 0)
 		return false;
+	else
+		return true;
 }
 
 Coordinate::operator Pixel()

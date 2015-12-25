@@ -52,20 +52,15 @@ const double & Vector4::operator[](int i) const
 const Vector4 & Vector4::operator=(const Vector4 & V)
 {
 	memcpy(this, &V, sizeof(Vector4));
-	/*for (int i = 0; i <= 3; i++) {
-		this->vectorValues[i] = V.vectorValues[i];
-	}*/
 	return *this;
 }
 
 const bool Vector4::operator==(const Vector4 & V) const
 {
-	bool isEqual = true; 
-	for (int i = 0; i <= 3; i++) {
-		isEqual&=this->vectorValues[i] == V.vectorValues[i];
-	}
-
-	return isEqual;
+	if (memcmp(this, &V, sizeof(Vector4)) == 0)
+		return true;
+	else
+		return false;
 }
 
 const bool Vector4::operator!=(const Vector4 & V) const

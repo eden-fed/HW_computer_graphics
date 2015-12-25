@@ -269,7 +269,7 @@ Color Shader::getVertxColor(vertexInfo& vInfo, Material & M, Color & ambientLigh
 {
 	double A = M.getAmbient();
 	Vector4& P = vInfo.vertex;
-	Vector4 N = vInfo.normal.normalize();
+	Vector4& N = vInfo.normal.normalize();
 
 	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
 
