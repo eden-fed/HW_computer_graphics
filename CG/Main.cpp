@@ -80,6 +80,12 @@ unsigned int g_ambientLight = 0xffffff;
 Light g_light1;
 Light g_light2;
 Z_Buffer g_zBuffer(g_Swidth, g_Sheight);
+bool g_mesh = false;
+eShadingType g_shadingType = FLAT;
+
+TwType shadingType;
+
+
 //red=0xff0000ff
 
 Object sceneObject;
@@ -206,9 +212,14 @@ int main(int argc, char *argv[])
 	TwAddButton(bar, "apply on light 2", &applyLight2, NULL, " help='apply scale' group='light' ");
 	TwAddVarRW(bar, "ambient light intensity", TW_TYPE_COLOR32, &g_ambientLight, "coloralpha=true colormode=rgb group='light' ");
 
-	TwAddSeparator(bar, NULL, NULL);
+	// Defining an empty season enum type
+	shadingType = TwDefineEnum("ShadingType", NULL, 0);
+	// Adding season to bar and defining seasonType enum values
+	TwAddVarRW(bar, "shading type", shadingType, &g_shadingType, " enum='0 {FLAT}, 1 {GOURAUD}, 2 {PHONG}' group='shading'");
+	TwAddVarRW(bar, "show mesh model", TW_TYPE_BOOLCPP, &g_mesh, "help='false=shading, true=meshmodel'  group='shading'");
 
-	
+	// This will affect all variables that are of type seasonType.
+	TwAddSeparator(bar, NULL, NULL);
 
 
 	//time display - don't delete
@@ -451,27 +462,21 @@ void drawScene() {
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
 	modelMtrx *= v2sMatrix;
 
-	//creating a mesh model and aplying all the transformations
+	//creating a mesh model and apllying all the transformations
 	MeshModel model = sceneObject.getMshMdl();
-
-	//model.transformNormals(modelMtrx, g_normals_size);
 	model.transformMshMdl(modelMtrx);
-	//model.transformNormals(axisTransform);
 
 
-
-
-
-
-	//Color ambientLight(0xff0000);
-	g_zBuffer.emptyBuffer();
-	Shader shader(FLAT);
-	model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
-	shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer);
-	g_zBuffer.drawBuffer();
-
-
-	//model.drawModelEdges();
+	if (g_mesh) {
+		model.drawModelEdges();
+	}
+	else {
+		g_zBuffer.emptyBuffer();
+		Shader shader(g_shadingType);
+		model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
+		shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer);
+		g_zBuffer.drawBuffer();
+	}
 
 	//show bounding box
 	if (g_bbox) {
@@ -481,7 +486,6 @@ void drawScene() {
 	}
 	//show normals
 	if (g_normals) {
-	//	model.transformNormals(axisTransform);
 		model.drawNormals(g_normals_size);
 	}
 	//show coordinate systems
