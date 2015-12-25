@@ -464,14 +464,14 @@ void drawScene() {
 
 
 	//Color ambientLight(0xff0000);
-/*	g_zBuffer.emptyBuffer();
+	g_zBuffer.emptyBuffer();
 	Shader shader(FLAT);
 	model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
 	shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer);
-	g_zBuffer.drawBuffer();*/
+	g_zBuffer.drawBuffer();
 
 
-	model.drawModelEdges();
+	//model.drawModelEdges();
 
 	//show bounding box
 	if (g_bbox) {

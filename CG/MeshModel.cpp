@@ -188,7 +188,7 @@ void MeshModel::drawNormals(double normSize)
 	for (int i = 0; i < faces.size(); i++) {
 		for (int j = 0; j < 3; j++) {
 			ln.setStartCrd(faces[i][j], 0x00ff0000);
-			end = faces[i][j] + faces[i].getNormal(j)*normSize;
+			end = faces[i][j] + faces[i].getNormal(j)*(normSize*10);
 			ln.setEndCrd(end, 0x00ff0000);
 		}
 		ln.drawline();
