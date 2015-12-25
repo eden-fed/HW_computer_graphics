@@ -44,9 +44,9 @@ void Shader::draw(MeshModel& mesh, Color ambientLight, Light& light1, Light& lig
 
 void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer)
 {
-		for (int j = 0; j < mesh.getAllFaces().size(); j++) {
+		for (int i = 0; i < mesh.getAllFaces().size(); i++) {
 			//clr.setColor(clr.getColor() + 0x05050500);
-			Triangle& T = mesh.getAllFaces()[j];
+			Triangle& T = mesh.getAllFaces()[i];
 
 			Color clr = getFlatColor(T, mesh.material, ambientLight, light1, light2);
 
@@ -65,6 +65,7 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 			Vector4 bCrd, firstBaryCrd;
 			stZbufferInfo crdInfo;
 
+			//get the firs barycentric coordinit (low left)
 			firstBaryCrd[0] = helpGNBC(T,1, 2, (int)minX, (int)minY) / helpGNBC(T, 1, 2, T[0][X], T[0][Y]); // V1V2D / V1V2V0
 			firstBaryCrd[1] = helpGNBC(T, 2, 0, (int)minX, (int)minY) / helpGNBC(T, 2, 0, T[1][X], T[1][Y]); // V1V0D / V1V2V0
 			firstBaryCrd[2] = 1.0 - (firstBaryCrd[0] + firstBaryCrd[1]);
@@ -89,13 +90,10 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 
 void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
-	for (int j = 0; j < mesh.getAllFaces().size(); j++) {
-		Triangle& T = mesh.getAllFaces()[j];
+	for (int i = 0; i < mesh.getAllFaces().size(); i++) {
+		Triangle& T = mesh.getAllFaces()[i];
 
 		//calculate Trinagle vertex colors
-		//Color clr0 = (0x00006400); 
-		//Color clr1 = (0x00006400 << 8);
-		//Color clr2 = (0x00006400 << 16);
 		Color clr0 = getVertxColor(T.getVertexInfo(0), mesh.material, ambientLight, light1, light2);
 		Color clr1 = getVertxColor(T.getVertexInfo(1), mesh.material, ambientLight, light1, light2);
 		Color clr2 = getVertxColor(T.getVertexInfo(2), mesh.material, ambientLight, light1, light2);
@@ -116,6 +114,7 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 		Vector4 bCrd, firstBaryCrd;
 		stZbufferInfo crdInfo;
 
+		//get the firs barycentric coordinit (low left)
 		firstBaryCrd[0] = helpGNBC(T, 1, 2, (int)minX, (int)minY) / helpGNBC(T, 1, 2, T[0][X], T[0][Y]); // V1V2D / V1V2V0
 		firstBaryCrd[1] = helpGNBC(T, 2, 0, (int)minX, (int)minY) / helpGNBC(T, 2, 0, T[1][X], T[1][Y]); // V1V0D / V1V2V0
 		firstBaryCrd[2] = 1.0 - (firstBaryCrd[0] + firstBaryCrd[1]);
@@ -147,10 +146,9 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer)
 {
 	//loop through all the triangles
-	for (int j = 0; j < mesh.getAllFaces().size(); j++) {
+	for (int i = 0; i < mesh.getAllFaces().size(); i++) {
 
-		Triangle& T = mesh.getAllFaces()[j];
-		Color clr = getFlatColor(T, mesh.material, ambientLight, light1, light2);
+		Triangle& T = mesh.getAllFaces()[i];
 
 		//bounding rectangle parameters
 		float minX, maxX, minY, maxY;
@@ -167,6 +165,7 @@ void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Li
 		Vector4 bCrd, firstBaryCrd;
 		stZbufferInfo crdInfo;
 
+		//get the firs barycentric coordinit (low left)
 		firstBaryCrd[0] = helpGNBC(T, 1, 2, (int)minX, (int)minY) / helpGNBC(T, 1, 2, T[0][X], T[0][Y]); // V1V2D / V1V2V0
 		firstBaryCrd[1] = helpGNBC(T, 2, 0, (int)minX, (int)minY) / helpGNBC(T, 2, 0, T[1][X], T[1][Y]); // V1V0D / V1V2V0
 		firstBaryCrd[2] = 1.0 - (firstBaryCrd[0] + firstBaryCrd[1]);
@@ -178,6 +177,18 @@ void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Li
 					crdInfo.cartCrd.setX(x);
 					crdInfo.cartCrd.setY(y);
 					crdInfo.baryCrd = bCrd;
+
+					vertexInfo vInfo;
+					//interpolated point
+					vInfo.vertex = T[0] * bCrd[0] + T[1] * bCrd[1] + T[2] * bCrd[2];
+
+					//interpolated normal and normilization
+					vInfo.normal = T.getNormal(0) * bCrd[0] + T.getNormal(1) * bCrd[1] + T.getNormal(2) * bCrd[2];
+					vInfo.normal = vInfo.normal.normalize();
+
+					//claculate the color
+					Color clr = getVertxColor(vInfo, mesh.material, ambientLight, light1, light2);
+
 					crdInfo.clr.setColor(clr.getColor());
 					crdInfo.trl = T;
 
