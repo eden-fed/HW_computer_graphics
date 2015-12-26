@@ -5,16 +5,16 @@ Z_Buffer::Z_Buffer(int width, int height)
 {
 	this->zWidth = width;
 	this->zHeight = height;
-	buffer = new Zpixel*[width];
-	for (int x = 0; x < width; x++) {
-		buffer[x] = new Zpixel[height];
+	buffer = new Zpixel*[width+1];
+	for (int x = 0; x < width+1; x++) {
+		buffer[x] = new Zpixel[height+1];
 	}
 	this->emptyBuffer();
 }
 
 Z_Buffer::~Z_Buffer()
 {
-	for (int x = 0; x < this->zWidth; ++x) {
+	for (int x = 0; x < this->zWidth+1; ++x) {
 		delete[] buffer[x];
 	}
 	delete[] buffer;
@@ -69,8 +69,8 @@ void Z_Buffer::drawBuffer()
 	Pixel pxlToPush;
 	std::vector<Pixel> pixels;
 
-	for (int x = 0; x < this->zWidth; x++) {
-		for (int y = 0; y < this->zHeight; y++) {
+	for (int x = 0; x < this->zWidth+1; x++) {
+		for (int y = 0; y < this->zHeight+1; y++) {
 			if (buffer[x][y].to_print) {
 				pxlToPush.x = x;
 				pxlToPush.y = y;
@@ -86,7 +86,7 @@ void Z_Buffer::drawBuffer()
 
 void Z_Buffer::reshape(int width, int height)
 {
-	for (int x = 0; x < this->zWidth; ++x) {
+	for (int x = 0; x < this->zWidth+1; ++x) {
 		delete[] buffer[x];
 	}
 	delete[] buffer;
@@ -94,9 +94,9 @@ void Z_Buffer::reshape(int width, int height)
 	this->zWidth = width;
 	this->zHeight = height;
 
-	buffer = new Zpixel*[width];
-	for (int x = 0; x < width; x++) {
-		buffer[x] = new Zpixel[height];
+	buffer = new Zpixel*[width+1];
+	for (int x = 0; x < width+1; x++) {
+		buffer[x] = new Zpixel[height+1];
 	}
 }
 
@@ -110,13 +110,13 @@ void Z_Buffer::emptyBuffer()
 
 	//seting all y valuse in one array
 	iterPtr = buffer[0];
-	for (int y = 0; y < this->zHeight; y++) {
+	for (int y = 0; y < this->zHeight+1; y++) {
 		memcpy(iterPtr, &initVal, sizeof(Zpixel));
 		iterPtr++;
 	}
 
 	//coppying the one array to all of them
-	for (int x = 1; x < this->zWidth; x++) {
+	for (int x = 1; x < this->zWidth+1; x++) {
 		memcpy(buffer[x], buffer[0], sizeof(Zpixel) *zHeight);
 	}
 	/*for (int x = 0; x < this->zWidth; x++) {
