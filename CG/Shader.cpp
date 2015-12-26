@@ -265,9 +265,11 @@ Color Shader::getVertxColor(vertexInfo& vInfo, Material & M, Color & ambientLigh
 	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
 
 	Color diffuse1  = clacDiffuseLight(P, N, light1, M.getDiffuse());
-	Color specular1 = clacSpecularLight(P, N, light1, M.getSpecular(), M.getspecularExp(),eyePosition);
 	Color diffuse2  = clacDiffuseLight(P, N, light2, M.getDiffuse());
+
+	Color specular1 = clacSpecularLight(P, N, light1, M.getSpecular(), M.getspecularExp(), eyePosition);
 	Color specular2 = clacSpecularLight(P, N, light2, M.getSpecular(), M.getspecularExp(), eyePosition);
+
 	Color color((ambient.getRedPortion() + diffuse1.getRedPortion() + diffuse2.getRedPortion() + specular1.getRedPortion() + specular2.getRedPortion()),
 		(ambient.getGreenPortion() + diffuse1.getGreenPortion() + diffuse2.getGreenPortion() + specular1.getGreenPortion() + specular2.getGreenPortion()),
 		(ambient.getBluePortion() + diffuse1.getBluePortion() + diffuse2.getBluePortion() + specular1.getBluePortion() + specular2.getBluePortion()));
@@ -277,7 +279,7 @@ Color Shader::getVertxColor(vertexInfo& vInfo, Material & M, Color & ambientLigh
 Color Shader::clacDiffuseLight(Vector4& point, Vector4 & normal, Light& light, double Kd)
 {
 
-	Vector4 N =normal;
+	Vector4& N =normal;
 	Vector4 L;
 
 	//get light direction
@@ -311,12 +313,12 @@ Color Shader::clacSpecularLight(Vector4& point, Vector4& normal, Light& light, d
 	//normalize light
 	L = L.normalize();
 
-	double dotNL = (N*L);
-	dotNL = (dotNL) < 0 ? (0) : (dotNL);
+	double NL = (N*L);
+	NL = (NL) < 0 ? (0) : (NL);
 
 	//calculate R
-	Vector4 R = (N * (dotNL*2)) - L;
-	R = R.normalize();// = R*(1 / R.getSize());
+	Vector4 R = (N * (NL*2)) - L;
+	R = R.normalize();
 
 	//calculate V
 	Vector4 V = eyePosition-point; 
@@ -326,6 +328,7 @@ Color Shader::clacSpecularLight(Vector4& point, Vector4& normal, Light& light, d
 	RV = pow(RV, specularExp);
 
 	Color& Ip = light.getIntensity();
+
 	Color retColor(Ks*RV*Ip.getRedPortion(), Ks*RV*Ip.getGreenPortion(), Ks*RV*Ip.getBluePortion());
 	return retColor;
 }
