@@ -177,7 +177,7 @@ Vector4 Vector4::roundVectorValues()
 	return retVal;
 }
 
-int Vector4::helpRoundNum(float f)
+int Vector4::helpRoundNum(double f)
 {
 	int i = f;
 	if (f - i <= 0.5) {

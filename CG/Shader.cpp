@@ -51,7 +51,7 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 			Color clr = getFlatColor(T, mesh.material, ambientLight, light1, light2);
 
 			//bounding rectangle parameters
-			float minX, maxX, minY, maxY;
+			double minX, maxX, minY, maxY;
 
 			//find bounding rectangle
 			T.calcBoundingRectangle(minX, maxX, minY, maxY);
@@ -100,7 +100,7 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 
 
 		//bounding rectangle parameters
-		float minX, maxX, minY, maxY;
+		double minX, maxX, minY, maxY;
 
 		//find bounding rectangle
 		T.calcBoundingRectangle(minX, maxX, minY, maxY);
@@ -151,7 +151,7 @@ void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Li
 		Triangle& T = mesh.getAllFaces()[i];
 
 		//bounding rectangle parameters
-		float minX, maxX, minY, maxY;
+		double minX, maxX, minY, maxY;
 
 		//find bounding rectangle
 		T.calcBoundingRectangle(minX, maxX, minY, maxY);
@@ -242,7 +242,7 @@ Vector4 Shader::getNewBarycentricCrd(Triangle& T, Vector4& bCrd, eScanConvMoveme
 	return retVal;
 }
 
-float Shader::helpGNBC(Triangle& T, int a, int b, float x, float y)
+double Shader::helpGNBC(Triangle& T, int a, int b, double x, double y)
 {
 	return ((T[a][Y] - T[b][Y])*x) + ((T[b][X] - T[a][X])*y) + T[a][X] * T[b][Y] - T[b][X] * T[a][Y];
 }

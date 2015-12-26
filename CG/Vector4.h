@@ -52,7 +52,7 @@ public:
 	Vector4 normalize() const;
 
 	//helper functions
-	int helpRoundNum(float F);
+	int helpRoundNum(double F);
 
 };
 

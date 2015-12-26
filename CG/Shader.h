@@ -38,7 +38,7 @@ public:
 	void phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer);
 
 	Vector4 getNewBarycentricCrd(Triangle& T,Vector4& bCrd, eScanConvMovement M, unsigned int numOfMoves);
-	float helpGNBC(Triangle& T, int a, int b, float x, float y);
+	double helpGNBC(Triangle& T, int a, int b, double x, double y);
 
 	Color getFlatColor(Triangle& T,Material& M, Color& ambientLight, Light& light1, Light& light2);
 	Color getVertxColor(vertexInfo& vInfo, Material& M, Color& ambientLight, Light& light1, Light& light2);
