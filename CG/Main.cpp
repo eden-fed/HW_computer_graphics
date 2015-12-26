@@ -471,10 +471,18 @@ void drawScene() {
 		model.drawModelEdges();
 	}
 	else {
+
+		Light Lt = g_light1;
+		Vector4 A = (g_light1.getDirection())*v2sMatrix;
+		Vector4 B = (g_light1.getPosition())*v2sMatrix;
+		Lt.setDirection(A);
+		Lt.setPosition(B);
+
+		Vector4 eyePosition(g_Swidth / 2, g_Sheight / 2, 0, 1);
 		g_zBuffer.emptyBuffer();
 		Shader shader(g_shadingType);
 		model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
-		shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer);
+		shader.draw(model, g_ambientLight, Lt, g_light2, g_zBuffer, eyePosition);
 		g_zBuffer.drawBuffer();
 	}
 
