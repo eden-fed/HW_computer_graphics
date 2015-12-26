@@ -251,7 +251,6 @@ Color Shader::getFlatColor(Triangle & T, Material& M, Color& ambientLight, Light
 {
 	vertexInfo vInfo;
 
-	double A = M.getAmbient();
 	vInfo.vertex = ((T[0] + T[1]) + T[2]) / 3.0; //tCentroid
 	vInfo.normal = T.getNormal();
 	return getVertxColor(vInfo, M, ambientLight, light1, light2, eyePosition);
