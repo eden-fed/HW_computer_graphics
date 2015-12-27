@@ -31,11 +31,11 @@ public:
 	~Shader();
 
 	//class methods
-	void draw(MeshModel& mesh,Color ambientLight, Light& light1, Light& light2,Z_Buffer& zBuffer,Vector4& eyePosition, Matrix4x4 M);
+	void draw(MeshModel& mesh,Color ambientLight, Light& light1, Light& light2,Z_Buffer& zBuffer,Vector4& eyePosition);
 
-	void flatShading(MeshModel& mesh, Color ambientLight,Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4 M);
-	void gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4 M);
-	void phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4 M);
+	void flatShading(MeshModel& mesh, Color ambientLight,Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition);
+	void gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition);
+	void phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition);
 
 	Vector4 getNewBarycentricCrd(Triangle& T,Vector4& bCrd, eScanConvMovement M, unsigned int numOfMoves);
 	double helpGNBC(Triangle& T, int a, int b, double x, double y);
