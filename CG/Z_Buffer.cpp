@@ -56,7 +56,7 @@ void Z_Buffer::FillPixelInBuffer(stZbufferInfo& pixel)
 	if (x < 0 || y < 0 || x > this->zWidth || y > this->zHeight)
 		return;
 	double z = Depth(pixel.trl, pixel.baryCrd);
-	if (z > this->buffer[x][y].zValue) {
+	if (z < this->buffer[x][y].zValue) {
 		buffer[x][y].zValue = z;
 		buffer[x][y].color = pixel.clr;
 		buffer[x][y].to_print = true;
@@ -104,7 +104,7 @@ void Z_Buffer::emptyBuffer()
 {
 	Zpixel initVal;
 	Zpixel* iterPtr;
-	initVal.zValue = -DBL_MAX;
+	initVal.zValue = DBL_MAX;
 	initVal.color.setColor(0, 0, 0);
 	initVal.to_print = false;
 

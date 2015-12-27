@@ -27,28 +27,30 @@ Shader::~Shader()
 {
 }
 
-void Shader::draw(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition)
+void Shader::draw(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx)
 {
 	switch (ShadingType) {
 	case FLAT:
-		flatShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition);
+		flatShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition, pMtrx);
 		break;
 	case GOURAUD:
-		gouraudShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition);
+		gouraudShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition, pMtrx);
 		break;
 	case PHONG:
-		phongShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition);
+		phongShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition, pMtrx);
 		break;
 	}
 }
 
-void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition)
+void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx)
 {
 		for (int i = 0; i < mesh.getAllFaces().size(); i++) {
 			//clr.setColor(clr.getColor() + 0x05050500);
 			Triangle& T = mesh.getAllFaces()[i];
 
 			Color clr = getFlatColor(T, mesh.material, ambientLight, light1, light2, eyePosition);
+
+			T.projectTriangle(pMtrx);
 
 			//bounding rectangle parameters
 			double minX, maxX, minY, maxY;
@@ -88,7 +90,7 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 		}
 }
 
-void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition)
+void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx)
 {
 	for (int i = 0; i < mesh.getAllFaces().size(); i++) {
 		Triangle& T = mesh.getAllFaces()[i];
@@ -98,6 +100,7 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 		Color clr1 = getVertxColor(T.getVertexInfo(1), mesh.material, ambientLight, light1, light2, eyePosition);
 		Color clr2 = getVertxColor(T.getVertexInfo(2), mesh.material, ambientLight, light1, light2, eyePosition);
 
+		T.projectTriangle(pMtrx);
 
 		//bounding rectangle parameters
 		double minX, maxX, minY, maxY;
@@ -143,7 +146,7 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 	}
 }
 
-void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition)
+void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx)
 {
 	//loop through all the triangles
 	for (int i = 0; i < mesh.getAllFaces().size(); i++) {
@@ -265,10 +268,10 @@ Color Shader::getVertxColor(vertexInfo& vInfo, Material & M, Color & ambientLigh
 	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
 
 	Color diffuse1  = clacDiffuseLight(P, N, light1, M.getDiffuse());
-	Color diffuse2  = clacDiffuseLight(P, N, light2, M.getDiffuse());
+	Color diffuse2 = 0; //clacDiffuseLight(P, N, light2, M.getDiffuse());
 
 	Color specular1 = clacSpecularLight(P, N, light1, M.getSpecular(), M.getspecularExp(), eyePosition);
-	Color specular2 = clacSpecularLight(P, N, light2, M.getSpecular(), M.getspecularExp(), eyePosition);
+	Color specular2 = 0;// clacSpecularLight(P, N, light2, M.getSpecular(), M.getspecularExp(), eyePosition);
 
 	Color color((ambient.getRedPortion() + diffuse1.getRedPortion() + diffuse2.getRedPortion() + specular1.getRedPortion() + specular2.getRedPortion()),
 		(ambient.getGreenPortion() + diffuse1.getGreenPortion() + diffuse2.getGreenPortion() + specular1.getGreenPortion() + specular2.getGreenPortion()),

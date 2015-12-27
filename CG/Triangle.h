@@ -39,6 +39,7 @@ public:
 	void setNormal(Vector4 n);
 
 	//class methods
+	void projectTriangle(Matrix4x4& pMtrx);
 	Vector4 calcNormal();
 	const int isVertexInTriangle(Vector4& V);
 	Color getColorOfPoint(int x, int y);

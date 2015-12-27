@@ -455,12 +455,13 @@ void drawScene() {
 
 	//creating projection matrix and aplying it
 	cam.setProjectionMatrix(g_fovy, g_near, g_far, (eProjectionType)g_projectionType, 1);
-	modelMtrx *= cam.getProjectionMtrx(); 
-	//axisTransform *= cam.getProjectionMtrx();
 
 	//view to screen matrix
 	Matrix4x4 v2sMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_Swidth / 2, g_Sheight / 2, 0, 1);
-	modelMtrx *= v2sMatrix;
+
+	Matrix4x4 projectionMtrx(cam.getProjectionMtrx()* v2sMatrix);
+
+
 
 	//creating a mesh model and apllying all the transformations
 	MeshModel model = sceneObject.getMshMdl();
@@ -471,18 +472,16 @@ void drawScene() {
 		model.drawModelEdges();
 	}
 	else {
-
+		/*Vector4 P(0, 0, 0, 1);
 		Light Lt = g_light1;
-		Vector4 A = (g_light1.getDirection())*v2sMatrix;
-		Vector4 B = (g_light1.getPosition())*v2sMatrix;
-		Lt.setDirection(A);
-		Lt.setPosition(B);
+		Lt.setDirection(model.getCentroid());
+		Lt.setPosition(P);*/
 
 		Vector4 eyePosition(g_Swidth / 2, g_Sheight / 2, 0, 1);
 		g_zBuffer.emptyBuffer();
 		Shader shader(g_shadingType);
 		model.material.setAll(g_ambient, g_diffuse, g_specular, g_specularExp);
-		shader.draw(model, g_ambientLight, Lt, g_light2, g_zBuffer, eyePosition);
+		shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer, eyePosition, projectionMtrx);
 		g_zBuffer.drawBuffer();
 	}
 
