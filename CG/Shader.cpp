@@ -27,22 +27,22 @@ Shader::~Shader()
 {
 }
 
-void Shader::draw(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition)
+void Shader::draw(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition,Matrix4x4 M)
 {
 	switch (ShadingType) {
 	case FLAT:
-		flatShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition);
+		flatShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition, M);
 		break;
 	case GOURAUD:
-		gouraudShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition);
+		gouraudShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition, M);
 		break;
 	case PHONG:
-		phongShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition);
+		phongShading(mesh, ambientLight, light1, light2, zBuffer, eyePosition, M);
 		break;
 	}
 }
 
-void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition)
+void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4 M)
 {
 		for (int i = 0; i < mesh.getAllFaces().size(); i++) {
 			//clr.setColor(clr.getColor() + 0x05050500);
@@ -88,7 +88,7 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 		}
 }
 
-void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition)
+void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition, Matrix4x4 M)
 {
 	for (int i = 0; i < mesh.getAllFaces().size(); i++) {
 		Triangle& T = mesh.getAllFaces()[i];
@@ -143,7 +143,7 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 	}
 }
 
-void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition)
+void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer & zBuffer, Vector4& eyePosition, Matrix4x4 M)
 {
 	//loop through all the triangles
 	for (int i = 0; i < mesh.getAllFaces().size(); i++) {
