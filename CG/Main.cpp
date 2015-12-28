@@ -469,14 +469,10 @@ void drawScene() {
 
 
 	if (g_mesh) {
+		model.transformMshMdl(projectionMtrx);
 		model.drawModelEdges();
 	}
 	else {
-		/*Vector4 P(0, 0, 0, 1);
-		Light Lt = g_light1;
-		Lt.setDirection(model.getCentroid());
-		Lt.setPosition(P);*/
-
 		Vector4 eyePosition(g_Swidth / 2, g_Sheight / 2, 0, 1);
 		g_zBuffer.emptyBuffer();
 		Shader shader(g_shadingType);
@@ -484,6 +480,8 @@ void drawScene() {
 		shader.draw(model, g_ambientLight, g_light1, g_light2, g_zBuffer, eyePosition, projectionMtrx);
 		g_zBuffer.drawBuffer();
 	}
+
+	modelMtrx *= projectionMtrx;
 
 	//show bounding box
 	if (g_bbox) {
