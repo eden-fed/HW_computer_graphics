@@ -80,7 +80,7 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 			firstBaryCrd[1] = helpGNBC(T, 2, 0, (int)minX, (int)minY) / helpGNBC(T, 2, 0, T[1][X], T[1][Y]); // V1V0D / V1V2V0
 			firstBaryCrd[2] = 1.0 - (firstBaryCrd[0] + firstBaryCrd[1]);
 
-			for (int x = minX; x <= maxX; x++) {
+			for (int x = (int)minX; x <= (int)maxX; x++) {
 				bCrd = getNewBarycentricCrd(T,firstBaryCrd, RIGHT, x - (int)minX);
 				for (int y = minY; y <= maxY; y++) {
 					if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
@@ -130,7 +130,7 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 		firstBaryCrd[1] = helpGNBC(T, 2, 0, (int)minX, (int)minY) / helpGNBC(T, 2, 0, T[1][X], T[1][Y]); // V1V0D / V1V2V0
 		firstBaryCrd[2] = 1.0 - (firstBaryCrd[0] + firstBaryCrd[1]);
 
-		for (int x = minX; x <= maxX; x++) {
+		for (int x = (int)minX; x <= (int)maxX; x++) {
 			bCrd = getNewBarycentricCrd(T, firstBaryCrd, RIGHT, x - (int)minX);
 			for (int y = minY; y <= maxY; y++) {
 				if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
@@ -214,7 +214,7 @@ void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Li
 		firstBaryCrd[1] = helpGNBC(T, 2, 0, (int)minX, (int)minY) / helpGNBC(T, 2, 0, T[1][X], T[1][Y]); // V1V0D / V1V2V0
 		firstBaryCrd[2] = 1.0 - (firstBaryCrd[0] + firstBaryCrd[1]);
 
-		for (int x = minX; x <= maxX; x++) {
+		for (int x = (int)minX; x <= (int)maxX; x++) {
 			bCrd = getNewBarycentricCrd(T, firstBaryCrd, RIGHT, x - (int)minX);
 			for (int y = minY; y <= maxY; y++) {
 				if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
