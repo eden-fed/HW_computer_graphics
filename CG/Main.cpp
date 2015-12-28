@@ -473,6 +473,11 @@ void drawScene() {
 		model.drawModelEdges();
 	}
 	else {
+		if (g_projectionType == false) {
+			Matrix4x4 scale1(0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 1);
+			Matrix4x4 scale2(3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1);
+			projectionMtrx = scale2*v2sMatrix*cam.getProjectionMtrx()*scale1;
+		}
 		Vector4 eyePosition(g_Swidth / 2, g_Sheight / 2, 0, 1);
 		g_zBuffer.emptyBuffer();
 		Shader shader(g_shadingType);
