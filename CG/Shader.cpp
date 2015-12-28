@@ -82,7 +82,7 @@ void Shader::flatShading(MeshModel& mesh, Color ambientLight, Light& light1, Lig
 
 			for (int x = (int)minX; x <= (int)maxX; x++) {
 				bCrd = getNewBarycentricCrd(T,firstBaryCrd, RIGHT, x - (int)minX);
-				for (int y = minY; y <= maxY; y++) {
+				for (int y = (int)minY; y <= (int)maxY; y++) {
 					if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
 						crdInfo.cartCrd.setX(x);
 						crdInfo.cartCrd.setY(y);
@@ -132,7 +132,7 @@ void Shader::gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, 
 
 		for (int x = (int)minX; x <= (int)maxX; x++) {
 			bCrd = getNewBarycentricCrd(T, firstBaryCrd, RIGHT, x - (int)minX);
-			for (int y = minY; y <= maxY; y++) {
+			for (int y = (int)minY; y <= (int)maxY; y++) {
 				if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
 					crdInfo.cartCrd.setX(x);
 					crdInfo.cartCrd.setY(y);
@@ -216,7 +216,7 @@ void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Li
 
 		for (int x = (int)minX; x <= (int)maxX; x++) {
 			bCrd = getNewBarycentricCrd(T, firstBaryCrd, RIGHT, x - (int)minX);
-			for (int y = minY; y <= maxY; y++) {
+			for (int y = (int)minY; y <= (int)maxY; y++) {
 				if (bCrd[0] > 0 && bCrd[1] > 0 && bCrd[2] > 0) {
 					crdInfo.cartCrd.setX(x);
 					crdInfo.cartCrd.setY(y);

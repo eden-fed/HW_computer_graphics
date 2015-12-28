@@ -256,11 +256,9 @@ void TW_CALL applyTranslation(void* clientData) {
 	if (g_translationX != 0.0 || g_translationY != 0.0 || g_translationZ != 0.0) {
 		Matrix4x4 mat(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, g_translationX, g_translationY, g_translationZ, 1);
 		if (g_space){//world space
-			//transform *= mat;
 			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 		}
 		else {//object space
-			//transform = mat*transform;
 			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 		}
 		glutPostRedisplay();
