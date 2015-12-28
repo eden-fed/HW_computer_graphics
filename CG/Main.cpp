@@ -75,16 +75,14 @@ double g_xLightDirection = 0.0;
 double g_yLightDirection = 0.0;
 double g_zLightDirection = -5;
 bool g_lightType = false;
-unsigned int g_lightIntensity = 0xff0000ff;
+unsigned int g_lightIntensity = 0xffffff;
 unsigned int g_ambientLight = 0xffffff;
 Light g_light1;
 Light g_light2;
 Z_Buffer g_zBuffer(g_Swidth, g_Sheight);
 bool g_mesh = false;
 eShadingType g_shadingType = FLAT;
-
 TwType shadingType;
-
 
 //red=0xff0000ff
 
@@ -253,12 +251,12 @@ void TW_CALL loadOBJModel(void *data)
 		box.setVertices(m);
 		sceneObject.setModel(m, transform);
 
-		Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
+	/*	Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
 		Vector4 P(g_xLightPosition, g_yLightPosition, g_zLightPosition, 1);
 		g_light1.setDirection(D);
 		g_light1.setPosition(P);
 		g_light1.setIntensity(g_lightIntensity);
-		g_light1.setType(_POINT);
+		g_light1.setType(_POINT);*/
 
 	}
 	else
@@ -416,16 +414,16 @@ void initGraphics(int argc, char *argv[])
 
 void drawScene() {
 	if (g_reset) {
-		/*transform.setAllValues( 1, 0, 0, 0,
-								0, 1, 0, 0,
-								0, 0, 1, 0,
-								0, 0, 0, 1);
-		axisTransform = transform;*/
 		sceneObject.getMtrx().setAllValues(1, 0, 0, 0,
 			0, 1, 0, 0,
 			0, 0, 1, 0,
 			0, 0, 0, 1);
 		axisTransform = sceneObject.getMtrx();
+
+		g_ambientLight = 0xffffff;
+		g_light1.setDefaults();
+		g_light2.setDefaults();
+
 		g_reset = !g_reset;
 	}
 	//initial position of object

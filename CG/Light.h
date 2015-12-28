@@ -29,6 +29,7 @@ public:
 	void setPosition(Vector4& P);
 	void setDirection(Vector4& D);
 	void setType(eLightType T);
+	void setDefaults();
 
 	//get functions
 	Color getIntensity() { return this->intensity;};
