@@ -146,14 +146,17 @@ const Vector4 Vector4::operator*(const double num)const
 
 const Vector4 & Vector4::operator*=(const Matrix4x4 & M)
 {
-		Vector4 V = *this;
-		memset(this, 0, sizeof(Vector4));
-		for (int i = 0; i <= 3; i++) {
-			for (int j = 0; j <= 3; j++) {
-				(*this)[i] += V[j] * M[j][i];
-			}
-		}
-	return *this*(1 / (*this)[3]);
+	//	Vector4 V = *this;
+	//	memset(this, 0, sizeof(Vector4));
+	//	for (int i = 0; i <= 3; i++) {
+	//		for (int j = 0; j <= 3; j++) {
+	//			(*this)[i] += V[j] * M[j][i];
+	//		}
+	//	}
+
+	//return *this*(1 / (*this)[3]);
+	(*this) = (*this)*M;
+	return (*this);
 }
 
 const Vector4 Vector4::operator*(const Matrix4x4 & M)

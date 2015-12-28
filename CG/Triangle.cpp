@@ -82,11 +82,10 @@ void Triangle::setNormal(Vector4 n)
 void Triangle::projectTriangle(Matrix4x4 & pMtrx)
 {
 		for (int i = 0; i < 3; i++) {
-			this->vertices[i].normal = (this->vertices[i].vertex + this->vertices[i].normal)*pMtrx;
-			this->vertices[i].vertex *= pMtrx;
-			this->vertices[i].normal = (this->vertices[i].normal - this->vertices[i].vertex).normalize();
+			vertices[i].normal = (vertices[i].vertex + vertices[i].normal)*pMtrx;
+			vertices[i].vertex *= pMtrx;
+			vertices[i].normal = (vertices[i].normal - vertices[i].vertex).normalize();
 		}
-
 }
 
 Vector4 Triangle::calcNormal()
