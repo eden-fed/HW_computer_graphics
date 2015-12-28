@@ -31,11 +31,6 @@ LARGE_INTEGER Frequency;
 #define WORLD_SPACE 1
 #define TEST_SPACE(x) ((x)==0 ? (1) : (-1))
 
-/*int g_StartX = 0;
-int g_StartY = 0;
-int g_EndX = 0;
-int g_EndY = 0;
-int g_Op = 0;*/
 unsigned int g_Color = 0xff0000ff;
 
 double g_Swidth = 1366;
@@ -52,7 +47,6 @@ double g_scale = 1.0;
 double g_xRotation = 0.0;
 double g_yRotation = 0.0;
 double g_zRotation = 0.0;
-double g_quaternion[4] = { 0.0, 0.0, 0.0, 1.0 };
 
 //global veriables for glut functions
 bool g_reset = false;
@@ -210,15 +204,11 @@ int main(int argc, char *argv[])
 	TwAddButton(bar, "apply on light 2", &applyLight2, NULL, " help='apply scale' group='light' ");
 	TwAddVarRW(bar, "ambient light intensity", TW_TYPE_COLOR32, &g_ambientLight, "coloralpha=true colormode=rgb group='light' ");
 
-	// Defining an empty season enum type
 	shadingType = TwDefineEnum("ShadingType", NULL, 0);
-	// Adding season to bar and defining seasonType enum values
 	TwAddVarRW(bar, "shading type", shadingType, &g_shadingType, " enum='0 {FLAT}, 1 {GOURAUD}, 2 {PHONG}' group='shading'");
 	TwAddVarRW(bar, "show mesh model", TW_TYPE_BOOLCPP, &g_mesh, "help='false=shading, true=meshmodel'  group='shading'");
 
-	// This will affect all variables that are of type seasonType.
 	TwAddSeparator(bar, NULL, NULL);
-
 
 	//time display - don't delete
 	TwAddVarRO(bar, "time (us)", TW_TYPE_UINT32, &ElapsedMicroseconds.LowPart, "help='shows the drawing time in micro seconds'");
@@ -245,18 +235,10 @@ void TW_CALL loadOBJModel(void *data)
 		//store the values in Object, MeshModel...
 		//draw the object for the first time
 		MeshModel m(objScene);
-		//model = m;
 		transform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
 		axisTransform.setAllValues(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);//this is the model matrix
 		box.setVertices(m);
 		sceneObject.setModel(m, transform);
-
-	/*	Vector4 D(g_xLightDirection, g_yLightDirection, g_zLightDirection, 1);
-		Vector4 P(g_xLightPosition, g_yLightPosition, g_zLightPosition, 1);
-		g_light1.setDirection(D);
-		g_light1.setPosition(P);
-		g_light1.setIntensity(g_lightIntensity);
-		g_light1.setType(_POINT);*/
 
 	}
 	else
@@ -289,11 +271,9 @@ void TW_CALL applyScale(void* clientData) {
 	if (g_scale != 1.0) {
 		Matrix4x4 mat(g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, g_scale, 0, 0, 0, 0, 1);
 		if (g_space) {//world space
-			//transform *= mat;
 			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 		}
 		else {//object space
-			//transform = mat*transform;
 			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 		}
 		glutPostRedisplay();
@@ -309,12 +289,10 @@ void TW_CALL applyXrotation(void* clientData) {
 	if (g_xRotation != 0.0) {
 		if (!g_space)//object space
 		{
-			//transform = mat*transform;
 			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 			axisTransform = mat*axisTransform;
 		}
 		else {//world space
-			//transform *= mat;
 			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 			axisTransform *= mat;
 
@@ -330,12 +308,10 @@ void TW_CALL applyYrotation(void* clientData) {
 		0, 0, 0, 1);
 	if (g_yRotation != 0.0) {
 		if (!g_space) {
-			//transform = mat*transform;
 			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 			axisTransform = mat*axisTransform;
 		}
 		else {
-			//transform *= mat;
 			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 			axisTransform *= mat;
 		}
@@ -350,12 +326,10 @@ void TW_CALL applyZrotation(void* clientData) {
 		0, 0, 0, 1);
 	if (g_zRotation != 0.0) {
 		if (!g_space) {
-			//transform = mat*transform;
 			sceneObject.setMtrx(mat*sceneObject.getMtrx());
 			axisTransform = mat*axisTransform;
 		}
 		else {
-			//transform *= mat;
 			sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 			axisTransform *= mat;
 		}
@@ -436,12 +410,10 @@ void drawScene() {
 	modelMtrx = sceneObject.getMtrx()*modelMtrx;
 
 	//creating a camera object
-	Camera cam({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });;
-
+	Camera cam({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
 	
 	//pointing camera at object
 	if (g_centerCam) {
-		//cam.setViewMtrx({ 0, 0, 0, 1 }, (sceneObject.getMshMdl().getCentroid())*modelMtrx, { 0,1,0,1 });
 		saveCamera.setAllValues(1, 0, 0, 0,
 								0, 1, 0, 0,
 								0, 0, 1, 0,
@@ -459,12 +431,9 @@ void drawScene() {
 
 	Matrix4x4 projectionMtrx(cam.getProjectionMtrx()* v2sMatrix);
 
-
-
 	//creating a mesh model and apllying all the transformations
 	MeshModel model = sceneObject.getMshMdl();
 	model.transformMshMdl(modelMtrx);
-
 
 	if (g_mesh) {
 		model.transformMshMdl(projectionMtrx);
@@ -547,7 +516,6 @@ void Reshape(int width, int height)
 	//resizing the object to fit the screen size
 	double scale=((width/ g_Swidth)*(height/ g_Sheight));
 	Matrix4x4 mat(scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, 1);
-	//transform *= mat;
 	sceneObject.setMtrx(sceneObject.getMtrx()*mat);
 	g_Swidth = width;
 	g_Sheight = height;
