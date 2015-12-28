@@ -127,6 +127,6 @@ void Triangle::calcBoundingRectangle(double & minX, double & maxX, double & minY
 	}
 	minX--;
 	minY--;
-	maxX ++;
-	maxY ++;
+	maxX++;
+	maxY++;
 }
