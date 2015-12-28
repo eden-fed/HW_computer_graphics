@@ -35,7 +35,7 @@ public:
 
 	void flatShading(MeshModel& mesh, Color ambientLight,Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx);
 	void gouraudShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx);
-	void phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx);
+	
 
 	Vector4 getNewBarycentricCrd(Triangle& T,Vector4& bCrd, eScanConvMovement M, unsigned int numOfMoves);
 	double helpGNBC(Triangle& T, int a, int b, double x, double y);
@@ -46,6 +46,12 @@ public:
 
 	Color clacDiffuseLight(Vector4& point, Vector4 & normal, Light& light, double Kd);
 	Color clacSpecularLight(Vector4& point, Vector4& normal, Light& light, double Ks, double specularExp, Vector4& eyePosition);
+
+	//phong functions
+	void phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Light& light2, Z_Buffer& zBuffer, Vector4& eyePosition, Matrix4x4& pMtrx);
+	Color getVertxColorPhong(Vector4 & R1, Vector4 & L1, Vector4 & R2, Vector4 & L2, Vector4 & P, Vector4 & N, Material& M, Color& ambientLight, Light& light1, Light& light2, Vector4& eyePosition);
+	Color clacDiffuseLightPhong(Vector4& point, Vector4& L, Vector4 & normal, Light& light, double Kd);
+	Color clacSpecularLightPhong(Vector4& point, Vector4 & R, Light& light, double Ks, double specularExp, Vector4& eyePosition);
 };
 
 

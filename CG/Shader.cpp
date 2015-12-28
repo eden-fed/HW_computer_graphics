@@ -12,6 +12,14 @@
 #define Y 1
 #define Z 3
 
+typedef struct {
+	Vector4 P;
+	Vector4 N;
+	Vector4 L1;
+	Vector4 L2;
+	Vector4 R1;
+	Vector4 R2;
+} stPhongInfo;
 
 
 Shader::Shader()
@@ -153,6 +161,39 @@ void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Li
 
 		Triangle& T = mesh.getAllFaces()[i];
 
+		stPhongInfo pointInfo[3];
+		for (int i = 0; i <= 2; i++) {
+			pointInfo[i].P = T.getVertexInfo(i).vertex;
+			pointInfo[i].N = T.getVertexInfo(i).normal.normalize();
+			//L calculation
+			//-----------light1-----------------------
+			if (light1.getType() == _DIRECTION)
+				pointInfo[i].L1 = light1.getPosition() - light1.getDirection();
+			else
+				pointInfo[i].L1 = light1.getPosition() - pointInfo[i].P;
+			pointInfo[i].L1 = pointInfo[i].L1.normalize();
+			//-----------light2-----------------------
+			if (light2.getType() == _DIRECTION)
+				pointInfo[i].L2 = light2.getPosition() - light2.getDirection();
+			else
+				pointInfo[i].L2 = light2.getPosition() - pointInfo[i].P;
+			pointInfo[i].L2 = pointInfo[i].L2.normalize();
+
+			//R calculation
+			//-----------light1-----------------------
+			double NL1 = (pointInfo[i].N*pointInfo[i].L1);
+			NL1 = (NL1) < 0 ? (0) : (NL1);
+			pointInfo[i].R1 = (pointInfo[i].N * (NL1 * 2)) - pointInfo[i].L1;
+			pointInfo[i].R1 = pointInfo[i].R1.normalize();
+			//-----------light2-----------------------
+			double NL2 = (pointInfo[i].N*pointInfo[i].L2);
+			NL2 = (NL2) < 0 ? (0) : (NL2);
+			pointInfo[i].R2 = (pointInfo[i].N * (NL2 * 2)) - pointInfo[i].L2;
+			pointInfo[i].R2 = pointInfo[i].R2.normalize();
+		}
+
+		T.projectTriangle(pMtrx);
+
 		//bounding rectangle parameters
 		double minX, maxX, minY, maxY;
 
@@ -181,17 +222,30 @@ void Shader::phongShading(MeshModel& mesh, Color ambientLight, Light& light1, Li
 					crdInfo.cartCrd.setY(y);
 					crdInfo.baryCrd = bCrd;
 
-					vertexInfo vInfo;
+					
 					//interpolated point
-					vInfo.vertex = T[0] * bCrd[0] + T[1] * bCrd[1] + T[2] * bCrd[2];
+					Vector4 P = pointInfo[0].P * bCrd[0] + pointInfo[1].P * bCrd[1] + pointInfo[2].P * bCrd[2];
 
 					//interpolated normal and normilization
-					vInfo.normal = T.getNormal(0) * bCrd[0] + T.getNormal(1) * bCrd[1] + T.getNormal(2) * bCrd[2];
-					vInfo.normal = vInfo.normal.normalize();
+					Vector4 N = pointInfo[0].N * bCrd[0] + pointInfo[1].N * bCrd[1] + pointInfo[2].N * bCrd[2];
+					N = N.normalize();
 
+					//interpolated L and normilization
+					Vector4 L1 = pointInfo[0].L1 * bCrd[0] + pointInfo[1].L1 * bCrd[1] + pointInfo[2].L1 * bCrd[2];
+					L1 = L1.normalize();
+					Vector4 L2 = pointInfo[0].L2 * bCrd[0] + pointInfo[1].L2 * bCrd[1] + pointInfo[2].L2 * bCrd[2];
+					L2 = L2.normalize();
+
+					//interpolated R and normilization
+					Vector4 R1 = pointInfo[0].R1 * bCrd[0] + pointInfo[1].R1 * bCrd[1] + pointInfo[2].R1 * bCrd[2];
+					R1 = R1.normalize();
+					Vector4 R2 = pointInfo[0].R2 * bCrd[0] + pointInfo[1].R2 * bCrd[1] + pointInfo[2].R2 * bCrd[2];
+					R2 = R2.normalize();
+
+					
 					//claculate the color
-					Color clr = getVertxColor(vInfo, mesh.material, ambientLight, light1, light2, eyePosition);
-
+					Color clr = getVertxColorPhong(R1,L1,R2,L2,P,N, mesh.material, ambientLight, light1, light2, eyePosition);
+					
 					crdInfo.clr.setColor(clr.getColor());
 					crdInfo.trl = T;
 
@@ -268,10 +322,10 @@ Color Shader::getVertxColor(vertexInfo& vInfo, Material & M, Color & ambientLigh
 	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
 
 	Color diffuse1  = clacDiffuseLight(P, N, light1, M.getDiffuse());
-	Color diffuse2 = 0; //clacDiffuseLight(P, N, light2, M.getDiffuse());
+	Color diffuse2  = clacDiffuseLight(P, N, light2, M.getDiffuse());
 
 	Color specular1 = clacSpecularLight(P, N, light1, M.getSpecular(), M.getspecularExp(), eyePosition);
-	Color specular2 = 0;// clacSpecularLight(P, N, light2, M.getSpecular(), M.getspecularExp(), eyePosition);
+	Color specular2 = clacSpecularLight(P, N, light2, M.getSpecular(), M.getspecularExp(), eyePosition);
 
 	Color color((ambient.getRedPortion() + diffuse1.getRedPortion() + diffuse2.getRedPortion() + specular1.getRedPortion() + specular2.getRedPortion()),
 		(ambient.getGreenPortion() + diffuse1.getGreenPortion() + diffuse2.getGreenPortion() + specular1.getGreenPortion() + specular2.getGreenPortion()),
@@ -325,6 +379,54 @@ Color Shader::clacSpecularLight(Vector4& point, Vector4& normal, Light& light, d
 
 	//calculate V
 	Vector4 V = eyePosition-point; 
+	V = V.normalize();
+
+	double RV = (R*V);
+	RV = pow(RV, specularExp);
+
+	Color& Ip = light.getIntensity();
+
+	Color retColor(Ks*RV*Ip.getRedPortion(), Ks*RV*Ip.getGreenPortion(), Ks*RV*Ip.getBluePortion());
+	return retColor;
+}
+
+Color Shader::getVertxColorPhong(Vector4 & R1, Vector4 & L1, Vector4 & R2, Vector4 & L2, Vector4 & P, Vector4 & N, Material& M, Color& ambientLight, Light& light1, Light& light2, Vector4& eyePosition)
+{
+	double A = M.getAmbient();
+
+	Color ambient(ambientLight.getRedPortion()*A, ambientLight.getGreenPortion()*A, ambientLight.getBluePortion()*A);
+
+
+	Color diffuse1 = clacDiffuseLightPhong(P, L1, N, light1, M.getDiffuse());
+	Color diffuse2 = clacDiffuseLightPhong(P, L2, N, light2, M.getDiffuse());
+
+	Color specular1 = clacSpecularLightPhong(P, R1, light1, M.getSpecular(), M.getspecularExp(), eyePosition);
+	Color specular2 = clacSpecularLightPhong(P, R2, light2, M.getSpecular(), M.getspecularExp(), eyePosition);
+
+	Color color((ambient.getRedPortion() + diffuse1.getRedPortion() + diffuse2.getRedPortion() + specular1.getRedPortion() + specular2.getRedPortion()),
+		(ambient.getGreenPortion() + diffuse1.getGreenPortion() + diffuse2.getGreenPortion() + specular1.getGreenPortion() + specular2.getGreenPortion()),
+		(ambient.getBluePortion() + diffuse1.getBluePortion() + diffuse2.getBluePortion() + specular1.getBluePortion() + specular2.getBluePortion()));
+	return color;
+}
+
+Color Shader::clacDiffuseLightPhong(Vector4 & point, Vector4 & L, Vector4 & normal, Light & light, double Kd)
+{
+	Vector4& N = normal;
+
+	//calc NL
+	double NL = (N*L);
+	NL = (NL) < 0 ? (0) : (NL);
+
+	//equation from class
+	Color& Ip = light.getIntensity();
+	Color retColor(Kd*NL*Ip.getRedPortion(), Kd*NL*Ip.getGreenPortion(), Kd*NL*Ip.getBluePortion());
+	return retColor;
+}
+
+Color Shader::clacSpecularLightPhong(Vector4 & point, Vector4 & R, Light & light, double Ks, double specularExp, Vector4 & eyePosition)
+{
+	//calculate V
+	Vector4 V = eyePosition - point;
 	V = V.normalize();
 
 	double RV = (R*V);
